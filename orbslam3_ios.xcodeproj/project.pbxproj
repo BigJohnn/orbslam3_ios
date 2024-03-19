@@ -1,0 +1,444 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FA28D3402BA96A48008E1E39 /* orbslam3_iosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA28D33F2BA96A48008E1E39 /* orbslam3_iosApp.swift */; };
+		FA28D3422BA96A48008E1E39 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA28D3412BA96A48008E1E39 /* ContentView.swift */; };
+		FA28D3442BA96A49008E1E39 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA28D3432BA96A49008E1E39 /* Assets.xcassets */; };
+		FA28D3482BA96A49008E1E39 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA28D3472BA96A49008E1E39 /* Preview Assets.xcassets */; };
+		FA28D36B2BA96E4C008E1E39 /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA28D36A2BA96E4C008E1E39 /* CameraPreviewView.swift */; };
+		FA28D36D2BA96ED8008E1E39 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA28D36C2BA96ED8008E1E39 /* CameraController.swift */; };
+		FA28D3722BA97FB9008E1E39 /* image_processor.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA28D3702BA97FB9008E1E39 /* image_processor.mm */; };
+		FA38EACC2BA9B43400F77BA7 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA38EAB52BA9852F00F77BA7 /* opencv2.framework */; };
+		FA38EACF2BA9BFEF00F77BA7 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA38EACE2BA9BFEF00F77BA7 /* Utils.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		FA28D33C2BA96A48008E1E39 /* orbslam3_ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = orbslam3_ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA28D33F2BA96A48008E1E39 /* orbslam3_iosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = orbslam3_iosApp.swift; sourceTree = "<group>"; };
+		FA28D3412BA96A48008E1E39 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		FA28D3432BA96A49008E1E39 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FA28D3452BA96A49008E1E39 /* orbslam3_ios.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = orbslam3_ios.entitlements; sourceTree = "<group>"; };
+		FA28D3472BA96A49008E1E39 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FA28D3512BA96A49008E1E39 /* orbslam3_iosTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = orbslam3_iosTests.swift; sourceTree = "<group>"; };
+		FA28D35B2BA96A49008E1E39 /* orbslam3_iosUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = orbslam3_iosUITests.swift; sourceTree = "<group>"; };
+		FA28D35D2BA96A49008E1E39 /* orbslam3_iosUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = orbslam3_iosUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		FA28D36A2BA96E4C008E1E39 /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
+		FA28D36C2BA96ED8008E1E39 /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
+		FA28D36F2BA97FB9008E1E39 /* orbslam3_ios-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "orbslam3_ios-Bridging-Header.h"; sourceTree = "<group>"; };
+		FA28D3702BA97FB9008E1E39 /* image_processor.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = image_processor.mm; sourceTree = "<group>"; };
+		FA28D3712BA97FB9008E1E39 /* image_processor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = image_processor.h; sourceTree = "<group>"; };
+		FA38EAB52BA9852F00F77BA7 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = orbslam3_ios/opencv2.framework; sourceTree = "<group>"; };
+		FA38EACE2BA9BFEF00F77BA7 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FA28D3392BA96A48008E1E39 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA38EACC2BA9B43400F77BA7 /* opencv2.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FA28D3332BA96A48008E1E39 = {
+			isa = PBXGroup;
+			children = (
+				FA28D33E2BA96A48008E1E39 /* orbslam3_ios */,
+				FA28D3502BA96A49008E1E39 /* orbslam3_iosTests */,
+				FA28D35A2BA96A49008E1E39 /* orbslam3_iosUITests */,
+				FA28D33D2BA96A48008E1E39 /* Products */,
+				FA28D3732BA98117008E1E39 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		FA28D33D2BA96A48008E1E39 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FA28D33C2BA96A48008E1E39 /* orbslam3_ios.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FA28D33E2BA96A48008E1E39 /* orbslam3_ios */ = {
+			isa = PBXGroup;
+			children = (
+				FA28D33F2BA96A48008E1E39 /* orbslam3_iosApp.swift */,
+				FA28D3412BA96A48008E1E39 /* ContentView.swift */,
+				FA28D36C2BA96ED8008E1E39 /* CameraController.swift */,
+				FA28D36A2BA96E4C008E1E39 /* CameraPreviewView.swift */,
+				FA28D3432BA96A49008E1E39 /* Assets.xcassets */,
+				FA28D3452BA96A49008E1E39 /* orbslam3_ios.entitlements */,
+				FA28D3462BA96A49008E1E39 /* Preview Content */,
+				FA28D3702BA97FB9008E1E39 /* image_processor.mm */,
+				FA28D3712BA97FB9008E1E39 /* image_processor.h */,
+				FA28D36F2BA97FB9008E1E39 /* orbslam3_ios-Bridging-Header.h */,
+				FA38EACE2BA9BFEF00F77BA7 /* Utils.swift */,
+			);
+			path = orbslam3_ios;
+			sourceTree = "<group>";
+		};
+		FA28D3462BA96A49008E1E39 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				FA28D3472BA96A49008E1E39 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		FA28D3502BA96A49008E1E39 /* orbslam3_iosTests */ = {
+			isa = PBXGroup;
+			children = (
+				FA28D3512BA96A49008E1E39 /* orbslam3_iosTests.swift */,
+			);
+			path = orbslam3_iosTests;
+			sourceTree = "<group>";
+		};
+		FA28D35A2BA96A49008E1E39 /* orbslam3_iosUITests */ = {
+			isa = PBXGroup;
+			children = (
+				FA28D35B2BA96A49008E1E39 /* orbslam3_iosUITests.swift */,
+				FA28D35D2BA96A49008E1E39 /* orbslam3_iosUITestsLaunchTests.swift */,
+			);
+			path = orbslam3_iosUITests;
+			sourceTree = "<group>";
+		};
+		FA28D3732BA98117008E1E39 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FA38EAB52BA9852F00F77BA7 /* opencv2.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FA28D33B2BA96A48008E1E39 /* orbslam3_ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FA28D3612BA96A49008E1E39 /* Build configuration list for PBXNativeTarget "orbslam3_ios" */;
+			buildPhases = (
+				FA28D3382BA96A48008E1E39 /* Sources */,
+				FA28D3392BA96A48008E1E39 /* Frameworks */,
+				FA28D33A2BA96A48008E1E39 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = orbslam3_ios;
+			productName = orbslam3_ios;
+			productReference = FA28D33C2BA96A48008E1E39 /* orbslam3_ios.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FA28D3342BA96A48008E1E39 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1510;
+				LastUpgradeCheck = 1510;
+				TargetAttributes = {
+					FA28D33B2BA96A48008E1E39 = {
+						CreatedOnToolsVersion = 15.1;
+						LastSwiftMigration = 1510;
+					};
+				};
+			};
+			buildConfigurationList = FA28D3372BA96A48008E1E39 /* Build configuration list for PBXProject "orbslam3_ios" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FA28D3332BA96A48008E1E39;
+			productRefGroup = FA28D33D2BA96A48008E1E39 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FA28D33B2BA96A48008E1E39 /* orbslam3_ios */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FA28D33A2BA96A48008E1E39 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA28D3482BA96A49008E1E39 /* Preview Assets.xcassets in Resources */,
+				FA28D3442BA96A49008E1E39 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FA28D3382BA96A48008E1E39 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA28D3422BA96A48008E1E39 /* ContentView.swift in Sources */,
+				FA28D36D2BA96ED8008E1E39 /* CameraController.swift in Sources */,
+				FA28D3402BA96A48008E1E39 /* orbslam3_iosApp.swift in Sources */,
+				FA28D36B2BA96E4C008E1E39 /* CameraPreviewView.swift in Sources */,
+				FA28D3722BA97FB9008E1E39 /* image_processor.mm in Sources */,
+				FA38EACF2BA9BFEF00F77BA7 /* Utils.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		FA28D35F2BA96A49008E1E39 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "need camera";
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 0.0.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		FA28D3602BA96A49008E1E39 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "need camera";
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 0.0.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		FA28D3622BA96A49008E1E39 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = orbslam3_ios/orbslam3_ios.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"orbslam3_ios/Preview Content\"";
+				DEVELOPMENT_TEAM = PTQHEM5K3R;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/orbslam3_ios",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/deps/eigen3";
+				INFOPLIST_KEY_CFBundleDisplayName = orbslam3_ios;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.letitbe.orbslam3-ios";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "orbslam3_ios/orbslam3_ios-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FA28D3632BA96A49008E1E39 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = orbslam3_ios/orbslam3_ios.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"orbslam3_ios/Preview Content\"";
+				DEVELOPMENT_TEAM = PTQHEM5K3R;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/orbslam3_ios",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/deps/eigen3";
+				INFOPLIST_KEY_CFBundleDisplayName = orbslam3_ios;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.letitbe.orbslam3-ios";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "orbslam3_ios/orbslam3_ios-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FA28D3372BA96A48008E1E39 /* Build configuration list for PBXProject "orbslam3_ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA28D35F2BA96A49008E1E39 /* Debug */,
+				FA28D3602BA96A49008E1E39 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FA28D3612BA96A49008E1E39 /* Build configuration list for PBXNativeTarget "orbslam3_ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA28D3622BA96A49008E1E39 /* Debug */,
+				FA28D3632BA96A49008E1E39 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FA28D3342BA96A48008E1E39 /* Project object */;
+}

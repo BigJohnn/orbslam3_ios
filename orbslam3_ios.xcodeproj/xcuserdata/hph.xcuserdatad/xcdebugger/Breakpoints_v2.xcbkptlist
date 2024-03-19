@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "450CA089-F35E-4B3B-90A3-7E3731E0EB0F"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "619732AF-A29F-4832-B05C-3EE4E242825D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "orbslam3_ios/CameraService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "122"
+            endingLineNumber = "122"
+            landmarkName = "captureOutput(_:didOutputSampleBuffer:from:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E39A6F5D-3217-46B7-9813-FD2D309428F4"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "orbslam3_ios/CameraService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "111"
+            endingLineNumber = "111"
+            landmarkName = "configureSession()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "E39A6F5D-3217-46B7-9813-FD2D309428F4 - 6a49298b4ac133c5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "orbslam3_ios.CameraService.configureSession() -&gt; ()"
+                  moduleName = "orbslam3_ios"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/hph/Codes/orbslam3_ios/orbslam3_ios/CameraService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "111"
+                  endingLineNumber = "111"
+                  offsetFromSymbolStart = "3628">
+               </Location>
+               <Location
+                  uuid = "E39A6F5D-3217-46B7-9813-FD2D309428F4 - 6a49298b4ac13368"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "orbslam3_ios.CameraService.configureSession() -&gt; ()"
+                  moduleName = "orbslam3_ios"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/hph/Codes/orbslam3_ios/orbslam3_ios/CameraService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "114"
+                  endingLineNumber = "114"
+                  offsetFromSymbolStart = "3624">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
