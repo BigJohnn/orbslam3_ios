@@ -16,6 +16,35 @@
 		FA28D3722BA97FB9008E1E39 /* image_processor.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA28D3702BA97FB9008E1E39 /* image_processor.mm */; };
 		FA38EACC2BA9B43400F77BA7 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA38EAB52BA9852F00F77BA7 /* opencv2.framework */; };
 		FA38EACF2BA9BFEF00F77BA7 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA38EACE2BA9BFEF00F77BA7 /* Utils.swift */; };
+		FA38F0A92BAA950800F77BA7 /* KeyFrameDatabase.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F08C2BAA950800F77BA7 /* KeyFrameDatabase.cc */; };
+		FA38F0AA2BAA950800F77BA7 /* Tracking.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F08D2BAA950800F77BA7 /* Tracking.cc */; };
+		FA38F0AB2BAA950800F77BA7 /* ORBmatcher.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F08E2BAA950800F77BA7 /* ORBmatcher.cc */; };
+		FA38F0AC2BAA950800F77BA7 /* Atlas.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F08F2BAA950800F77BA7 /* Atlas.cc */; };
+		FA38F0AD2BAA950800F77BA7 /* Sim3Solver.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0902BAA950800F77BA7 /* Sim3Solver.cc */; };
+		FA38F0AE2BAA950800F77BA7 /* ORBextractor.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0912BAA950800F77BA7 /* ORBextractor.cc */; };
+		FA38F0AF2BAA950800F77BA7 /* OptimizableTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0922BAA950800F77BA7 /* OptimizableTypes.cpp */; };
+		FA38F0B02BAA950800F77BA7 /* GeometricTools.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0932BAA950800F77BA7 /* GeometricTools.cc */; };
+		FA38F0B12BAA950800F77BA7 /* Map.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0942BAA950800F77BA7 /* Map.cc */; };
+		FA38F0B22BAA950800F77BA7 /* MapPoint.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0952BAA950800F77BA7 /* MapPoint.cc */; };
+		FA38F0B32BAA950800F77BA7 /* Settings.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0962BAA950800F77BA7 /* Settings.cc */; };
+		FA38F0B42BAA950800F77BA7 /* LocalMapping.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0972BAA950800F77BA7 /* LocalMapping.cc */; };
+		FA38F0B52BAA950800F77BA7 /* MLPnPsolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0982BAA950800F77BA7 /* MLPnPsolver.cpp */; };
+		FA38F0B62BAA950800F77BA7 /* Optimizer.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0992BAA950800F77BA7 /* Optimizer.cc */; };
+		FA38F0B72BAA950800F77BA7 /* LoopClosing.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F09A2BAA950800F77BA7 /* LoopClosing.cc */; };
+		FA38F0B82BAA950800F77BA7 /* Frame.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F09B2BAA950800F77BA7 /* Frame.cc */; };
+		FA38F0B92BAA950800F77BA7 /* ImuTypes.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F09C2BAA950800F77BA7 /* ImuTypes.cc */; };
+		FA38F0BA2BAA950800F77BA7 /* TwoViewReconstruction.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F09D2BAA950800F77BA7 /* TwoViewReconstruction.cc */; };
+		FA38F0BB2BAA950800F77BA7 /* KeyFrame.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F09E2BAA950800F77BA7 /* KeyFrame.cc */; };
+		FA38F0BC2BAA950800F77BA7 /* MapDrawer.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F09F2BAA950800F77BA7 /* MapDrawer.cc */; };
+		FA38F0BD2BAA950800F77BA7 /* Converter.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A02BAA950800F77BA7 /* Converter.cc */; };
+		FA38F0BE2BAA950800F77BA7 /* KannalaBrandt8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A22BAA950800F77BA7 /* KannalaBrandt8.cpp */; };
+		FA38F0BF2BAA950800F77BA7 /* Pinhole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A32BAA950800F77BA7 /* Pinhole.cpp */; };
+		FA38F0C02BAA950800F77BA7 /* System.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A42BAA950800F77BA7 /* System.cc */; };
+		FA38F0C12BAA950800F77BA7 /* Viewer.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A52BAA950800F77BA7 /* Viewer.cc */; };
+		FA38F0C22BAA950800F77BA7 /* G2oTypes.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A62BAA950800F77BA7 /* G2oTypes.cc */; };
+		FA38F0C32BAA950800F77BA7 /* FrameDrawer.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A72BAA950800F77BA7 /* FrameDrawer.cc */; };
+		FA38F0C42BAA950800F77BA7 /* Config.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A82BAA950800F77BA7 /* Config.cc */; };
+		FA38F0CA2BAC253600F77BA7 /* ORBvoc.bin in Resources */ = {isa = PBXBuildFile; fileRef = FA38F0C92BAC031300F77BA7 /* ORBvoc.bin */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +64,67 @@
 		FA28D3712BA97FB9008E1E39 /* image_processor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = image_processor.h; sourceTree = "<group>"; };
 		FA38EAB52BA9852F00F77BA7 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = orbslam3_ios/opencv2.framework; sourceTree = "<group>"; };
 		FA38EACE2BA9BFEF00F77BA7 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		FA38F06B2BAA950800F77BA7 /* FrameDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrameDrawer.h; sourceTree = "<group>"; };
+		FA38F06C2BAA950800F77BA7 /* MapPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapPoint.h; sourceTree = "<group>"; };
+		FA38F06D2BAA950800F77BA7 /* KeyFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyFrame.h; sourceTree = "<group>"; };
+		FA38F06E2BAA950800F77BA7 /* Viewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Viewer.h; sourceTree = "<group>"; };
+		FA38F06F2BAA950800F77BA7 /* KeyFrameDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyFrameDatabase.h; sourceTree = "<group>"; };
+		FA38F0702BAA950800F77BA7 /* Map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Map.h; sourceTree = "<group>"; };
+		FA38F0712BAA950800F77BA7 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
+		FA38F0722BAA950800F77BA7 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		FA38F0732BAA950800F77BA7 /* Atlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Atlas.h; sourceTree = "<group>"; };
+		FA38F0742BAA950800F77BA7 /* OptimizableTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptimizableTypes.h; sourceTree = "<group>"; };
+		FA38F0752BAA950800F77BA7 /* ORBextractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORBextractor.h; sourceTree = "<group>"; };
+		FA38F0762BAA950800F77BA7 /* ORBmatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORBmatcher.h; sourceTree = "<group>"; };
+		FA38F0772BAA950800F77BA7 /* Frame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Frame.h; sourceTree = "<group>"; };
+		FA38F0782BAA950800F77BA7 /* GeometricTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeometricTools.h; sourceTree = "<group>"; };
+		FA38F0792BAA950800F77BA7 /* LocalMapping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalMapping.h; sourceTree = "<group>"; };
+		FA38F07A2BAA950800F77BA7 /* MLPnPsolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLPnPsolver.h; sourceTree = "<group>"; };
+		FA38F07B2BAA950800F77BA7 /* Converter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Converter.h; sourceTree = "<group>"; };
+		FA38F07C2BAA950800F77BA7 /* Optimizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Optimizer.h; sourceTree = "<group>"; };
+		FA38F07D2BAA950800F77BA7 /* LoopClosing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoopClosing.h; sourceTree = "<group>"; };
+		FA38F07E2BAA950800F77BA7 /* G2oTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = G2oTypes.h; sourceTree = "<group>"; };
+		FA38F07F2BAA950800F77BA7 /* Tracking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tracking.h; sourceTree = "<group>"; };
+		FA38F0802BAA950800F77BA7 /* TwoViewReconstruction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwoViewReconstruction.h; sourceTree = "<group>"; };
+		FA38F0812BAA950800F77BA7 /* ORBVocabulary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORBVocabulary.h; sourceTree = "<group>"; };
+		FA38F0822BAA950800F77BA7 /* SerializationUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SerializationUtils.h; sourceTree = "<group>"; };
+		FA38F0842BAA950800F77BA7 /* Pinhole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pinhole.h; sourceTree = "<group>"; };
+		FA38F0852BAA950800F77BA7 /* KannalaBrandt8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KannalaBrandt8.h; sourceTree = "<group>"; };
+		FA38F0862BAA950800F77BA7 /* GeometricCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeometricCamera.h; sourceTree = "<group>"; };
+		FA38F0872BAA950800F77BA7 /* System.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = System.h; sourceTree = "<group>"; };
+		FA38F0882BAA950800F77BA7 /* ImuTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImuTypes.h; sourceTree = "<group>"; };
+		FA38F0892BAA950800F77BA7 /* Sim3Solver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sim3Solver.h; sourceTree = "<group>"; };
+		FA38F08A2BAA950800F77BA7 /* MapDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapDrawer.h; sourceTree = "<group>"; };
+		FA38F08C2BAA950800F77BA7 /* KeyFrameDatabase.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyFrameDatabase.cc; sourceTree = "<group>"; };
+		FA38F08D2BAA950800F77BA7 /* Tracking.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tracking.cc; sourceTree = "<group>"; };
+		FA38F08E2BAA950800F77BA7 /* ORBmatcher.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ORBmatcher.cc; sourceTree = "<group>"; };
+		FA38F08F2BAA950800F77BA7 /* Atlas.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Atlas.cc; sourceTree = "<group>"; };
+		FA38F0902BAA950800F77BA7 /* Sim3Solver.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sim3Solver.cc; sourceTree = "<group>"; };
+		FA38F0912BAA950800F77BA7 /* ORBextractor.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ORBextractor.cc; sourceTree = "<group>"; };
+		FA38F0922BAA950800F77BA7 /* OptimizableTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OptimizableTypes.cpp; sourceTree = "<group>"; };
+		FA38F0932BAA950800F77BA7 /* GeometricTools.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GeometricTools.cc; sourceTree = "<group>"; };
+		FA38F0942BAA950800F77BA7 /* Map.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Map.cc; sourceTree = "<group>"; };
+		FA38F0952BAA950800F77BA7 /* MapPoint.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapPoint.cc; sourceTree = "<group>"; };
+		FA38F0962BAA950800F77BA7 /* Settings.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Settings.cc; sourceTree = "<group>"; };
+		FA38F0972BAA950800F77BA7 /* LocalMapping.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalMapping.cc; sourceTree = "<group>"; };
+		FA38F0982BAA950800F77BA7 /* MLPnPsolver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLPnPsolver.cpp; sourceTree = "<group>"; };
+		FA38F0992BAA950800F77BA7 /* Optimizer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Optimizer.cc; sourceTree = "<group>"; };
+		FA38F09A2BAA950800F77BA7 /* LoopClosing.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LoopClosing.cc; sourceTree = "<group>"; };
+		FA38F09B2BAA950800F77BA7 /* Frame.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Frame.cc; sourceTree = "<group>"; };
+		FA38F09C2BAA950800F77BA7 /* ImuTypes.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImuTypes.cc; sourceTree = "<group>"; };
+		FA38F09D2BAA950800F77BA7 /* TwoViewReconstruction.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TwoViewReconstruction.cc; sourceTree = "<group>"; };
+		FA38F09E2BAA950800F77BA7 /* KeyFrame.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyFrame.cc; sourceTree = "<group>"; };
+		FA38F09F2BAA950800F77BA7 /* MapDrawer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapDrawer.cc; sourceTree = "<group>"; };
+		FA38F0A02BAA950800F77BA7 /* Converter.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Converter.cc; sourceTree = "<group>"; };
+		FA38F0A22BAA950800F77BA7 /* KannalaBrandt8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KannalaBrandt8.cpp; sourceTree = "<group>"; };
+		FA38F0A32BAA950800F77BA7 /* Pinhole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pinhole.cpp; sourceTree = "<group>"; };
+		FA38F0A42BAA950800F77BA7 /* System.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = System.cc; sourceTree = "<group>"; };
+		FA38F0A52BAA950800F77BA7 /* Viewer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Viewer.cc; sourceTree = "<group>"; };
+		FA38F0A62BAA950800F77BA7 /* G2oTypes.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = G2oTypes.cc; sourceTree = "<group>"; };
+		FA38F0A72BAA950800F77BA7 /* FrameDrawer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameDrawer.cc; sourceTree = "<group>"; };
+		FA38F0A82BAA950800F77BA7 /* Config.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Config.cc; sourceTree = "<group>"; };
+		FA38F0C62BAAD24A00F77BA7 /* CoreAudioTypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudioTypes.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.2.sdk/System/Library/Frameworks/CoreAudioTypes.framework; sourceTree = DEVELOPER_DIR; };
+		FA38F0C92BAC031300F77BA7 /* ORBvoc.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = ORBvoc.bin; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +142,8 @@
 		FA28D3332BA96A48008E1E39 = {
 			isa = PBXGroup;
 			children = (
+				FA38F0C82BAC031300F77BA7 /* Vocabulary */,
+				FA38F0692BAA950800F77BA7 /* orbslam3 */,
 				FA28D33E2BA96A48008E1E39 /* orbslam3_ios */,
 				FA28D3502BA96A49008E1E39 /* orbslam3_iosTests */,
 				FA28D35A2BA96A49008E1E39 /* orbslam3_iosUITests */,
@@ -114,9 +206,117 @@
 		FA28D3732BA98117008E1E39 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FA38F0C62BAAD24A00F77BA7 /* CoreAudioTypes.framework */,
 				FA38EAB52BA9852F00F77BA7 /* opencv2.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FA38F0692BAA950800F77BA7 /* orbslam3 */ = {
+			isa = PBXGroup;
+			children = (
+				FA38F06A2BAA950800F77BA7 /* include */,
+				FA38F08B2BAA950800F77BA7 /* src */,
+			);
+			name = orbslam3;
+			path = Thirdparty/orbslam3;
+			sourceTree = "<group>";
+		};
+		FA38F06A2BAA950800F77BA7 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				FA38F06B2BAA950800F77BA7 /* FrameDrawer.h */,
+				FA38F06C2BAA950800F77BA7 /* MapPoint.h */,
+				FA38F06D2BAA950800F77BA7 /* KeyFrame.h */,
+				FA38F06E2BAA950800F77BA7 /* Viewer.h */,
+				FA38F06F2BAA950800F77BA7 /* KeyFrameDatabase.h */,
+				FA38F0702BAA950800F77BA7 /* Map.h */,
+				FA38F0712BAA950800F77BA7 /* Config.h */,
+				FA38F0722BAA950800F77BA7 /* Settings.h */,
+				FA38F0732BAA950800F77BA7 /* Atlas.h */,
+				FA38F0742BAA950800F77BA7 /* OptimizableTypes.h */,
+				FA38F0752BAA950800F77BA7 /* ORBextractor.h */,
+				FA38F0762BAA950800F77BA7 /* ORBmatcher.h */,
+				FA38F0772BAA950800F77BA7 /* Frame.h */,
+				FA38F0782BAA950800F77BA7 /* GeometricTools.h */,
+				FA38F0792BAA950800F77BA7 /* LocalMapping.h */,
+				FA38F07A2BAA950800F77BA7 /* MLPnPsolver.h */,
+				FA38F07B2BAA950800F77BA7 /* Converter.h */,
+				FA38F07C2BAA950800F77BA7 /* Optimizer.h */,
+				FA38F07D2BAA950800F77BA7 /* LoopClosing.h */,
+				FA38F07E2BAA950800F77BA7 /* G2oTypes.h */,
+				FA38F07F2BAA950800F77BA7 /* Tracking.h */,
+				FA38F0802BAA950800F77BA7 /* TwoViewReconstruction.h */,
+				FA38F0812BAA950800F77BA7 /* ORBVocabulary.h */,
+				FA38F0822BAA950800F77BA7 /* SerializationUtils.h */,
+				FA38F0832BAA950800F77BA7 /* CameraModels */,
+				FA38F0872BAA950800F77BA7 /* System.h */,
+				FA38F0882BAA950800F77BA7 /* ImuTypes.h */,
+				FA38F0892BAA950800F77BA7 /* Sim3Solver.h */,
+				FA38F08A2BAA950800F77BA7 /* MapDrawer.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		FA38F0832BAA950800F77BA7 /* CameraModels */ = {
+			isa = PBXGroup;
+			children = (
+				FA38F0842BAA950800F77BA7 /* Pinhole.h */,
+				FA38F0852BAA950800F77BA7 /* KannalaBrandt8.h */,
+				FA38F0862BAA950800F77BA7 /* GeometricCamera.h */,
+			);
+			path = CameraModels;
+			sourceTree = "<group>";
+		};
+		FA38F08B2BAA950800F77BA7 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				FA38F08C2BAA950800F77BA7 /* KeyFrameDatabase.cc */,
+				FA38F08D2BAA950800F77BA7 /* Tracking.cc */,
+				FA38F08E2BAA950800F77BA7 /* ORBmatcher.cc */,
+				FA38F08F2BAA950800F77BA7 /* Atlas.cc */,
+				FA38F0902BAA950800F77BA7 /* Sim3Solver.cc */,
+				FA38F0912BAA950800F77BA7 /* ORBextractor.cc */,
+				FA38F0922BAA950800F77BA7 /* OptimizableTypes.cpp */,
+				FA38F0932BAA950800F77BA7 /* GeometricTools.cc */,
+				FA38F0942BAA950800F77BA7 /* Map.cc */,
+				FA38F0952BAA950800F77BA7 /* MapPoint.cc */,
+				FA38F0962BAA950800F77BA7 /* Settings.cc */,
+				FA38F0972BAA950800F77BA7 /* LocalMapping.cc */,
+				FA38F0982BAA950800F77BA7 /* MLPnPsolver.cpp */,
+				FA38F0992BAA950800F77BA7 /* Optimizer.cc */,
+				FA38F09A2BAA950800F77BA7 /* LoopClosing.cc */,
+				FA38F09B2BAA950800F77BA7 /* Frame.cc */,
+				FA38F09C2BAA950800F77BA7 /* ImuTypes.cc */,
+				FA38F09D2BAA950800F77BA7 /* TwoViewReconstruction.cc */,
+				FA38F09E2BAA950800F77BA7 /* KeyFrame.cc */,
+				FA38F09F2BAA950800F77BA7 /* MapDrawer.cc */,
+				FA38F0A02BAA950800F77BA7 /* Converter.cc */,
+				FA38F0A12BAA950800F77BA7 /* CameraModels */,
+				FA38F0A42BAA950800F77BA7 /* System.cc */,
+				FA38F0A52BAA950800F77BA7 /* Viewer.cc */,
+				FA38F0A62BAA950800F77BA7 /* G2oTypes.cc */,
+				FA38F0A72BAA950800F77BA7 /* FrameDrawer.cc */,
+				FA38F0A82BAA950800F77BA7 /* Config.cc */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		FA38F0A12BAA950800F77BA7 /* CameraModels */ = {
+			isa = PBXGroup;
+			children = (
+				FA38F0A22BAA950800F77BA7 /* KannalaBrandt8.cpp */,
+				FA38F0A32BAA950800F77BA7 /* Pinhole.cpp */,
+			);
+			path = CameraModels;
+			sourceTree = "<group>";
+		};
+		FA38F0C82BAC031300F77BA7 /* Vocabulary */ = {
+			isa = PBXGroup;
+			children = (
+				FA38F0C92BAC031300F77BA7 /* ORBvoc.bin */,
+			);
+			path = Vocabulary;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,6 +378,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA38F0CA2BAC253600F77BA7 /* ORBvoc.bin in Resources */,
 				FA28D3482BA96A49008E1E39 /* Preview Assets.xcassets in Resources */,
 				FA28D3442BA96A49008E1E39 /* Assets.xcassets in Resources */,
 			);
@@ -192,10 +393,38 @@
 			files = (
 				FA28D3422BA96A48008E1E39 /* ContentView.swift in Sources */,
 				FA28D36D2BA96ED8008E1E39 /* CameraController.swift in Sources */,
+				FA38F0AD2BAA950800F77BA7 /* Sim3Solver.cc in Sources */,
+				FA38F0AF2BAA950800F77BA7 /* OptimizableTypes.cpp in Sources */,
+				FA38F0B22BAA950800F77BA7 /* MapPoint.cc in Sources */,
 				FA28D3402BA96A48008E1E39 /* orbslam3_iosApp.swift in Sources */,
+				FA38F0BE2BAA950800F77BA7 /* KannalaBrandt8.cpp in Sources */,
+				FA38F0AE2BAA950800F77BA7 /* ORBextractor.cc in Sources */,
 				FA28D36B2BA96E4C008E1E39 /* CameraPreviewView.swift in Sources */,
+				FA38F0C22BAA950800F77BA7 /* G2oTypes.cc in Sources */,
+				FA38F0B92BAA950800F77BA7 /* ImuTypes.cc in Sources */,
+				FA38F0C02BAA950800F77BA7 /* System.cc in Sources */,
+				FA38F0A92BAA950800F77BA7 /* KeyFrameDatabase.cc in Sources */,
+				FA38F0AC2BAA950800F77BA7 /* Atlas.cc in Sources */,
+				FA38F0BA2BAA950800F77BA7 /* TwoViewReconstruction.cc in Sources */,
+				FA38F0BF2BAA950800F77BA7 /* Pinhole.cpp in Sources */,
+				FA38F0B02BAA950800F77BA7 /* GeometricTools.cc in Sources */,
+				FA38F0BB2BAA950800F77BA7 /* KeyFrame.cc in Sources */,
+				FA38F0B82BAA950800F77BA7 /* Frame.cc in Sources */,
 				FA28D3722BA97FB9008E1E39 /* image_processor.mm in Sources */,
+				FA38F0BC2BAA950800F77BA7 /* MapDrawer.cc in Sources */,
+				FA38F0B42BAA950800F77BA7 /* LocalMapping.cc in Sources */,
+				FA38F0C12BAA950800F77BA7 /* Viewer.cc in Sources */,
+				FA38F0B62BAA950800F77BA7 /* Optimizer.cc in Sources */,
+				FA38F0C42BAA950800F77BA7 /* Config.cc in Sources */,
+				FA38F0B32BAA950800F77BA7 /* Settings.cc in Sources */,
+				FA38F0BD2BAA950800F77BA7 /* Converter.cc in Sources */,
+				FA38F0B72BAA950800F77BA7 /* LoopClosing.cc in Sources */,
+				FA38F0B52BAA950800F77BA7 /* MLPnPsolver.cpp in Sources */,
+				FA38F0C32BAA950800F77BA7 /* FrameDrawer.cc in Sources */,
+				FA38F0B12BAA950800F77BA7 /* Map.cc in Sources */,
 				FA38EACF2BA9BFEF00F77BA7 /* Utils.swift in Sources */,
+				FA38F0AA2BAA950800F77BA7 /* Tracking.cc in Sources */,
+				FA38F0AB2BAA950800F77BA7 /* ORBmatcher.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,6 +554,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = orbslam3_ios/orbslam3_ios.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -338,8 +568,19 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/orbslam3_ios",
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/deps/eigen3";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Thirdparty/eigen3",
+					"$(PROJECT_DIR)/Thirdparty/g2o",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Thirdparty/DBoW2",
+					"$(PROJECT_DIR)/Thirdparty/Sophus",
+					"$(PROJECT_DIR)/Thirdparty/boost/include",
+					"$(PROJECT_DIR)/Thirdparty/orbslam3",
+					"$(PROJECT_DIR)/Thirdparty/orbslam3/include",
+				);
 				INFOPLIST_KEY_CFBundleDisplayName = orbslam3_ios;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -355,8 +596,18 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Thirdparty/g2o/lib/Release",
+					"$(PROJECT_DIR)/Thirdparty/DBoW2/lib/Debug",
+					"$(PROJECT_DIR)/Thirdparty/boost/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-lDBoW2",
+					"-lg2o",
+					"-lboost_serialization",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.letitbe.orbslam3-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -374,6 +625,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = orbslam3_ios/orbslam3_ios.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -387,8 +639,19 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/orbslam3_ios",
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/deps/eigen3";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Thirdparty/eigen3",
+					"$(PROJECT_DIR)/Thirdparty/g2o",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Thirdparty/DBoW2",
+					"$(PROJECT_DIR)/Thirdparty/Sophus",
+					"$(PROJECT_DIR)/Thirdparty/boost/include",
+					"$(PROJECT_DIR)/Thirdparty/orbslam3",
+					"$(PROJECT_DIR)/Thirdparty/orbslam3/include",
+				);
 				INFOPLIST_KEY_CFBundleDisplayName = orbslam3_ios;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -404,8 +667,18 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Thirdparty/g2o/lib/Release",
+					"$(PROJECT_DIR)/Thirdparty/DBoW2/lib/Debug",
+					"$(PROJECT_DIR)/Thirdparty/boost/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-lDBoW2",
+					"-lg2o",
+					"-lboost_serialization",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.letitbe.orbslam3-ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;

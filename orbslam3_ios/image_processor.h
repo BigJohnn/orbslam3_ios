@@ -23,7 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (UIImage *) Process: (UIImage *) img;
 - (void)imuStartUpdate;
 
-
 @end
 
 NS_ASSUME_NONNULL_END

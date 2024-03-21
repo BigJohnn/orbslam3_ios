@@ -10,6 +10,7 @@
 
 #import "image_processor.h"
 #include <Eigen/Dense>
+#include <System.h>
 
 #define GRAVITY ((double)9.805)
 
@@ -62,16 +63,43 @@ queue<ImuConstPtr> imu_msg_buf;
 // Lock the IMU data feedback to featuretracker
 std::mutex m_imu_feedback;
 
+using namespace ORB_SLAM3;
+std::shared_ptr<System> slam;
+std::thread track_thread;
+std::mutex track_mutex;
+
 + (ImageProcessor *) shared {
     if(!mImageProcessor) {
         mImageProcessor = [ImageProcessor new];
         [mImageProcessor imuStartUpdate];
         mImageProcessor.motionManager = [[CMMotionManager alloc] init];
+        
+        auto* path = [[[NSBundle mainBundle] pathForResource:@"ORBvoc" ofType:@"bin"] UTF8String];
+        slam = std::make_shared<System>(path, "", System::IMU_MONOCULAR);
+        
+        
     }
     return mImageProcessor;
 }
 
+bool is_tracking = false;
 - (nonnull UIImage *)Process:(nonnull UIImage *)img {
+    if(!is_tracking) {
+        
+        static auto track_func = []() {
+        //            [_condition lock];
+            std::unique_lock<std::mutex> lock(track_mutex);
+            while(true) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            }
+        };
+        track_thread = thread(track_func);
+        track_thread.detach();
+        
+//        slam->TrackMonocular(<#const cv::Mat &im#>, <#const double &timestamp#>)
+        
+        is_tracking = true;
+    }
     cv::Mat src;
     using namespace cv;
         UIImageToMat(img, src);
@@ -231,5 +259,43 @@ vector<IMU_MSG> gyro_buf;  // for Interpolation
      }];
 }
 
+/*
+ Send imu data and visual data
+ */
+std::vector<std::pair<std::vector<ImuConstPtr>, ImgConstPtr>>
+getMeasurements()
+{
+    std::vector<std::pair<std::vector<ImuConstPtr>, ImgConstPtr>> measurements;
+    while (true)
+    {
+        if (imu_msg_buf.empty() || img_msg_buf.empty())
+            return measurements;
+        
+        if (!(imu_msg_buf.back()->header > img_msg_buf.front()->header))
+        {
+            NSLog(@"wait for imu, only should happen at the beginning");
+            return measurements;
+        }
+        
+        if (!(imu_msg_buf.front()->header < img_msg_buf.front()->header))
+        {
+            NSLog(@"throw img, only should happen at the beginning");
+            img_msg_buf.pop();
+            continue;
+        }
+        ImgConstPtr img_msg = img_msg_buf.front();
+        img_msg_buf.pop();
+        
+        std::vector<ImuConstPtr> IMUs;
+        while (imu_msg_buf.front()->header <= img_msg->header)
+        {
+            IMUs.emplace_back(imu_msg_buf.front());
+            imu_msg_buf.pop();
+        }
+        //NSLog(@"IMU_buf = %d",IMUs.size());
+        measurements.emplace_back(IMUs, img_msg);
+    }
+    return measurements;
+}
 
 @end
