@@ -613,6 +613,7 @@ void Tracking::newParameterLoader(Settings *settings) {
     const float sf = sqrt(mImuFreq);
     mpImuCalib = new IMU::Calib(Tbc,Ng*sf,Na*sf,Ngw/sf,Naw/sf);
 
+    delete mpImuPreintegratedFromLastKF;
     mpImuPreintegratedFromLastKF = new IMU::Preintegrated(IMU::Bias(),*mpImuCalib);
 }
 
@@ -1417,7 +1418,7 @@ bool Tracking::ParseIMUParamFile(cv::FileStorage &fSettings)
     cout << "IMU accelerometer walk: " << Naw << " m/s^3/sqrt(Hz)" << endl;
 
     mpImuCalib = new IMU::Calib(Tbc,Ng*sf,Na*sf,Ngw/sf,Naw/sf);
-
+    delete mpImuPreintegratedFromLastKF;
     mpImuPreintegratedFromLastKF = new IMU::Preintegrated(IMU::Bias(),*mpImuCalib);
 
 
@@ -1565,7 +1566,10 @@ Sophus::SE3f Tracking::GrabImageRGBD(const cv::Mat &imRGB,const cv::Mat &imD, co
 
 Sophus::SE3f Tracking::GrabImageMonocular(const cv::Mat &im, const double &timestamp, string filename)
 {
+    
+    
     mImGray = im;
+    
     if(mImGray.channels()==3)
     {
         if(mbRGB)
@@ -1580,7 +1584,8 @@ Sophus::SE3f Tracking::GrabImageMonocular(const cv::Mat &im, const double &times
         else
             cvtColor(mImGray,mImGray,cv::COLOR_BGRA2GRAY);
     }
-
+    
+    
     if (mSensor == System::MONOCULAR)
     {
         if(mState==NOT_INITIALIZED || mState==NO_IMAGES_YET ||(lastID - initID) < mMaxFrames)
@@ -1592,12 +1597,24 @@ Sophus::SE3f Tracking::GrabImageMonocular(const cv::Mat &im, const double &times
     {
         if(mState==NOT_INITIALIZED || mState==NO_IMAGES_YET)
         {
-            mCurrentFrame = Frame(mImGray,timestamp,mpIniORBextractor,mpORBVocabulary,mpCamera,mDistCoef,mbf,mThDepth,&mLastFrame,*mpImuCalib);
+            printf("mState==NO_IMAGES_YET\n");
+            
+//            mCurrentFrame = Frame(mImGray,timestamp,mpIniORBextractor,mpORBVocabulary,mpCamera,mDistCoef,mbf,mThDepth,&mLastFrame,*mpImuCalib);
+//            return Sophus::SE3f();
+            delete mpCurrentFrame;
+            mpCurrentFrame = new Frame(mImGray,timestamp,mpIniORBextractor,mpORBVocabulary,mpCamera,mDistCoef,mbf,mThDepth,&mLastFrame,*mpImuCalib);
+            
         }
-        else
-            mCurrentFrame = Frame(mImGray,timestamp,mpORBextractorLeft,mpORBVocabulary,mpCamera,mDistCoef,mbf,mThDepth,&mLastFrame,*mpImuCalib);
+        else {
+            delete mpCurrentFrame;
+            mpCurrentFrame =new  Frame(mImGray,timestamp,mpORBextractorLeft,mpORBVocabulary,mpCamera,mDistCoef,mbf,mThDepth,&mLastFrame,*mpImuCalib);
+        }
+
+        mCurrentFrame = *mpCurrentFrame;
     }
 
+    
+    
     if (mState==NO_IMAGES_YET)
         t0=timestamp;
 
@@ -1731,7 +1748,7 @@ void Tracking::PreintegrateIMU()
 
     mCurrentFrame.setIntegrated();
 
-    //Verbose::PrintMess("Preintegration is finished!! ", Verbose::VERBOSITY_DEBUG);
+    Verbose::PrintMess("Preintegration is finished!! ", Verbose::VERBOSITY_DEBUG);
 }
 
 
@@ -1855,7 +1872,8 @@ void Tracking::Track()
         }
     }
 
-
+    
+    
     if ((mSensor == System::IMU_MONOCULAR || mSensor == System::IMU_STEREO || mSensor == System::IMU_RGBD) && mpLastKeyFrame)
         mCurrentFrame.SetNewBias(mpLastKeyFrame->GetImuBias());
 
@@ -1911,7 +1929,9 @@ void Tracking::Track()
 
         if(mState!=OK) // If rightly initialized, mState=OK
         {
-            mLastFrame = Frame(mCurrentFrame);
+            delete mpLastFrame;
+            mpLastFrame = new Frame(mCurrentFrame);
+            mLastFrame = *mpLastFrame;
             return;
         }
 
@@ -2453,9 +2473,14 @@ void Tracking::MonocularInitialization()
         // Set Reference Frame
         if(mCurrentFrame.mvKeys.size()>100)
         {
-
-            mInitialFrame = Frame(mCurrentFrame);
-            mLastFrame = Frame(mCurrentFrame);
+            delete mpInitialFrame;
+            mpInitialFrame = new Frame(mCurrentFrame);
+            mInitialFrame = *mpInitialFrame;
+            
+            delete mpLastFrame;
+            mpLastFrame = new Frame(mCurrentFrame);
+            mLastFrame = *mpLastFrame;
+            
             mvbPrevMatched.resize(mCurrentFrame.mvKeysUn.size());
             for(size_t i=0; i<mCurrentFrame.mvKeysUn.size(); i++)
                 mvbPrevMatched[i]=mCurrentFrame.mvKeysUn[i].pt;
@@ -2464,10 +2489,10 @@ void Tracking::MonocularInitialization()
 
             if (mSensor == System::IMU_MONOCULAR)
             {
-                if(mpImuPreintegratedFromLastKF)
-                {
-                    delete mpImuPreintegratedFromLastKF;
-                }
+//                if(mpImuPreintegratedFromLastKF) //check
+//                {
+//                    delete mpImuPreintegratedFromLastKF;
+//                }
                 mpImuPreintegratedFromLastKF = new IMU::Preintegrated(IMU::Bias(),*mpImuCalib);
                 mCurrentFrame.mpImuPreintegrated = mpImuPreintegratedFromLastKF;
 
@@ -2529,8 +2554,8 @@ void Tracking::CreateInitialMapMonocular()
     KeyFrame* pKFini = new KeyFrame(mInitialFrame,mpAtlas->GetCurrentMap(),mpKeyFrameDB);
     KeyFrame* pKFcur = new KeyFrame(mCurrentFrame,mpAtlas->GetCurrentMap(),mpKeyFrameDB);
 
-    if(mSensor == System::IMU_MONOCULAR)
-        pKFini->mpImuPreintegrated = (IMU::Preintegrated*)(NULL);
+//    if(mSensor == System::IMU_MONOCULAR)
+//        pKFini->mpImuPreintegrated = (IMU::Preintegrated*)(NULL);
 
 
     pKFini->ComputeBoW();
@@ -2615,7 +2640,9 @@ void Tracking::CreateInitialMapMonocular()
         pKFcur->mPrevKF = pKFini;
         pKFini->mNextKF = pKFcur;
         pKFcur->mpImuPreintegrated = mpImuPreintegratedFromLastKF;
-
+        
+//        delete mpImuPreintegratedFromLastKF;
+        //TODO: pKFcur->mpImuPreintegrated->GetUpdatedBias() CRASH, check
         mpImuPreintegratedFromLastKF = new IMU::Preintegrated(pKFcur->mpImuPreintegrated->GetUpdatedBias(),pKFcur->mImuCalib);
     }
 
@@ -3241,6 +3268,7 @@ void Tracking::CreateNewKeyFrame()
     // Reset preintegration from last KF (Create new object)
     if (mSensor == System::IMU_MONOCULAR || mSensor == System::IMU_STEREO || mSensor == System::IMU_RGBD)
     {
+        delete mpImuPreintegratedFromLastKF;
         mpImuPreintegratedFromLastKF = new IMU::Preintegrated(pKF->GetImuBias(),pKF->mImuCalib);
     }
 
@@ -3914,8 +3942,13 @@ void Tracking::ResetActiveMap(bool bLocMap)
     mnInitialFrameId = mCurrentFrame.mnId;
     mnLastRelocFrameId = mCurrentFrame.mnId;
 
-    mCurrentFrame = Frame();
-    mLastFrame = Frame();
+    delete mpCurrentFrame;
+    mpCurrentFrame = new Frame();
+    mCurrentFrame = *mpCurrentFrame;
+    
+    delete mpLastFrame;
+    mpLastFrame = new Frame();
+    mLastFrame = *mpLastFrame;
     mpReferenceKF = static_cast<KeyFrame*>(NULL);
     mpLastKeyFrame = static_cast<KeyFrame*>(NULL);
     mvIniMatches.clear();

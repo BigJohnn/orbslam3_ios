@@ -409,7 +409,7 @@ public:
     KeyFrame* mPrevKF;
     KeyFrame* mNextKF;
 
-    IMU::Preintegrated* mpImuPreintegrated;
+    IMU::Preintegrated* mpImuPreintegrated = nullptr;
     IMU::Calib mImuCalib;
 
     unsigned int mnOriginMapId;

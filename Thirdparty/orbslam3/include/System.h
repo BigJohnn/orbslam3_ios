@@ -39,7 +39,7 @@
 #include "Viewer.h"
 #include "ImuTypes.h"
 #include "Settings.h"
-
+#include "Timer.h"
 
 namespace ORB_SLAM3
 {
@@ -185,6 +185,9 @@ public:
     void ChangeDataset();
 
     float GetImageScale();
+    
+    void setCFScaled(cv::Mat const& input, double timestamp, float scale=0.5f);
+    cv::Mat getCFScaled(double& timestamp);
 
 #ifdef REGISTER_TIMES
     void InsertRectTime(double& time);
@@ -263,6 +266,10 @@ private:
 
     Settings* settings_;
     cv::Mat* m_descriptor = nullptr;
+    
+    std::mutex mMutexLoadCF;
+    cv::Mat mCurFrameScaled;
+    double mCurFrameTimeStamp = 0;
 };
 
 }// namespace ORB_SLAM

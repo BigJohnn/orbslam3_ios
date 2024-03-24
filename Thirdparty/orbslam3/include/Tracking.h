@@ -135,7 +135,9 @@ public:
     int mSensor;
 
     // Current Frame
+    Frame* mpCurrentFrame = nullptr;
     Frame mCurrentFrame;
+    Frame* mpLastFrame = nullptr;
     Frame mLastFrame;
 
     cv::Mat mImGray;
@@ -146,6 +148,7 @@ public:
     std::vector<cv::Point2f> mvbPrevMatched;
     std::vector<cv::Point3f> mvIniP3D;
     Frame mInitialFrame;
+    Frame* mpInitialFrame = nullptr;
 
     // Lists used to recover the full camera trajectory at the end of the execution.
     // Basically we store the reference keyframe for each frame and its relative transformation
@@ -232,7 +235,7 @@ protected:
     bool mbMapUpdated;
 
     // Imu preintegration from last frame
-    IMU::Preintegrated *mpImuPreintegratedFromLastKF;
+    IMU::Preintegrated *mpImuPreintegratedFromLastKF = nullptr;
 
     // Queue of IMU measurements between frames
     std::list<IMU::Point> mlQueueImuData;

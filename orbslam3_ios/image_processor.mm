@@ -18,33 +18,18 @@
 
 using namespace Eigen;
 using namespace std;
-struct IMU_MSG {
-    NSTimeInterval header;
-    Vector3d acc;
-    Vector3d gyr;
-};
 
-struct IMG_MSG {
-    NSTimeInterval header;
-    map<int, Vector3d> point_clouds;
-};
-
-struct IMG_DATA {
-    NSTimeInterval header;
-    UIImage *image;
-};
-typedef shared_ptr <IMU_MSG const > ImuConstPtr;
-typedef shared_ptr <IMG_MSG const > ImgConstPtr;
-
+using namespace ORB_SLAM3;
+std::mutex mutexImuMeas;
+vector<IMU::Point> vImuMeas;
 
 ImageProcessor* mImageProcessor;
-queue<IMG_DATA> imgDataBuf;
+
 NSMutableData *imuDataBuf = [[NSMutableData alloc] init];
 NSData *imuReader;
-IMG_DATA imgData;
-IMU_MSG imuData;
+//IMU_MSG imuData;
 // Lock the feature and imu data buffer
-std::mutex m_buf;
+//std::mutex m_buf;
 std::condition_variable con;
 
 int imu_prepare = 0;
@@ -53,67 +38,117 @@ NSTimeInterval current_time = -1;
 
 NSTimeInterval lateast_imu_time = -1;
 
-
-
-// Store the feature data
-queue<ImgConstPtr> img_msg_buf;
-
 // Store the IMU data
-queue<ImuConstPtr> imu_msg_buf;
+queue<IMU::Point> meas;
 // Lock the IMU data feedback to featuretracker
 std::mutex m_imu_feedback;
 
-using namespace ORB_SLAM3;
+
 std::shared_ptr<System> slam;
 std::thread track_thread;
 std::mutex track_mutex;
+
 
 + (ImageProcessor *) shared {
     if(!mImageProcessor) {
         mImageProcessor = [ImageProcessor new];
         [mImageProcessor imuStartUpdate];
-        mImageProcessor.motionManager = [[CMMotionManager alloc] init];
+        slam.reset();
         
-        auto* path = [[[NSBundle mainBundle] pathForResource:@"ORBvoc" ofType:@"bin"] UTF8String];
-        slam = std::make_shared<System>(path, "", System::IMU_MONOCULAR);
-        
+        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+            auto* voc_path = [[[NSBundle mainBundle] pathForResource:@"ORBvoc" ofType:@"bin"] UTF8String];
+            slam = std::make_shared<System>(voc_path,
+                                            [[[NSBundle mainBundle] pathForResource:@"ipxsmax_test" ofType:@"yaml"] UTF8String], System::IMU_MONOCULAR);
+        });
         
     }
     return mImageProcessor;
 }
 
 bool is_tracking = false;
+bool is_imu_started = false;
 - (nonnull UIImage *)Process:(nonnull UIImage *)img {
     if(!is_tracking) {
-        
         static auto track_func = []() {
-        //            [_condition lock];
-            std::unique_lock<std::mutex> lock(track_mutex);
-            while(true) {
+            
+            while(!slam) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            }
+            
+            int t_prev = 0;
+            
+            while(true) {
+                
+                Timer timer;
+                
+                double t = 0;
+                
+                auto && cf = slam->getCFScaled(t);
+                
+                vector<IMU::Point> meas_cur_frame;
+                if(!cf.empty()) {
+                    {
+                        if(0 == t_prev) {
+                            t_prev = t;
+                        }
+                        
+                        std::unique_lock<std::mutex> lk(mutexImuMeas);
+                        
+                        if(!meas.empty()) {
+                            while(!meas.empty() && meas.front().t <= t) {
+                                meas_cur_frame.push_back(meas.front());
+//                                printf("meas_cur_frame.push_back(%lf)\n", meas.front().t);
+                                meas.pop();
+                            }
+                        }
+                    }
+                    
+                    // Only track if there's both image and IMU data
+                    if (!cf.empty() && !meas_cur_frame.empty()) {
+                        const int capacity = 10;
+                        while(meas_cur_frame.size()>capacity) meas_cur_frame.erase(meas_cur_frame.begin());
+                        string tname = std::to_string(t);
+                        printf("meas_cur_frame.size == %lu", meas_cur_frame.size());
+                        
+                        {
+                            slam->TrackMonocular(cf, t, meas_cur_frame, tname);
+                        }
+                        
+                        timer.tok("Track spent", true);
+                        auto t2 = timer.durationMilliSeconds();
+                        float track_fps = std::min(30.0f, static_cast<float>(1000/t2));
+
+                        auto dt = (t - t_prev) * 1e3;
+                        if(t2 < 33) {
+                            usleep((33-t2) * 1e3);
+                        }
+                    }
+                }
+
             }
         };
         track_thread = thread(track_func);
         track_thread.detach();
         
-//        slam->TrackMonocular(<#const cv::Mat &im#>, <#const double &timestamp#>)
-        
         is_tracking = true;
     }
+    
     cv::Mat src;
     using namespace cv;
-        UIImageToMat(img, src);
+    UIImageToMat(img, src);
     
-//        resizeImg(src);
-//        cv::medianBlur(src, src, 3);
-//        cv::Mat sharpen_op = (cv::Mat_<char>(3, 3) <<
-//                              0, -1, 0,
-//                              -1, 5, -1,
-//                              0, -1, 0);
-//        filter2D(src, src, CV_32F, sharpen_op);
-//        convertScaleAbs(src, src);
-        cv::cvtColor(src, src, cv::COLOR_BGR2GRAY);
 
+    {
+        if(slam) {
+            
+            slam->setCFScaled(src, [[NSProcessInfo processInfo] systemUptime]);
+        }
+//        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    }
+    
+    
+    
+    
     return MatToUIImage(src);
 }
 
@@ -128,10 +163,11 @@ bool is_tracking = false;
  */
 bool imuDataFinished = false;
 bool vinsDataFinished = false;
-shared_ptr<IMU_MSG> cur_acc(new IMU_MSG());
-vector<IMU_MSG> gyro_buf;  // for Interpolation
+shared_ptr<IMU::Point> cur_acc(new IMU::Point(0,0,0,0,0,0,0));
+vector<IMU::Point> gyro_buf;  // for Interpolation
 - (void)imuStartUpdate
 {
+    printf("imuStartUpdate\n ");
     CMMotionManager *motionManager = [[CMMotionManager alloc] init];
     if (!motionManager.accelerometerAvailable) {
         NSLog(@"没有加速计");
@@ -149,24 +185,31 @@ vector<IMU_MSG> gyro_buf;  // for Interpolation
     [motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue]
                                         withHandler:^(CMAccelerometerData *latestAcc, NSError *error)
      {
+        
          double header = motionManager.deviceMotion.timestamp;
-         motionManager.deviceMotion.attitude.roll * 180.0 / M_PI,  //pitch for vins
-         motionManager.deviceMotion.attitude.pitch * 180.0 / M_PI;  //roll for vins
+         motionManager.deviceMotion.attitude.roll * 180.0 / M_PI,  //pitch
+         motionManager.deviceMotion.attitude.pitch * 180.0 / M_PI;  //roll
          if(imu_prepare<10)
          {
              imu_prepare++;
          }
-         shared_ptr<IMU_MSG> acc_msg(new IMU_MSG());
-         acc_msg->header = latestAcc.timestamp;
-         acc_msg->acc << -latestAcc.acceleration.x * GRAVITY,
-         -latestAcc.acceleration.y * GRAVITY,
-         -latestAcc.acceleration.z * GRAVITY;
+        
+         shared_ptr<IMU::Point> acc_msg(new IMU::Point(0,0,0,0,0,0,0));
+         acc_msg->t = latestAcc.timestamp;
+//         acc_msg->a << -latestAcc.acceleration.x * GRAVITY,
+//         -latestAcc.acceleration.y * GRAVITY,
+//         -latestAcc.acceleration.z * GRAVITY;
+        acc_msg->a << latestAcc.acceleration.x,
+        -latestAcc.acceleration.y,
+        latestAcc.acceleration.z;
          cur_acc = acc_msg;
-         //printf("imu acc update %lf %lf %lf %lf\n", acc_msg->header, acc_msg->acc.x(), acc_msg->acc.y(), acc_msg->acc.z());
+//         printf("imu acc update %lf %lf %lf %lf\n", acc_msg->t, acc_msg->a.x(), acc_msg->a.y(), acc_msg->a.z());
          
      }];
     [motionManager startGyroUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMGyroData *latestGyro, NSError *error)
      {
+        Timer timer;
+        timer.tik();
          //The time stamp is the amount of time in seconds since the device booted.
          NSTimeInterval header = latestGyro.timestamp;
          if(header<=0)
@@ -174,10 +217,10 @@ vector<IMU_MSG> gyro_buf;  // for Interpolation
          if(imu_prepare < 10)
              return;
          
-         IMU_MSG gyro_msg;
-         gyro_msg.header = header;
-         gyro_msg.gyr << latestGyro.rotationRate.x,
-         latestGyro.rotationRate.y,
+        IMU::Point gyro_msg;
+         gyro_msg.t = header;
+         gyro_msg.w << latestGyro.rotationRate.x,
+         -latestGyro.rotationRate.y,
          latestGyro.rotationRate.z;
          
          if(gyro_buf.size() == 0)
@@ -192,110 +235,32 @@ vector<IMU_MSG> gyro_buf;  // for Interpolation
              gyro_buf[1] = gyro_msg;
          }
          //interpolation
-         shared_ptr<IMU_MSG> imu_msg(new IMU_MSG());
-         if(cur_acc->header >= gyro_buf[0].header && cur_acc->header < gyro_buf[1].header)
+         IMU::Point imu_msg;
+         if(cur_acc->t >= gyro_buf[0].t && cur_acc->t < gyro_buf[1].t)
          {
-             imu_msg->header = cur_acc->header;
-             imu_msg->acc = cur_acc->acc;
-             imu_msg->gyr = gyro_buf[0].gyr + (cur_acc->header - gyro_buf[0].header)*(gyro_buf[1].gyr - gyro_buf[0].gyr)/(gyro_buf[1].header - gyro_buf[0].header);
-             //printf("imu gyro update %lf %lf %lf\n", gyro_buf[0].header, imu_msg->header, gyro_buf[1].header);
-             //printf("imu inte update %lf %lf %lf %lf\n", imu_msg->header, gyro_buf[0].gyr.x(), imu_msg->gyr.x(), gyro_buf[1].gyr.x());
+             imu_msg.t = cur_acc->t;
+             imu_msg.a = cur_acc->a;
+             
+             // w 0  1
+             // a 0  1
+             imu_msg.w = gyro_buf[0].w + (cur_acc->t - gyro_buf[0].t)*(gyro_buf[1].w - gyro_buf[0].w)/(gyro_buf[1].t - gyro_buf[0].t);
+//             printf("imu gyro update %lf %lf %lf\n", gyro_buf[0].t, imu_msg->t, gyro_buf[1].t);
+//             printf("imu inte update %lf %lf %lf %lf %lf %lf %lf\n", imu_msg.t,
+//                    imu_msg.a.x(), imu_msg.a.y(), imu_msg.a.z(),
+//                    imu_msg.w.x(), imu_msg.w.y(), imu_msg.w.z()
+//                    );
          }
          else
          {
-             printf("imu error %lf %lf %lf\n", gyro_buf[0].header, cur_acc->header, gyro_buf[1].header);
+             printf("imu error %lf %lf %lf\n", gyro_buf[0].t, cur_acc->t, gyro_buf[1].t);
              return;
          }
          
-         //for save data
-//         if(start_playback)
-//         {
-//             //TS(read_imu_buf);
-//             if(imuDataFinished)
-//                 return;
-//             [imuReader getBytes:&imuData range: NSMakeRange(imuDataReadIndex * sizeof(imuData), sizeof(imuData))];
-//             imuDataReadIndex++;
-//             if(imuData.header == 0)
-//             {
-//                 imuDataFinished = true;
-//                 return;
-//             }
-//             imu_msg->header = imuData.header;
-//             imu_msg->acc = imuData.acc;
-//             imu_msg->gyr = imuData.gyr;
-//             //TE(read_imu_buf);
-//         }
-         
-//         if(start_record)
-//         {
-//             TS(record_imu_buf);
-//             imuData.header = imu_msg->header;
-//             imuData.acc = imu_msg->acc;
-//             imuData.gyr = imu_msg->gyr;
-//             [imuDataBuf appendBytes:&imuData length:sizeof(imuData)];
-//             imuDataIndex++;
-//             TE(record_imu_buf);
-////             NSLog(@"record: imu %lf, %lu",imuData.header,imuDataIndex);
-//         }
-         
-         lateast_imu_time = imu_msg->header;
-         
-         //img_msg callback
-//         {
-//             IMU_MSG_LOCAL imu_msg_local;
-//             imu_msg_local.header = imu_msg->header;
-//             imu_msg_local.acc = imu_msg->acc;
-//             imu_msg_local.gyr = imu_msg->gyr;
-//             
-//             m_imu_feedback.lock();
-//             local_imu_msg_buf.push(imu_msg_local);
-//             m_imu_feedback.unlock();
-//         }
-         m_buf.lock();
-         imu_msg_buf.push(imu_msg);
-         NSLog(@"IMU_buf timestamp %lf, acc_x = %lf",imu_msg_buf.front()->header,imu_msg_buf.front()->acc.x());
-         m_buf.unlock();
-         con.notify_one();
+        {
+            std::unique_lock<std::mutex> lock2(mutexImuMeas);
+             meas.push(imu_msg);
+        }
      }];
-}
-
-/*
- Send imu data and visual data
- */
-std::vector<std::pair<std::vector<ImuConstPtr>, ImgConstPtr>>
-getMeasurements()
-{
-    std::vector<std::pair<std::vector<ImuConstPtr>, ImgConstPtr>> measurements;
-    while (true)
-    {
-        if (imu_msg_buf.empty() || img_msg_buf.empty())
-            return measurements;
-        
-        if (!(imu_msg_buf.back()->header > img_msg_buf.front()->header))
-        {
-            NSLog(@"wait for imu, only should happen at the beginning");
-            return measurements;
-        }
-        
-        if (!(imu_msg_buf.front()->header < img_msg_buf.front()->header))
-        {
-            NSLog(@"throw img, only should happen at the beginning");
-            img_msg_buf.pop();
-            continue;
-        }
-        ImgConstPtr img_msg = img_msg_buf.front();
-        img_msg_buf.pop();
-        
-        std::vector<ImuConstPtr> IMUs;
-        while (imu_msg_buf.front()->header <= img_msg->header)
-        {
-            IMUs.emplace_back(imu_msg_buf.front());
-            imu_msg_buf.pop();
-        }
-        //NSLog(@"IMU_buf = %d",IMUs.size());
-        measurements.emplace_back(IMUs, img_msg);
-    }
-    return measurements;
 }
 
 @end

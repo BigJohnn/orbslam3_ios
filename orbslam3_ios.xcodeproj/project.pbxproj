@@ -45,6 +45,8 @@
 		FA38F0C32BAA950800F77BA7 /* FrameDrawer.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A72BAA950800F77BA7 /* FrameDrawer.cc */; };
 		FA38F0C42BAA950800F77BA7 /* Config.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A82BAA950800F77BA7 /* Config.cc */; };
 		FA38F0CA2BAC253600F77BA7 /* ORBvoc.bin in Resources */ = {isa = PBXBuildFile; fileRef = FA38F0C92BAC031300F77BA7 /* ORBvoc.bin */; };
+		FADFF6FA2BAD6E2B002E5B03 /* ipxsmax_test.yaml in Resources */ = {isa = PBXBuildFile; fileRef = FADFF6F92BAD6E22002E5B03 /* ipxsmax_test.yaml */; };
+		FADFF6FD2BAE8124002E5B03 /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FADFF6FB2BAE8124002E5B03 /* Timer.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -125,6 +127,9 @@
 		FA38F0A82BAA950800F77BA7 /* Config.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Config.cc; sourceTree = "<group>"; };
 		FA38F0C62BAAD24A00F77BA7 /* CoreAudioTypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudioTypes.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.2.sdk/System/Library/Frameworks/CoreAudioTypes.framework; sourceTree = DEVELOPER_DIR; };
 		FA38F0C92BAC031300F77BA7 /* ORBvoc.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = ORBvoc.bin; sourceTree = "<group>"; };
+		FADFF6F92BAD6E22002E5B03 /* ipxsmax_test.yaml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = ipxsmax_test.yaml; sourceTree = "<group>"; };
+		FADFF6FB2BAE8124002E5B03 /* Timer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Timer.cpp; sourceTree = "<group>"; };
+		FADFF6FC2BAE8124002E5B03 /* Timer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +147,7 @@
 		FA28D3332BA96A48008E1E39 = {
 			isa = PBXGroup;
 			children = (
+				FADFF6F82BAD6E22002E5B03 /* Settings */,
 				FA38F0C82BAC031300F77BA7 /* Vocabulary */,
 				FA38F0692BAA950800F77BA7 /* orbslam3 */,
 				FA28D33E2BA96A48008E1E39 /* orbslam3_ios */,
@@ -254,6 +260,7 @@
 				FA38F0882BAA950800F77BA7 /* ImuTypes.h */,
 				FA38F0892BAA950800F77BA7 /* Sim3Solver.h */,
 				FA38F08A2BAA950800F77BA7 /* MapDrawer.h */,
+				FADFF6FC2BAE8124002E5B03 /* Timer.h */,
 			);
 			path = include;
 			sourceTree = "<group>";
@@ -298,6 +305,7 @@
 				FA38F0A62BAA950800F77BA7 /* G2oTypes.cc */,
 				FA38F0A72BAA950800F77BA7 /* FrameDrawer.cc */,
 				FA38F0A82BAA950800F77BA7 /* Config.cc */,
+				FADFF6FB2BAE8124002E5B03 /* Timer.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -317,6 +325,14 @@
 				FA38F0C92BAC031300F77BA7 /* ORBvoc.bin */,
 			);
 			path = Vocabulary;
+			sourceTree = "<group>";
+		};
+		FADFF6F82BAD6E22002E5B03 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				FADFF6F92BAD6E22002E5B03 /* ipxsmax_test.yaml */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -378,6 +394,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FADFF6FA2BAD6E2B002E5B03 /* ipxsmax_test.yaml in Resources */,
 				FA38F0CA2BAC253600F77BA7 /* ORBvoc.bin in Resources */,
 				FA28D3482BA96A49008E1E39 /* Preview Assets.xcassets in Resources */,
 				FA28D3442BA96A49008E1E39 /* Assets.xcassets in Resources */,
@@ -424,6 +441,7 @@
 				FA38F0B12BAA950800F77BA7 /* Map.cc in Sources */,
 				FA38EACF2BA9BFEF00F77BA7 /* Utils.swift in Sources */,
 				FA38F0AA2BAA950800F77BA7 /* Tracking.cc in Sources */,
+				FADFF6FD2BAE8124002E5B03 /* Timer.cpp in Sources */,
 				FA38F0AB2BAA950800F77BA7 /* ORBmatcher.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

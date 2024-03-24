@@ -67,43 +67,43 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
         cout << "RGB-D-Inertial" << endl;
 
     //Check settings file
-//    cv::FileStorage fsSettings(strSettingsFile.c_str(), cv::FileStorage::READ);
-//    if(!fsSettings.isOpened())
-//    {
-//       cerr << "Failed to open settings file at: " << strSettingsFile << endl;
-//       exit(-1);
-//    }
-//
-//    cv::FileNode node = fsSettings["File.version"];
-//    if(!node.empty() && node.isString() && node.string() == "1.0"){
-//        settings_ = new Settings(strSettingsFile,mSensor);
-//
-//        mStrLoadAtlasFromFile = settings_->atlasLoadFile();
-//        mStrSaveAtlasToFile = settings_->atlasSaveFile();
-//
-//        cout << (*settings_) << endl;
-//    }
-//    else{
-//        settings_ = nullptr;
-//        cv::FileNode node = fsSettings["System.LoadAtlasFromFile"];
-//        if(!node.empty() && node.isString())
-//        {
-//            mStrLoadAtlasFromFile = (string)node;
-//        }
-//
-//        node = fsSettings["System.SaveAtlasToFile"];
-//        if(!node.empty() && node.isString())
-//        {
-//            mStrSaveAtlasToFile = (string)node;
-//        }
-//    }
-//
-//    node = fsSettings["loopClosing"];
+    cv::FileStorage fsSettings(strSettingsFile.c_str(), cv::FileStorage::READ);
+    if(!fsSettings.isOpened())
+    {
+       cerr << "Failed to open settings file at: " << strSettingsFile << endl;
+       exit(-1);
+    }
+
+    cv::FileNode node = fsSettings["File.version"];
+    if(!node.empty() && node.isString() && node.string() == "1.0"){
+        settings_ = new Settings(strSettingsFile,mSensor);
+
+        mStrLoadAtlasFromFile = settings_->atlasLoadFile();
+        mStrSaveAtlasToFile = settings_->atlasSaveFile();
+
+        cout << (*settings_) << endl;
+    }
+    else{
+        settings_ = nullptr;
+        cv::FileNode node = fsSettings["System.LoadAtlasFromFile"];
+        if(!node.empty() && node.isString())
+        {
+            mStrLoadAtlasFromFile = (string)node;
+        }
+
+        node = fsSettings["System.SaveAtlasToFile"];
+        if(!node.empty() && node.isString())
+        {
+            mStrSaveAtlasToFile = (string)node;
+        }
+    }
+
+    node = fsSettings["loopClosing"];
     bool activeLC = true;
-//    if(!node.empty())
-//    {
-//        activeLC = static_cast<int>(fsSettings["loopClosing"]) != 0;
-//    }
+    if(!node.empty())
+    {
+        activeLC = static_cast<int>(fsSettings["loopClosing"]) != 0;
+    }
 
     mStrVocabularyFilePath = strVocFile;
 
@@ -196,12 +196,10 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
                                      mSensor==IMU_MONOCULAR || mSensor==IMU_STEREO || mSensor==IMU_RGBD, strSequence);
     mptLocalMapping = new thread(&ORB_SLAM3::LocalMapping::Run,mpLocalMapper);
     mpLocalMapper->mInitFr = initFr;
-//    if(settings_)
-//        mpLocalMapper->mThFarPoints = settings_->thFarPoints();
-//    else
-//        mpLocalMapper->mThFarPoints = fsSettings["thFarPoints"];
-    
-    mpLocalMapper->mThFarPoints = 35.0f; //check
+    if(settings_)
+        mpLocalMapper->mThFarPoints = settings_->thFarPoints();
+    else
+        mpLocalMapper->mThFarPoints = fsSettings["thFarPoints"];
     
     if(mpLocalMapper->mThFarPoints!=0)
     {
@@ -467,7 +465,7 @@ Sophus::SE3f System::TrackMonocular(const cv::Mat &im, const double &timestamp, 
             mpTracker->GrabImuData(vImuMeas[i_imu]);
 
     Sophus::SE3f Tcw = mpTracker->GrabImageMonocular(imToFeed,timestamp,filename);
-
+    
     unique_lock<mutex> lock2(mMutexState);
     mTrackingState = mpTracker->mState;
     mTrackedMapPoints = mpTracker->mCurrentFrame.mvpMapPoints;
@@ -1546,6 +1544,21 @@ string System::CalculateCheckSum(string filename, int type)
 //    }
 //
     return checksum;
+}
+#include <opencv2/imgproc.hpp>
+void System::setCFScaled(cv::Mat const& input, double timestamp, float scale)
+{
+    std::unique_lock<std::mutex> lock(mMutexLoadCF);
+    cv::Mat gray;
+    cv::cvtColor(input, gray, cv::COLOR_BGR2GRAY);
+    cv::resize(gray, mCurFrameScaled, cv::Size(int(input.cols * scale), int(input.rows * scale)));
+    mCurFrameTimeStamp = timestamp;
+}
+
+cv::Mat System::getCFScaled(double& timestamp) {
+    std::unique_lock<std::mutex> lock(mMutexLoadCF);
+    timestamp = mCurFrameTimeStamp;
+    return mCurFrameScaled.clone();
 }
 
 } //namespace ORB_SLAM

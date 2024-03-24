@@ -50,6 +50,111 @@ Frame::Frame(): mpcpi(NULL), mpImuPreintegrated(NULL), mpPrevFrame(NULL), mpImuP
 #endif
 }
 
+Frame& Frame::operator=(const Frame& frame) {
+//    return *this;
+    // Member variables that can be directly copied
+    mpcpi = frame.mpcpi;
+    mpORBvocabulary = frame.mpORBvocabulary;
+    mpORBextractorLeft = frame.mpORBextractorLeft;
+    mpORBextractorRight = frame.mpORBextractorRight;
+    mTimeStamp = frame.mTimeStamp;
+    mK = frame.mK.clone(); // Clone camera calibration matrix
+    if(!frame.mK.empty()) {
+        mK_ = Converter::toMatrix3f(frame.mK); // Convert calibration to Eigen matrix (assuming Converter exists)
+    }
+    
+    mDistCoef = frame.mDistCoef.clone(); // Clone distortion coefficients
+    mbf = frame.mbf;
+    mb = frame.mb;
+    mThDepth = frame.mThDepth;
+    N = frame.N;
+    mvKeys = frame.mvKeys;
+    mvKeysRight = frame.mvKeysRight;
+    mvKeysUn = frame.mvKeysUn;
+    mvuRight = frame.mvuRight;
+    mvDepth = frame.mvDepth;
+    mBowVec = frame.mBowVec;
+    mFeatVec = frame.mFeatVec;
+    // Clone descriptors as they might be large data structures
+    mDescriptors = frame.mDescriptors.clone();
+    mDescriptorsRight = frame.mDescriptorsRight.clone();
+    mvpMapPoints = frame.mvpMapPoints;
+    mvbOutlier = frame.mvbOutlier;
+    mImuCalib = frame.mImuCalib;
+    mnCloseMPs = frame.mnCloseMPs;
+    // Handle pointers (assuming they point to managed resources)
+    if (mpImuPreintegrated != nullptr) {
+        delete mpImuPreintegrated; // Delete existing pre-integrated IMU data
+    }
+    if(nullptr == frame.mpImuPreintegrated) {
+        mpImuPreintegrated = nullptr;
+    }
+    else {
+        mpImuPreintegrated = new IMU::Preintegrated(frame.mpImuPreintegrated); // Deep copy pre-integrated IMU data
+    }
+    
+    if (mpImuPreintegratedFrame != nullptr) {
+        delete mpImuPreintegratedFrame; // Delete existing pre-integrated IMU frame
+    }
+    if(frame.mpImuPreintegratedFrame == nullptr) {
+        mpImuPreintegratedFrame = nullptr;
+    }
+    else {
+        mpImuPreintegratedFrame = new IMU::Preintegrated(frame.mpImuPreintegratedFrame); // Deep copy pre-integrated IMU frame
+    }
+    
+    mImuBias = frame.mImuBias;
+    mnId = frame.mnId;
+    mpReferenceKF = frame.mpReferenceKF;
+    mnScaleLevels = frame.mnScaleLevels;
+      mfScaleFactor = frame.mfScaleFactor;
+      mfLogScaleFactor = frame.mfLogScaleFactor;
+      mvScaleFactors = frame.mvScaleFactors;
+      mvInvScaleFactors = frame.mvInvScaleFactors;
+      mNameFile = frame.mNameFile;
+      mnDataset = frame.mnDataset;
+      mvLevelSigma2 = frame.mvLevelSigma2;
+      mvInvLevelSigma2 = frame.mvInvLevelSigma2;
+    
+    mmProjectPoints = frame.mmProjectPoints;
+    mmMatchedInImage = frame.mmMatchedInImage;
+    
+    mOw = frame.mOw;
+    mRcw = frame.mRcw;
+    mtcw = frame.mtcw;
+    mbImuPreintegrated = frame.mbImuPreintegrated;
+    mpMutexImu = frame.mpMutexImu;
+    mpCamera = frame.mpCamera;
+    mpCamera2 = frame.mpCamera2;
+    Nleft = frame.Nleft;  // Number of left keypoints
+      Nright = frame.Nright;  // Number of right keypoints (if stereo camera)
+      monoLeft = frame.monoLeft;  // Monocular flag for left camera
+      monoRight = frame.monoRight;  // Monocular flag for right camera (if stereo camera)
+      mvLeftToRightMatch = frame.mvLeftToRightMatch;  // Matches between left and right keypoints (if stereo camera)
+      mvRightToLeftMatch = frame.mvRightToLeftMatch;  // Matches between right and left keypoints (if stereo camera)
+      mvStereo3Dpoints = frame.mvStereo3Dpoints;
+    
+    for(int i=0;i<FRAME_GRID_COLS;i++)
+        for(int j=0; j<FRAME_GRID_ROWS; j++){
+            mGrid[i][j]=frame.mGrid[i][j];
+            if(frame.Nleft > 0){
+                mGridRight[i][j] = frame.mGridRight[i][j];
+            }
+        }
+
+    if(frame.mbHasPose)
+        SetPose(frame.GetPose());
+
+    if(frame.HasVelocity())
+    {
+        SetVelocity(frame.GetVelocity());
+    }
+
+    mmProjectPoints = frame.mmProjectPoints;
+    mmMatchedInImage = frame.mmMatchedInImage;
+    return *this;
+}
+
 
 //Copy Constructor
 Frame::Frame(const Frame &frame)
@@ -287,11 +392,29 @@ Frame::Frame(const cv::Mat &imGray, const cv::Mat &imDepth, const double &timeSt
 
 
 Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extractor,ORBVocabulary* voc, GeometricCamera* pCamera, cv::Mat &distCoef, const float &bf, const float &thDepth, Frame* pPrevF, const IMU::Calib &ImuCalib)
-    :mpcpi(NULL),mpORBvocabulary(voc),mpORBextractorLeft(extractor),mpORBextractorRight(static_cast<ORBextractor*>(NULL)),
-     mTimeStamp(timeStamp), mK(static_cast<Pinhole*>(pCamera)->toK()), mK_(static_cast<Pinhole*>(pCamera)->toK_()), mDistCoef(distCoef.clone()), mbf(bf), mThDepth(thDepth),
-     mImuCalib(ImuCalib), mpImuPreintegrated(NULL),mpPrevFrame(pPrevF),mpImuPreintegratedFrame(NULL), mpReferenceKF(static_cast<KeyFrame*>(NULL)), mbIsSet(false), mbImuPreintegrated(false), mpCamera(pCamera),
-     mpCamera2(nullptr), mbHasPose(false), mbHasVelocity(false)
 {
+    mpcpi = nullptr;
+    mpORBvocabulary = voc;
+    mpORBextractorLeft = extractor;
+    mpORBextractorRight = nullptr;
+    mTimeStamp = timeStamp;
+    mK = static_cast<Pinhole*>(pCamera)->toK();
+    mK_ = static_cast<Pinhole*>(pCamera)->toK_();
+    mDistCoef = distCoef.clone();
+    mbf = bf;
+    mThDepth = thDepth;
+    mImuCalib = ImuCalib;
+    mpImuPreintegrated = nullptr;
+    mpPrevFrame = pPrevF;
+    mpImuPreintegratedFrame = nullptr;
+    mpReferenceKF = nullptr;
+    mbIsSet = false;
+    mbImuPreintegrated = false;
+    mpCamera = pCamera;
+    mpCamera2 = nullptr;
+    mbHasPose = false;
+    mbHasVelocity = false;
+    
     // Frame ID
     mnId=nNextId++;
 

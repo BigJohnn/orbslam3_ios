@@ -46,6 +46,7 @@ const float GRAVITY_VALUE=9.81;
 class Point
 {
 public:
+    Point() = default;
     Point(const float &acc_x, const float &acc_y, const float &acc_z,
              const float &ang_vel_x, const float &ang_vel_y, const float &ang_vel_z,
              const double &timestamp): a(acc_x,acc_y,acc_z), w(ang_vel_x,ang_vel_y,ang_vel_z), t(timestamp){}
