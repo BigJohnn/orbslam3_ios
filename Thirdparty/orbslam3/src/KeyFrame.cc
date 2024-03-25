@@ -916,7 +916,7 @@ void KeyFrame::PreSave(set<KeyFrame*>& spKF,set<MapPoint*>& spMP, set<GeometricC
         mBackupNextKFId = mNextKF->mnId;
 
     if(mpImuPreintegrated)
-        mBackupImuPreintegrated.CopyFrom(mpImuPreintegrated);
+        mBackupImuPreintegrated->CopyFrom(mpImuPreintegrated.get());
 }
 
 void KeyFrame::PostLoad(map<long unsigned int, KeyFrame*>& mpKFid, map<long unsigned int, MapPoint*>& mpMPid, map<unsigned int, GeometricCamera*>& mpCamId){
@@ -996,7 +996,7 @@ void KeyFrame::PostLoad(map<long unsigned int, KeyFrame*>& mpKFid, map<long unsi
     {
         mNextKF = mpKFid[mBackupNextKFId];
     }
-    mpImuPreintegrated = &mBackupImuPreintegrated;
+    mpImuPreintegrated = mBackupImuPreintegrated;
 
 
     // Remove all backup container

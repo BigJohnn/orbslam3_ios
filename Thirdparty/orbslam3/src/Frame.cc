@@ -83,25 +83,9 @@ Frame& Frame::operator=(const Frame& frame) {
     mImuCalib = frame.mImuCalib;
     mnCloseMPs = frame.mnCloseMPs;
     // Handle pointers (assuming they point to managed resources)
-    if (mpImuPreintegrated != nullptr) {
-        delete mpImuPreintegrated; // Delete existing pre-integrated IMU data
-    }
-    if(nullptr == frame.mpImuPreintegrated) {
-        mpImuPreintegrated = nullptr;
-    }
-    else {
-        mpImuPreintegrated = new IMU::Preintegrated(frame.mpImuPreintegrated); // Deep copy pre-integrated IMU data
-    }
+    mpImuPreintegrated = frame.mpImuPreintegrated;
     
-    if (mpImuPreintegratedFrame != nullptr) {
-        delete mpImuPreintegratedFrame; // Delete existing pre-integrated IMU frame
-    }
-    if(frame.mpImuPreintegratedFrame == nullptr) {
-        mpImuPreintegratedFrame = nullptr;
-    }
-    else {
-        mpImuPreintegratedFrame = new IMU::Preintegrated(frame.mpImuPreintegratedFrame); // Deep copy pre-integrated IMU frame
-    }
+    mpImuPreintegratedFrame = frame.mpImuPreintegratedFrame;
     
     mImuBias = frame.mImuBias;
     mnId = frame.mnId;
@@ -205,9 +189,10 @@ Frame::Frame(const Frame &frame)
 
 Frame::Frame(const cv::Mat &imLeft, const cv::Mat &imRight, const double &timeStamp, ORBextractor* extractorLeft, ORBextractor* extractorRight, ORBVocabulary* voc, cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth, GeometricCamera* pCamera, Frame* pPrevF, const IMU::Calib &ImuCalib)
     :mpcpi(NULL), mpORBvocabulary(voc),mpORBextractorLeft(extractorLeft),mpORBextractorRight(extractorRight), mTimeStamp(timeStamp), mK(K.clone()), mK_(Converter::toMatrix3f(K)), mDistCoef(distCoef.clone()), mbf(bf), mThDepth(thDepth),
-     mImuCalib(ImuCalib), mpImuPreintegrated(NULL), mpPrevFrame(pPrevF),mpImuPreintegratedFrame(NULL), mpReferenceKF(static_cast<KeyFrame*>(NULL)), mbIsSet(false), mbImuPreintegrated(false),
+     mImuCalib(ImuCalib), mpImuPreintegrated(NULL), mpPrevFrame(pPrevF), mpReferenceKF(static_cast<KeyFrame*>(NULL)), mbIsSet(false), mbImuPreintegrated(false),
      mpCamera(pCamera) ,mpCamera2(nullptr), mbHasPose(false), mbHasVelocity(false)
 {
+    mpImuPreintegratedFrame.reset();
     // Frame ID
     mnId=nNextId++;
 
@@ -1150,6 +1135,9 @@ bool Frame::imuIsPreintegrated()
 
 void Frame::setIntegrated()
 {
+    if(!mpMutexImu) {
+        mpMutexImu = new mutex();
+    }
     unique_lock<std::mutex> lock(*mpMutexImu);
     mbImuPreintegrated = true;
 }

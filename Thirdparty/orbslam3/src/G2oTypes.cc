@@ -488,10 +488,9 @@ VertexAccBias::VertexAccBias(Frame *pF)
 }
 
 
-
-EdgeInertial::EdgeInertial(IMU::Preintegrated *pInt):JRg(pInt->JRg.cast<double>()),
-    JVg(pInt->JVg.cast<double>()), JPg(pInt->JPg.cast<double>()), JVa(pInt->JVa.cast<double>()),
-    JPa(pInt->JPa.cast<double>()), mpInt(pInt), dt(pInt->dT)
+EdgeInertial::EdgeInertial(std::shared_ptr<IMU::Preintegrated> const& pInt):JRg(pInt->JRg.cast<double>()),
+JVg(pInt->JVg.cast<double>()), JPg(pInt->JPg.cast<double>()), JVa(pInt->JVa.cast<double>()),
+JPa(pInt->JPa.cast<double>()), mpInt(pInt), dt(pInt->dT)
 {
     // This edge links 6 vertices
     resize(6);
@@ -593,7 +592,7 @@ void EdgeInertial::linearizeOplus()
     _jacobianOplus[5].block<3,3>(3,0) = Rbw1; // OK
 }
 
-EdgeInertialGS::EdgeInertialGS(IMU::Preintegrated *pInt):JRg(pInt->JRg.cast<double>()),
+EdgeInertialGS::EdgeInertialGS(std::shared_ptr<IMU::Preintegrated> const& pInt):JRg(pInt->JRg.cast<double>()),
     JVg(pInt->JVg.cast<double>()), JPg(pInt->JPg.cast<double>()), JVa(pInt->JVa.cast<double>()),
     JPa(pInt->JPa.cast<double>()), mpInt(pInt), dt(pInt->dT)
 {

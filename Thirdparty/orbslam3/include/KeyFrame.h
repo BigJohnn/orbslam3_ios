@@ -182,7 +182,7 @@ class KeyFrame
 
         // Inertial variables
         ar & mImuBias;
-        ar & mBackupImuPreintegrated;
+        ar & *mBackupImuPreintegrated;
         ar & mImuCalib;
         ar & mBackupPrevKFId;
         ar & mBackupNextKFId;
@@ -406,10 +406,10 @@ public:
     const int mnMaxY;
 
     // Preintegrated IMU measurements from previous keyframe
-    KeyFrame* mPrevKF;
-    KeyFrame* mNextKF;
+    KeyFrame* mPrevKF = nullptr;
+    KeyFrame* mNextKF = nullptr;
 
-    IMU::Preintegrated* mpImuPreintegrated = nullptr;
+    std::shared_ptr<IMU::Preintegrated> mpImuPreintegrated;
     IMU::Calib mImuCalib;
 
     unsigned int mnOriginMapId;
@@ -451,8 +451,8 @@ protected:
     std::vector<long long int> mvBackupMapPointsId;
 
     // BoW
-    KeyFrameDatabase* mpKeyFrameDB;
-    ORBVocabulary* mpORBvocabulary;
+    KeyFrameDatabase* mpKeyFrameDB = nullptr;
+    ORBVocabulary* mpORBvocabulary = nullptr;
 
     // Grid over the image to speed up feature matching
     std::vector< std::vector <std::vector<size_t> > > mGrid;
@@ -465,7 +465,7 @@ protected:
 
     // Spanning Tree and Loop Edges
     bool mbFirstConnection;
-    KeyFrame* mpParent;
+    KeyFrame* mpParent = nullptr;
     std::set<KeyFrame*> mspChildrens;
     std::set<KeyFrame*> mspLoopEdges;
     std::set<KeyFrame*> mspMergeEdges;
@@ -482,12 +482,13 @@ protected:
 
     float mHalfBaseline; // Only for visualization
 
-    Map* mpMap;
+    Map* mpMap = nullptr;
 
     // Backup variables for inertial
     long long int mBackupPrevKFId;
     long long int mBackupNextKFId;
-    IMU::Preintegrated mBackupImuPreintegrated;
+
+    std::shared_ptr<IMU::Preintegrated> mBackupImuPreintegrated;
 
     // Backup for Cameras
     unsigned int mnBackupIdCamera, mnBackupIdCamera2;
@@ -502,7 +503,7 @@ protected:
     std::mutex mMutexMap;
 
 public:
-    GeometricCamera* mpCamera, *mpCamera2;
+    GeometricCamera* mpCamera = nullptr, *mpCamera2 = nullptr;
 
     //Indexes of stereo observations correspondences
     std::vector<int> mvLeftToRightMatch, mvRightToLeftMatch;

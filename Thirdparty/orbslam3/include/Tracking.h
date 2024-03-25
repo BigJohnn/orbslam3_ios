@@ -135,9 +135,9 @@ public:
     int mSensor;
 
     // Current Frame
-    Frame* mpCurrentFrame = nullptr;
+    std::shared_ptr<Frame> mpCurrentFrame;
     Frame mCurrentFrame;
-    Frame* mpLastFrame = nullptr;
+    std::shared_ptr<Frame> mpLastFrame;
     Frame mLastFrame;
 
     cv::Mat mImGray;
@@ -235,7 +235,7 @@ protected:
     bool mbMapUpdated;
 
     // Imu preintegration from last frame
-    IMU::Preintegrated *mpImuPreintegratedFromLastKF = nullptr;
+    std::shared_ptr<IMU::Preintegrated> mpImuPreintegratedFromLastKF;
 
     // Queue of IMU measurements between frames
     std::list<IMU::Point> mlQueueImuData;
@@ -245,7 +245,7 @@ protected:
     std::mutex mMutexImuQueue;
 
     // Imu calibration parameters
-    IMU::Calib *mpImuCalib;
+    IMU::Calib *mpImuCalib = nullptr;
 
     // Last Bias Estimation (at keyframe creation)
     IMU::Bias mLastBias;
@@ -257,33 +257,33 @@ protected:
     bool mbVO;
 
     //Other Thread Pointers
-    LocalMapping* mpLocalMapper;
-    LoopClosing* mpLoopClosing;
+    LocalMapping* mpLocalMapper = nullptr;
+    LoopClosing* mpLoopClosing = nullptr;
 
     //ORB
-    ORBextractor* mpORBextractorLeft, *mpORBextractorRight;
-    ORBextractor* mpIniORBextractor;
+    ORBextractor* mpORBextractorLeft, *mpORBextractorRight = nullptr;
+    ORBextractor* mpIniORBextractor = nullptr;
 
     //BoW
-    ORBVocabulary* mpORBVocabulary;
-    KeyFrameDatabase* mpKeyFrameDB;
+    ORBVocabulary* mpORBVocabulary = nullptr;
+    KeyFrameDatabase* mpKeyFrameDB = nullptr;
 
     // Initalization (only for monocular)
     bool mbReadyToInitializate;
     bool mbSetInit;
 
     //Local Map
-    KeyFrame* mpReferenceKF;
+    KeyFrame* mpReferenceKF = nullptr;
     std::vector<KeyFrame*> mvpLocalKeyFrames;
     std::vector<MapPoint*> mvpLocalMapPoints;
     
     // System
-    System* mpSystem;
+    System* mpSystem = nullptr;
     
     //Drawers
-    Viewer* mpViewer;
-    FrameDrawer* mpFrameDrawer;
-    MapDrawer* mpMapDrawer;
+    Viewer* mpViewer = nullptr;
+    FrameDrawer* mpFrameDrawer = nullptr;
+    MapDrawer* mpMapDrawer = nullptr;
     bool bStepByStep;
 
     //Atlas
@@ -319,7 +319,7 @@ protected:
     int mnMatchesInliers;
 
     //Last Frame, KeyFrame and Relocalisation Info
-    KeyFrame* mpLastKeyFrame;
+    KeyFrame* mpLastKeyFrame = nullptr;
     unsigned int mnLastKeyFrameId;
     unsigned int mnLastRelocFrameId;
     double mTimeStampLost;

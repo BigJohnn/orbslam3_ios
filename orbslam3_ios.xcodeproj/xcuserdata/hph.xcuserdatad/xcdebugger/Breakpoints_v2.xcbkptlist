@@ -80,7 +80,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "152"
             endingLineNumber = "152"
-            landmarkName = "+shared"
+            landmarkName = "-Process:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -96,40 +96,56 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "261"
             endingLineNumber = "261"
-            landmarkName = "+shared"
+            landmarkName = "-imuStartUpdate"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "83B57EC5-22F0-44B9-9ADE-7D0890720593"
+            uuid = "6A0F0389-77FC-4C92-A76C-D48BB471D204"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Thirdparty/orbslam3/src/Tracking.cc"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2132"
-            endingLineNumber = "2132"
+            startingLineNumber = "2186"
+            endingLineNumber = "2186"
             landmarkName = "Tracking::Track()"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "D914A646-49A9-4BAE-8DDF-FD336D9963A0"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Thirdparty/orbslam3/src/Tracking.cc"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1944"
-            endingLineNumber = "1944"
-            landmarkName = "Tracking::Track()"
-            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "6A0F0389-77FC-4C92-A76C-D48BB471D204 - c7336a9d4357088"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ORB_SLAM3::Tracking::Track()"
+                  moduleName = "orbslam3_ios"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "2188"
+                  endingLineNumber = "2188"
+                  offsetFromSymbolStart = "5692">
+               </Location>
+               <Location
+                  uuid = "6A0F0389-77FC-4C92-A76C-D48BB471D204 - c7336a9d43570ca"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ORB_SLAM3::Tracking::Track()"
+                  moduleName = "orbslam3_ios"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "2186"
+                  endingLineNumber = "2186"
+                  offsetFromSymbolStart = "5868">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

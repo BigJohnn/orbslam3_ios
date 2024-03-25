@@ -108,13 +108,13 @@ bool is_imu_started = false;
                         const int capacity = 10;
                         while(meas_cur_frame.size()>capacity) meas_cur_frame.erase(meas_cur_frame.begin());
                         string tname = std::to_string(t);
-                        printf("meas_cur_frame.size == %lu", meas_cur_frame.size());
+//                        printf("meas_cur_frame.size == %lu\n", meas_cur_frame.size());
                         
                         {
                             slam->TrackMonocular(cf, t, meas_cur_frame, tname);
                         }
                         
-                        timer.tok("Track spent", true);
+//                        timer.tok("Track spent", true);
                         auto t2 = timer.durationMilliSeconds();
                         float track_fps = std::min(30.0f, static_cast<float>(1000/t2));
 
@@ -236,7 +236,7 @@ vector<IMU::Point> gyro_buf;  // for Interpolation
          }
          //interpolation
          IMU::Point imu_msg;
-         if(cur_acc->t >= gyro_buf[0].t && cur_acc->t < gyro_buf[1].t)
+         if(cur_acc->t >= gyro_buf[0].t && cur_acc->t <= gyro_buf[1].t)
          {
              imu_msg.t = cur_acc->t;
              imu_msg.a = cur_acc->a;
