@@ -25,13 +25,6 @@ vector<IMU::Point> vImuMeas;
 
 ImageProcessor* mImageProcessor;
 
-NSMutableData *imuDataBuf = [[NSMutableData alloc] init];
-NSData *imuReader;
-//IMU_MSG imuData;
-// Lock the feature and imu data buffer
-//std::mutex m_buf;
-std::condition_variable con;
-
 int imu_prepare = 0;
 
 NSTimeInterval current_time = -1;
@@ -40,26 +33,40 @@ NSTimeInterval lateast_imu_time = -1;
 
 // Store the IMU data
 queue<IMU::Point> meas;
-// Lock the IMU data feedback to featuretracker
-std::mutex m_imu_feedback;
-
 
 std::shared_ptr<System> slam;
 std::thread track_thread;
 std::mutex track_mutex;
 
+cv::String tmp_folder;
+
+//#define CALIB_MODE
+
+#define S2NS 1e9
 
 + (ImageProcessor *) shared {
     if(!mImageProcessor) {
         mImageProcessor = [ImageProcessor new];
         [mImageProcessor imuStartUpdate];
         slam.reset();
-        
+
+#ifndef CALIB_MODE
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
             auto* voc_path = [[[NSBundle mainBundle] pathForResource:@"ORBvoc" ofType:@"bin"] UTF8String];
             slam = std::make_shared<System>(voc_path,
                                             [[[NSBundle mainBundle] pathForResource:@"ipxsmax_test" ofType:@"yaml"] UTF8String], System::IMU_MONOCULAR);
         });
+#else
+        NSString* tmppath = NSFileManager.defaultManager.temporaryDirectory.path;
+        tmp_folder = cv::String([tmppath cStringUsingEncoding:kCFStringEncodingUTF8])+cv::String("/");
+        std::ofstream outFile(tmp_folder + "times.txt", std::ios::out);
+        outFile.close();
+        std::ofstream accOutFile(tmp_folder + "acc.txt", std::ios::out);
+        accOutFile.close();
+        std::ofstream gyrOutFile(tmp_folder + "gyr.txt", std::ios::out);
+        gyrOutFile.close();
+        
+#endif
         
     }
     return mImageProcessor;
@@ -68,6 +75,7 @@ std::mutex track_mutex;
 bool is_tracking = false;
 bool is_imu_started = false;
 - (nonnull UIImage *)Process:(nonnull UIImage *)img {
+#ifndef CALIB_MODE
     if(!is_tracking) {
         static auto track_func = []() {
             
@@ -116,9 +124,9 @@ bool is_imu_started = false;
                         
 //                        timer.tok("Track spent", true);
                         auto t2 = timer.durationMilliSeconds();
-                        float track_fps = std::min(30.0f, static_cast<float>(1000/t2));
-
-                        auto dt = (t - t_prev) * 1e3;
+//                        float track_fps = std::min(30.0f, static_cast<float>(1000/t2));
+//
+//                        auto dt = (t - t_prev) * 1e3;
                         if(t2 < 33) {
                             usleep((33-t2) * 1e3);
                         }
@@ -132,18 +140,47 @@ bool is_imu_started = false;
         
         is_tracking = true;
     }
+#else
+    std::ofstream outFile(tmp_folder + "times.txt", std::ios::app);
+    auto&& t = [[NSProcessInfo processInfo] systemUptime];
+    outFile << std::to_string(t) << std::endl;
+    cout << "[img]"<< std::to_string(t) <<endl;
+    outFile.close();
+//    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    static int curId=0;
+    int period = 90;
+    if(curId % period != 0) {
+        curId = (++curId) % period;
+        return img;
+    }
+#endif
     
     cv::Mat src;
     using namespace cv;
     UIImageToMat(img, src);
     
-
     {
+#ifndef CALIB_MODE
         if(slam) {
             
             slam->setCFScaled(src, [[NSProcessInfo processInfo] systemUptime]);
         }
-//        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+#else
+    
+        cv::Mat gray, grayScaled;
+        cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
+        float scale = 0.5f;
+        cv::resize(gray, grayScaled, cv::Size(int(gray.cols * scale), int(gray.rows * scale)));
+        
+        static int i = 0;
+        ++i;
+        cv::imwrite(tmp_folder + std::to_string(long(t*1e9)) + ".png", grayScaled);
+        
+        if(i >= 300) {
+            exit(0);
+        }
+#endif
+        
     }
     
     
@@ -185,10 +222,13 @@ vector<IMU::Point> gyro_buf;  // for Interpolation
     [motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue]
                                         withHandler:^(CMAccelerometerData *latestAcc, NSError *error)
      {
+        /*此处不加会引起传感器数据不更新， 疑似bug*/
+        double header = motionManager.deviceMotion.timestamp;
+        motionManager.deviceMotion.attitude.roll * 180.0 / M_PI,  //pitch
+        motionManager.deviceMotion.attitude.pitch * 180.0 / M_PI;  //roll
         
-         double header = motionManager.deviceMotion.timestamp;
-         motionManager.deviceMotion.attitude.roll * 180.0 / M_PI,  //pitch
-         motionManager.deviceMotion.attitude.pitch * 180.0 / M_PI;  //roll
+#ifndef CALIB_MODE
+         
          if(imu_prepare<10)
          {
              imu_prepare++;
@@ -200,14 +240,25 @@ vector<IMU::Point> gyro_buf;  // for Interpolation
 //         -latestAcc.acceleration.y * GRAVITY,
 //         -latestAcc.acceleration.z * GRAVITY;
         acc_msg->a << latestAcc.acceleration.x,
-        -latestAcc.acceleration.y,
+        latestAcc.acceleration.y,
         latestAcc.acceleration.z;
          cur_acc = acc_msg;
+#else
+        std::ofstream accOutFile(tmp_folder + "acc.txt", std::ios::app);
+        auto&& t = (latestAcc.timestamp);
+        accOutFile << std::to_string(t) <<","
+        << std::to_string(latestAcc.acceleration.x) <<","
+        << std::to_string(latestAcc.acceleration.y) <<","
+        << std::to_string(latestAcc.acceleration.z) << std::endl;
+        cout<< "[acc]" <<std::to_string(t) <<endl;
+        accOutFile.close();
+#endif
 //         printf("imu acc update %lf %lf %lf %lf\n", acc_msg->t, acc_msg->a.x(), acc_msg->a.y(), acc_msg->a.z());
          
      }];
     [motionManager startGyroUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMGyroData *latestGyro, NSError *error)
      {
+#ifndef CALIB_MODE
         Timer timer;
         timer.tik();
          //The time stamp is the amount of time in seconds since the device booted.
@@ -220,7 +271,7 @@ vector<IMU::Point> gyro_buf;  // for Interpolation
         IMU::Point gyro_msg;
          gyro_msg.t = header;
          gyro_msg.w << latestGyro.rotationRate.x,
-         -latestGyro.rotationRate.y,
+         latestGyro.rotationRate.y,
          latestGyro.rotationRate.z;
          
          if(gyro_buf.size() == 0)
@@ -260,6 +311,17 @@ vector<IMU::Point> gyro_buf;  // for Interpolation
             std::unique_lock<std::mutex> lock2(mutexImuMeas);
              meas.push(imu_msg);
         }
+#else
+        std::ofstream gyroOutFile(tmp_folder + "gyr.txt", std::ios::app);
+        auto&& t = (latestGyro.timestamp);
+        gyroOutFile << std::to_string(t) <<","
+        << std::to_string(latestGyro.rotationRate.x) <<","
+        << std::to_string(latestGyro.rotationRate.y) <<","
+        << std::to_string(latestGyro.rotationRate.z) << std::endl;
+        printf("[gyr]%s\n", std::to_string(t).c_str());
+//        cout<< "[gyr]"<< std::to_string(latestGyro.timestamp * S2NS) <<endl;
+        gyroOutFile.close();
+#endif
      }];
 }
 
