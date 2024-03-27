@@ -51,11 +51,11 @@ cv::String tmp_folder;
         slam.reset();
 
 #ifndef CALIB_MODE
-        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+//        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
             auto* voc_path = [[[NSBundle mainBundle] pathForResource:@"ORBvoc" ofType:@"bin"] UTF8String];
             slam = std::make_shared<System>(voc_path,
                                             [[[NSBundle mainBundle] pathForResource:@"ipxsmax_test" ofType:@"yaml"] UTF8String], System::IMU_MONOCULAR);
-        });
+//        });
 #else
         NSString* tmppath = NSFileManager.defaultManager.temporaryDirectory.path;
         tmp_folder = cv::String([tmppath cStringUsingEncoding:kCFStringEncodingUTF8])+cv::String("/");
@@ -89,9 +89,9 @@ bool is_imu_started = false;
                 
                 Timer timer;
                 
-                double t = 0;
-                
-                auto && cf = slam->getCFScaled(t);
+                auto&& cache = slam->getCFScaled();
+                auto&& cf = cache.image;
+                double& t = cache.timestamp;
                 
                 vector<IMU::Point> meas_cur_frame;
                 if(!cf.empty()) {
@@ -116,23 +116,25 @@ bool is_imu_started = false;
                         const int capacity = 10;
                         while(meas_cur_frame.size()>capacity) meas_cur_frame.erase(meas_cur_frame.begin());
                         string tname = std::to_string(t);
-//                        printf("meas_cur_frame.size == %lu\n", meas_cur_frame.size());
-                        
+                        printf("track with %lu measures!\n", meas_cur_frame.size());
                         {
                             slam->TrackMonocular(cf, t, meas_cur_frame, tname);
                         }
                         
-//                        timer.tok("Track spent", true);
-                        auto t2 = timer.durationMilliSeconds();
+                        timer.tok("Track", true);
+//                        auto t2 = timer.durationMilliSeconds();
 //                        float track_fps = std::min(30.0f, static_cast<float>(1000/t2));
 //
 //                        auto dt = (t - t_prev) * 1e3;
-                        if(t2 < 33) {
-                            usleep((33-t2) * 1e3);
-                        }
+//                        if(t2 < 33) {
+//                            usleep((33-t2) * 1e3);
+//                        }
                     }
                 }
-
+                else{
+                    usleep(3000);
+                    continue;
+                }
             }
         };
         track_thread = thread(track_func);
@@ -155,6 +157,7 @@ bool is_imu_started = false;
     }
 #endif
     
+    Timer render_tm;
     cv::Mat src;
     using namespace cv;
     UIImageToMat(img, src);
@@ -162,8 +165,15 @@ bool is_imu_started = false;
     {
 #ifndef CALIB_MODE
         if(slam) {
+            static int counter =0;
+            if((counter = counter++ % 5) == 0) {
+                cv::Mat gray;
+                cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
+                float scale = 0.5f;
+                cv::resize(gray, gray, cv::Size(int(src.cols * scale), int(src.rows * scale)));
+                slam->setCFScaled(gray, [[NSProcessInfo processInfo] systemUptime]);
+            }
             
-            slam->setCFScaled(src, [[NSProcessInfo processInfo] systemUptime]);
         }
 #else
     
@@ -185,7 +195,7 @@ bool is_imu_started = false;
     
     
     
-    
+//    render_tm.tok("draw single frame spent");
     return MatToUIImage(src);
 }
 

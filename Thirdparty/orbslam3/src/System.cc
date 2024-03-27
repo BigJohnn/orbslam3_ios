@@ -1549,16 +1549,15 @@ string System::CalculateCheckSum(string filename, int type)
 void System::setCFScaled(cv::Mat const& input, double timestamp, float scale)
 {
     std::unique_lock<std::mutex> lock(mMutexLoadCF);
-    cv::Mat gray;
-    cv::cvtColor(input, gray, cv::COLOR_BGR2GRAY);
-    cv::resize(gray, mCurFrameScaled, cv::Size(int(input.cols * scale), int(input.rows * scale)));
-    mCurFrameTimeStamp = timestamp;
+    mCache.push(ImageCache{input.clone(), timestamp});
+    if(mCache.size() > 2) mCache.pop();
 }
 
-cv::Mat System::getCFScaled(double& timestamp) {
+System::ImageCache System::getCFScaled() {
     std::unique_lock<std::mutex> lock(mMutexLoadCF);
-    timestamp = mCurFrameTimeStamp;
-    return mCurFrameScaled.clone();
+    System::ImageCache cache;
+    if(mCache.empty()) return cache;
+    return mCache.front();
 }
 
 } //namespace ORB_SLAM

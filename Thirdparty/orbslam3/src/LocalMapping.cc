@@ -65,7 +65,7 @@ void LocalMapping::Run()
 {
     mbFinished = false;
 
-    while(1)
+    while(true)
     {
         // Tracking will see that Local Mapping is busy
         SetAcceptKeyFrames(false);
