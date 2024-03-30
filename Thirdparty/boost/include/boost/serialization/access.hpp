@@ -113,7 +113,7 @@ public:
         // the class Archive.  To resolve this, don't include an
         // archive type other than that for which the serialization
         // function is defined!!!
-        t.serialize(ar, file_version);
+//        t.serialize(ar, file_version);
     }
     template<class T>
     static void destroy( const T * t) // const appropriate here?

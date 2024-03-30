@@ -35,14 +35,11 @@
 		FA38F0B92BAA950800F77BA7 /* ImuTypes.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F09C2BAA950800F77BA7 /* ImuTypes.cc */; };
 		FA38F0BA2BAA950800F77BA7 /* TwoViewReconstruction.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F09D2BAA950800F77BA7 /* TwoViewReconstruction.cc */; };
 		FA38F0BB2BAA950800F77BA7 /* KeyFrame.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F09E2BAA950800F77BA7 /* KeyFrame.cc */; };
-		FA38F0BC2BAA950800F77BA7 /* MapDrawer.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F09F2BAA950800F77BA7 /* MapDrawer.cc */; };
 		FA38F0BD2BAA950800F77BA7 /* Converter.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A02BAA950800F77BA7 /* Converter.cc */; };
 		FA38F0BE2BAA950800F77BA7 /* KannalaBrandt8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A22BAA950800F77BA7 /* KannalaBrandt8.cpp */; };
 		FA38F0BF2BAA950800F77BA7 /* Pinhole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A32BAA950800F77BA7 /* Pinhole.cpp */; };
 		FA38F0C02BAA950800F77BA7 /* System.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A42BAA950800F77BA7 /* System.cc */; };
-		FA38F0C12BAA950800F77BA7 /* Viewer.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A52BAA950800F77BA7 /* Viewer.cc */; };
 		FA38F0C22BAA950800F77BA7 /* G2oTypes.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A62BAA950800F77BA7 /* G2oTypes.cc */; };
-		FA38F0C32BAA950800F77BA7 /* FrameDrawer.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A72BAA950800F77BA7 /* FrameDrawer.cc */; };
 		FA38F0C42BAA950800F77BA7 /* Config.cc in Sources */ = {isa = PBXBuildFile; fileRef = FA38F0A82BAA950800F77BA7 /* Config.cc */; };
 		FA38F0CA2BAC253600F77BA7 /* ORBvoc.bin in Resources */ = {isa = PBXBuildFile; fileRef = FA38F0C92BAC031300F77BA7 /* ORBvoc.bin */; };
 		FADFF6FA2BAD6E2B002E5B03 /* ipxsmax_test.yaml in Resources */ = {isa = PBXBuildFile; fileRef = FADFF6F92BAD6E22002E5B03 /* ipxsmax_test.yaml */; };
@@ -66,10 +63,8 @@
 		FA28D3712BA97FB9008E1E39 /* image_processor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = image_processor.h; sourceTree = "<group>"; };
 		FA38EAB52BA9852F00F77BA7 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = orbslam3_ios/opencv2.framework; sourceTree = "<group>"; };
 		FA38EACE2BA9BFEF00F77BA7 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		FA38F06B2BAA950800F77BA7 /* FrameDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrameDrawer.h; sourceTree = "<group>"; };
 		FA38F06C2BAA950800F77BA7 /* MapPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapPoint.h; sourceTree = "<group>"; };
 		FA38F06D2BAA950800F77BA7 /* KeyFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyFrame.h; sourceTree = "<group>"; };
-		FA38F06E2BAA950800F77BA7 /* Viewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Viewer.h; sourceTree = "<group>"; };
 		FA38F06F2BAA950800F77BA7 /* KeyFrameDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyFrameDatabase.h; sourceTree = "<group>"; };
 		FA38F0702BAA950800F77BA7 /* Map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Map.h; sourceTree = "<group>"; };
 		FA38F0712BAA950800F77BA7 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
@@ -96,7 +91,6 @@
 		FA38F0872BAA950800F77BA7 /* System.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = System.h; sourceTree = "<group>"; };
 		FA38F0882BAA950800F77BA7 /* ImuTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImuTypes.h; sourceTree = "<group>"; };
 		FA38F0892BAA950800F77BA7 /* Sim3Solver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sim3Solver.h; sourceTree = "<group>"; };
-		FA38F08A2BAA950800F77BA7 /* MapDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapDrawer.h; sourceTree = "<group>"; };
 		FA38F08C2BAA950800F77BA7 /* KeyFrameDatabase.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyFrameDatabase.cc; sourceTree = "<group>"; };
 		FA38F08D2BAA950800F77BA7 /* Tracking.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tracking.cc; sourceTree = "<group>"; };
 		FA38F08E2BAA950800F77BA7 /* ORBmatcher.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ORBmatcher.cc; sourceTree = "<group>"; };
@@ -116,14 +110,11 @@
 		FA38F09C2BAA950800F77BA7 /* ImuTypes.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImuTypes.cc; sourceTree = "<group>"; };
 		FA38F09D2BAA950800F77BA7 /* TwoViewReconstruction.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TwoViewReconstruction.cc; sourceTree = "<group>"; };
 		FA38F09E2BAA950800F77BA7 /* KeyFrame.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyFrame.cc; sourceTree = "<group>"; };
-		FA38F09F2BAA950800F77BA7 /* MapDrawer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapDrawer.cc; sourceTree = "<group>"; };
 		FA38F0A02BAA950800F77BA7 /* Converter.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Converter.cc; sourceTree = "<group>"; };
 		FA38F0A22BAA950800F77BA7 /* KannalaBrandt8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KannalaBrandt8.cpp; sourceTree = "<group>"; };
 		FA38F0A32BAA950800F77BA7 /* Pinhole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pinhole.cpp; sourceTree = "<group>"; };
 		FA38F0A42BAA950800F77BA7 /* System.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = System.cc; sourceTree = "<group>"; };
-		FA38F0A52BAA950800F77BA7 /* Viewer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Viewer.cc; sourceTree = "<group>"; };
 		FA38F0A62BAA950800F77BA7 /* G2oTypes.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = G2oTypes.cc; sourceTree = "<group>"; };
-		FA38F0A72BAA950800F77BA7 /* FrameDrawer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameDrawer.cc; sourceTree = "<group>"; };
 		FA38F0A82BAA950800F77BA7 /* Config.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Config.cc; sourceTree = "<group>"; };
 		FA38F0C62BAAD24A00F77BA7 /* CoreAudioTypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudioTypes.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.2.sdk/System/Library/Frameworks/CoreAudioTypes.framework; sourceTree = DEVELOPER_DIR; };
 		FA38F0C92BAC031300F77BA7 /* ORBvoc.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = ORBvoc.bin; sourceTree = "<group>"; };
@@ -231,10 +222,8 @@
 		FA38F06A2BAA950800F77BA7 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				FA38F06B2BAA950800F77BA7 /* FrameDrawer.h */,
 				FA38F06C2BAA950800F77BA7 /* MapPoint.h */,
 				FA38F06D2BAA950800F77BA7 /* KeyFrame.h */,
-				FA38F06E2BAA950800F77BA7 /* Viewer.h */,
 				FA38F06F2BAA950800F77BA7 /* KeyFrameDatabase.h */,
 				FA38F0702BAA950800F77BA7 /* Map.h */,
 				FA38F0712BAA950800F77BA7 /* Config.h */,
@@ -259,7 +248,6 @@
 				FA38F0872BAA950800F77BA7 /* System.h */,
 				FA38F0882BAA950800F77BA7 /* ImuTypes.h */,
 				FA38F0892BAA950800F77BA7 /* Sim3Solver.h */,
-				FA38F08A2BAA950800F77BA7 /* MapDrawer.h */,
 				FADFF6FC2BAE8124002E5B03 /* Timer.h */,
 			);
 			path = include;
@@ -297,13 +285,10 @@
 				FA38F09C2BAA950800F77BA7 /* ImuTypes.cc */,
 				FA38F09D2BAA950800F77BA7 /* TwoViewReconstruction.cc */,
 				FA38F09E2BAA950800F77BA7 /* KeyFrame.cc */,
-				FA38F09F2BAA950800F77BA7 /* MapDrawer.cc */,
 				FA38F0A02BAA950800F77BA7 /* Converter.cc */,
 				FA38F0A12BAA950800F77BA7 /* CameraModels */,
 				FA38F0A42BAA950800F77BA7 /* System.cc */,
-				FA38F0A52BAA950800F77BA7 /* Viewer.cc */,
 				FA38F0A62BAA950800F77BA7 /* G2oTypes.cc */,
-				FA38F0A72BAA950800F77BA7 /* FrameDrawer.cc */,
 				FA38F0A82BAA950800F77BA7 /* Config.cc */,
 				FADFF6FB2BAE8124002E5B03 /* Timer.cpp */,
 			);
@@ -428,16 +413,13 @@
 				FA38F0BB2BAA950800F77BA7 /* KeyFrame.cc in Sources */,
 				FA38F0B82BAA950800F77BA7 /* Frame.cc in Sources */,
 				FA28D3722BA97FB9008E1E39 /* image_processor.mm in Sources */,
-				FA38F0BC2BAA950800F77BA7 /* MapDrawer.cc in Sources */,
 				FA38F0B42BAA950800F77BA7 /* LocalMapping.cc in Sources */,
-				FA38F0C12BAA950800F77BA7 /* Viewer.cc in Sources */,
 				FA38F0B62BAA950800F77BA7 /* Optimizer.cc in Sources */,
 				FA38F0C42BAA950800F77BA7 /* Config.cc in Sources */,
 				FA38F0B32BAA950800F77BA7 /* Settings.cc in Sources */,
 				FA38F0BD2BAA950800F77BA7 /* Converter.cc in Sources */,
 				FA38F0B72BAA950800F77BA7 /* LoopClosing.cc in Sources */,
 				FA38F0B52BAA950800F77BA7 /* MLPnPsolver.cpp in Sources */,
-				FA38F0C32BAA950800F77BA7 /* FrameDrawer.cc in Sources */,
 				FA38F0B12BAA950800F77BA7 /* Map.cc in Sources */,
 				FA38EACF2BA9BFEF00F77BA7 /* Utils.swift in Sources */,
 				FA38F0AA2BAA950800F77BA7 /* Tracking.cc in Sources */,

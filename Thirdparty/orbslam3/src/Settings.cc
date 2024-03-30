@@ -165,8 +165,6 @@ namespace ORB_SLAM3 {
 
         readORB(fSettings);
         cout << "\t-Loaded ORB settings" << endl;
-        readViewer(fSettings);
-        cout << "\t-Loaded viewer settings" << endl;
         readLoadAndSave(fSettings);
         cout << "\t-Loaded Atlas settings" << endl;
         readOtherParameters(fSettings);
@@ -447,25 +445,6 @@ namespace ORB_SLAM3 {
         nLevels_ = readParameter<int>(fSettings,"ORBextractor.nLevels",found);
         initThFAST_ = readParameter<int>(fSettings,"ORBextractor.iniThFAST",found);
         minThFAST_ = readParameter<int>(fSettings,"ORBextractor.minThFAST",found);
-    }
-
-    void Settings::readViewer(cv::FileStorage &fSettings) {
-        bool found;
-
-        keyFrameSize_ = readParameter<float>(fSettings,"Viewer.KeyFrameSize",found);
-        keyFrameLineWidth_ = readParameter<float>(fSettings,"Viewer.KeyFrameLineWidth",found);
-        graphLineWidth_ = readParameter<float>(fSettings,"Viewer.GraphLineWidth",found);
-        pointSize_ = readParameter<float>(fSettings,"Viewer.PointSize",found);
-        cameraSize_ = readParameter<float>(fSettings,"Viewer.CameraSize",found);
-        cameraLineWidth_ = readParameter<float>(fSettings,"Viewer.CameraLineWidth",found);
-        viewPointX_ = readParameter<float>(fSettings,"Viewer.ViewpointX",found);
-        viewPointY_ = readParameter<float>(fSettings,"Viewer.ViewpointY",found);
-        viewPointZ_ = readParameter<float>(fSettings,"Viewer.ViewpointZ",found);
-        viewPointF_ = readParameter<float>(fSettings,"Viewer.ViewpointF",found);
-        imageViewerScale_ = readParameter<float>(fSettings,"Viewer.imageViewScale",found,false);
-
-         if(!found)
-            imageViewerScale_ = 1.0f;
     }
 
     void Settings::readLoadAndSave(cv::FileStorage &fSettings) {
