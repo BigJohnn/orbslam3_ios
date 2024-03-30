@@ -1203,8 +1203,11 @@ void LocalMapping::InitializeIMU(float priorG, float priorA, bool bFIBA)
     lpKF.push_front(pKF);
     vector<KeyFrame*> vpKF(lpKF.begin(),lpKF.end());
 
-    if(vpKF.size()<nMinKF)
+    if(vpKF.size()<nMinKF) {
+        printf("vpKF.size == %lu < nMinKF == %d\n", vpKF.size(), nMinKF);
         return;
+    }
+        
 
     mFirstTs=vpKF.front()->mTimeStamp;
     if(mpCurrentKeyFrame->mTimeStamp-mFirstTs<minTime)

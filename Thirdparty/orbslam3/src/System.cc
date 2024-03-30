@@ -182,13 +182,13 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
         mpAtlas->SetInertialSensor();
 
     //Create Drawers. These are used by the Viewer
-    mpFrameDrawer = new FrameDrawer(mpAtlas);
-    mpMapDrawer = new MapDrawer(mpAtlas, strSettingsFile, settings_);
+//    mpFrameDrawer = new FrameDrawer(mpAtlas);
+//    mpMapDrawer = new MapDrawer(mpAtlas, strSettingsFile, settings_);
 
     //Initialize the Tracking thread
     //(it will live in the main thread of execution, the one that called this constructor)
     cout << "Seq. Name: " << strSequence << endl;
-    mpTracker = new Tracking(this, mpVocabulary, mpFrameDrawer, mpMapDrawer,
+    mpTracker = new Tracking(this, mpVocabulary, nullptr/*mpFrameDrawer*/, nullptr/*mpMapDrawer*/,
                              mpAtlas, mpKeyFrameDatabase, strSettingsFile, mSensor, settings_, strSequence);
 
     //Initialize the Local Mapping thread and launch
@@ -238,7 +238,7 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
     }
 
     // Fix verbosity
-    Verbose::SetTh(Verbose::VERBOSITY_QUIET);
+    Verbose::SetTh(Verbose::VERBOSITY_DEBUG);
 
 }
 
@@ -1544,20 +1544,6 @@ string System::CalculateCheckSum(string filename, int type)
 //    }
 //
     return checksum;
-}
-#include <opencv2/imgproc.hpp>
-void System::setCFScaled(cv::Mat const& input, double timestamp, float scale)
-{
-    std::unique_lock<std::mutex> lock(mMutexLoadCF);
-    mCache.push(ImageCache{input.clone(), timestamp});
-    if(mCache.size() > 2) mCache.pop();
-}
-
-System::ImageCache System::getCFScaled() {
-    std::unique_lock<std::mutex> lock(mMutexLoadCF);
-    System::ImageCache cache;
-    if(mCache.empty()) return cache;
-    return mCache.front();
 }
 
 } //namespace ORB_SLAM

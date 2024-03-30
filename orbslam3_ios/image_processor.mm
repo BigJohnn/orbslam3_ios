@@ -38,24 +38,40 @@ std::shared_ptr<System> slam;
 std::thread track_thread;
 std::mutex track_mutex;
 
+std::condition_variable con;
+
 cv::String tmp_folder;
 
 //#define CALIB_MODE
 
 #define S2NS 1e9
 
-+ (ImageProcessor *) shared {
-    if(!mImageProcessor) {
-        mImageProcessor = [ImageProcessor new];
-        [mImageProcessor imuStartUpdate];
-        slam.reset();
+struct ImageCache{
+    cv::Mat image;
+    double timestamp;
+};
+std::queue<ImageCache> cached_imgs;
 
++ (instancetype)shared {
+  static ImageProcessor *sharedInstance = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    sharedInstance = [[ImageProcessor alloc] init];
+  });
+    [sharedInstance initialize];
+  return sharedInstance;
+}
+
+- (void)initialize {
+  // Thread-safe initialization of instance variables (if needed)
+  
+    [self imuStartUpdate];
 #ifndef CALIB_MODE
-//        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
             auto* voc_path = [[[NSBundle mainBundle] pathForResource:@"ORBvoc" ofType:@"bin"] UTF8String];
             slam = std::make_shared<System>(voc_path,
                                             [[[NSBundle mainBundle] pathForResource:@"ipxsmax_test" ofType:@"yaml"] UTF8String], System::IMU_MONOCULAR);
-//        });
+        });
 #else
         NSString* tmppath = NSFileManager.defaultManager.temporaryDirectory.path;
         tmp_folder = cv::String([tmppath cStringUsingEncoding:kCFStringEncodingUTF8])+cv::String("/");
@@ -67,9 +83,46 @@ cv::String tmp_folder;
         gyrOutFile.close();
         
 #endif
+
+}
+
+std::vector<std::pair<std::vector<IMU::Point>, ImageCache>>
+getMeasurements()
+{
+    std::vector<std::pair<std::vector<IMU::Point>, ImageCache>> measurements;
+    while (true)
+    {
+        auto&& cache = cached_imgs;
         
+        vector<IMU::Point> imus;
+        
+        if(cache.empty() || meas.empty()) {
+            return measurements;
+        }
+        if (!(meas.back().t > cache.front().timestamp))
+        {
+            NSLog(@"wait for imu, only should happen at the beginning");
+            return measurements;
+        }
+        if (!(meas.front().t < cache.front().timestamp))
+        {
+            NSLog(@"throw img, only should happen at the beginning");
+            cache.pop();
+            continue;
+        }
+        ImageCache curImg = cache.front();
+        cache.pop();
+        
+        printf("cache size == %lu\n", cache.size());
+        
+        while (meas.front().t <= curImg.timestamp)
+        {
+            imus.emplace_back(meas.front());
+            meas.pop();
+        }
+        measurements.emplace_back(imus, curImg);
     }
-    return mImageProcessor;
+    return measurements;
 }
 
 bool is_tracking = false;
@@ -83,58 +136,26 @@ bool is_imu_started = false;
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
             
-            int t_prev = 0;
-            
             while(true) {
                 
                 Timer timer;
                 
-                auto&& cache = slam->getCFScaled();
-                auto&& cf = cache.image;
-                double& t = cache.timestamp;
+                std::vector<std::pair<std::vector<IMU::Point>, ImageCache>> measurements;
+                std::unique_lock<std::mutex> lk(mutexImuMeas);
+                con.wait(lk, [&]
+                         {
+                             return (measurements = getMeasurements()).size() != 0;
+                         });
+                lk.unlock();
                 
-                vector<IMU::Point> meas_cur_frame;
-                if(!cf.empty()) {
-                    {
-                        if(0 == t_prev) {
-                            t_prev = t;
-                        }
-                        
-                        std::unique_lock<std::mutex> lk(mutexImuMeas);
-                        
-                        if(!meas.empty()) {
-                            while(!meas.empty() && meas.front().t <= t) {
-                                meas_cur_frame.push_back(meas.front());
-//                                printf("meas_cur_frame.push_back(%lf)\n", meas.front().t);
-                                meas.pop();
-                            }
-                        }
-                    }
-                    
-                    // Only track if there's both image and IMU data
-                    if (!cf.empty() && !meas_cur_frame.empty()) {
-                        const int capacity = 10;
-                        while(meas_cur_frame.size()>capacity) meas_cur_frame.erase(meas_cur_frame.begin());
-                        string tname = std::to_string(t);
-                        printf("track with %lu measures!\n", meas_cur_frame.size());
-                        {
-                            slam->TrackMonocular(cf, t, meas_cur_frame, tname);
-                        }
-                        
-                        timer.tok("Track", true);
-//                        auto t2 = timer.durationMilliSeconds();
-//                        float track_fps = std::min(30.0f, static_cast<float>(1000/t2));
-//
-//                        auto dt = (t - t_prev) * 1e3;
-//                        if(t2 < 33) {
-//                            usleep((33-t2) * 1e3);
-//                        }
-                    }
+                for(auto&& meas: measurements) {
+                    auto&& curImg = meas.second;
+                    string tname = std::to_string(curImg.timestamp);
+//                    printf("track with %lu measures!\n", meas.first.size());
+                    slam->TrackMonocular(curImg.image, curImg.timestamp, meas.first, tname);
                 }
-                else{
-                    usleep(3000);
-                    continue;
-                }
+                
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
         };
         track_thread = thread(track_func);
@@ -165,15 +186,19 @@ bool is_imu_started = false;
     {
 #ifndef CALIB_MODE
         if(slam) {
-            static int counter =0;
-            if((counter = counter++ % 5) == 0) {
-                cv::Mat gray;
-                cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
-                float scale = 0.5f;
-                cv::resize(gray, gray, cv::Size(int(src.cols * scale), int(src.rows * scale)));
-                slam->setCFScaled(gray, [[NSProcessInfo processInfo] systemUptime]);
-            }
+//            static int curId = 0;
+//            if((curId = curId++ % 5) == 0) {
+            cv::Mat gray;
+            cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
+            float scale = 0.5f;
+            cv::resize(gray, gray, cv::Size(int(src.cols * scale), int(src.rows * scale)));
             
+            mutexImuMeas.lock();
+//            slam->setCFScaled(gray, [[NSProcessInfo processInfo] systemUptime]);
+            cached_imgs.push(ImageCache{gray, [[NSProcessInfo processInfo] systemUptime]});
+            mutexImuMeas.unlock();
+            con.notify_one();
+//            }
         }
 #else
     
@@ -317,10 +342,12 @@ vector<IMU::Point> gyro_buf;  // for Interpolation
              return;
          }
          
-        {
-            std::unique_lock<std::mutex> lock2(mutexImuMeas);
-             meas.push(imu_msg);
-        }
+        
+        mutexImuMeas.lock();
+        meas.push(imu_msg);
+        mutexImuMeas.unlock();
+        con.notify_one();
+        
 #else
         std::ofstream gyroOutFile(tmp_folder + "gyr.txt", std::ios::app);
         auto&& t = (latestGyro.timestamp);

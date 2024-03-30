@@ -82,11 +82,6 @@ class Settings;
 
 class System
 {
-    struct ImageCache{
-        cv::Mat image;
-        double timestamp;
-    };
-    
 public:
     // Input sensor
     enum eSensor{
@@ -190,9 +185,6 @@ public:
     void ChangeDataset();
 
     float GetImageScale();
-    
-    void setCFScaled(cv::Mat const& input, double timestamp, float scale=0.5f);
-    ImageCache getCFScaled();
 
 #ifdef REGISTER_TIMES
     void InsertRectTime(double& time);
@@ -271,10 +263,6 @@ private:
 
     Settings* settings_;
     cv::Mat* m_descriptor = nullptr;
-    
-    std::mutex mMutexLoadCF;
-    
-    std::queue<ImageCache> mCache;
 };
 
 }// namespace ORB_SLAM
