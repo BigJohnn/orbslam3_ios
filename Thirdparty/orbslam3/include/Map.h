@@ -38,7 +38,7 @@ class KeyFrame;
 class Atlas;
 class KeyFrameDatabase;
 
-class Map
+class Map : public std::enable_shared_from_this<Map>
 {
     friend class boost::serialization::access;
 

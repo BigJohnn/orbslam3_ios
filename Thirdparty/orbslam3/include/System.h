@@ -141,8 +141,8 @@ public:
     void SaveTrajectoryEuRoC(const string &filename);
     void SaveKeyFrameTrajectoryEuRoC(const string &filename);
 
-    void SaveTrajectoryEuRoC(const string &filename, Map* pMap);
-    void SaveKeyFrameTrajectoryEuRoC(const string &filename, Map* pMap);
+    void SaveTrajectoryEuRoC(const string &filename, std::shared_ptr<Map> pMap);
+    void SaveKeyFrameTrajectoryEuRoC(const string &filename, std::shared_ptr<Map> pMap);
 
     // Save data used for initialization debug
     void SaveDebugData(const int &iniIdx);
@@ -195,7 +195,7 @@ private:
     KeyFrameDatabase* mpKeyFrameDatabase;
 
     // Map structure that stores the pointers to all KeyFrames and MapPoints.
-    //Map* mpMap;
+    //std::shared_ptr<Map> mpMap;
     Atlas* mpAtlas;
 
     // Tracker. It receives a frame and computes the associated camera pose.

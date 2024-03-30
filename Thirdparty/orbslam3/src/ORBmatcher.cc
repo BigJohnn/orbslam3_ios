@@ -1999,7 +1999,7 @@ namespace ORB_SLAM3
                 {
                     for(size_t j=0, jend=rotHist[i].size(); j<jend; j++)
                     {
-                        CurrentFrame.mvpMapPoints[rotHist[i][j]]=NULL;
+                        CurrentFrame.mvpMapPoints[rotHist[i][j]]=nullptr;
                         nmatches--;
                     }
                 }

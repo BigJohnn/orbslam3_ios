@@ -34,8 +34,8 @@ namespace ORB_SLAM3
 
 LoopClosing::LoopClosing(Atlas *pAtlas, KeyFrameDatabase *pDB, ORBVocabulary *pVoc, const bool bFixScale, const bool bActiveLC):
     mbResetRequested(false), mbResetActiveMapRequested(false), mbFinishRequested(false), mbFinished(true), mpAtlas(pAtlas),
-    mpKeyFrameDB(pDB), mpORBVocabulary(pVoc), mpMatchedKF(NULL), mLastLoopKFid(0), mbRunningGBA(false), mbFinishedGBA(true),
-    mbStopGBA(false), mpThreadGBA(NULL), mbFixScale(bFixScale), mnFullBAIdx(0), mnLoopNumCoincidences(0), mnMergeNumCoincidences(0),
+    mpKeyFrameDB(pDB), mpORBVocabulary(pVoc), mpMatchedKF(nullptr), mLastLoopKFid(0), mbRunningGBA(false), mbFinishedGBA(true),
+    mbStopGBA(false), mpThreadGBA(nullptr), mbFixScale(bFixScale), mnFullBAIdx(0), mnLoopNumCoincidences(0), mnMergeNumCoincidences(0),
     mbLoopDetected(false), mbMergeDetected(false), mnLoopNumNotFound(0), mnMergeNumNotFound(0), mbActiveLC(bActiveLC)
 {
     mnCovisibilityConsistencyTh = 3;
@@ -1021,7 +1021,7 @@ void LoopClosing::CorrectLoop()
     Sophus::SE3d correctedTcw(mg2oLoopScw.rotation(),mg2oLoopScw.translation() / mg2oLoopScw.scale());
     mpCurrentKF->SetPose(correctedTcw.cast<float>());
 
-    Map* pLoopMap = mpCurrentKF->GetMap();
+    std::shared_ptr<Map> pLoopMap = mpCurrentKF->GetMap();
 
 #ifdef REGISTER_TIMES
     /*std::shared_ptr<KeyFrame> pKF = mpCurrentKF;
@@ -1257,8 +1257,8 @@ void LoopClosing::MergeLocal()
 
     // Merge map will become in the new active map with the local window of KFs and MPs from the current map.
     // Later, the elements of the current map will be transform to the new active map reference, in order to keep real time tracking
-    Map* pCurrentMap = mpCurrentKF->GetMap();
-    Map* pMergeMap = mpMergeMatchedKF->GetMap();
+    std::shared_ptr<Map> pCurrentMap = mpCurrentKF->GetMap();
+    std::shared_ptr<Map> pMergeMap = mpMergeMatchedKF->GetMap();
 
     //std::cout << "Merge local, Active map: " << pCurrentMap->GetId() << std::endl;
     //std::cout << "Merge local, Non-Active map: " << pMergeMap->GetId() << std::endl;
@@ -1826,8 +1826,8 @@ void LoopClosing::MergeLocal2()
     }
     //cout << "Local Map stopped" << endl;
 
-    Map* pCurrentMap = mpCurrentKF->GetMap();
-    Map* pMergeMap = mpMergeMatchedKF->GetMap();
+    std::shared_ptr<Map> pCurrentMap = mpCurrentKF->GetMap();
+    std::shared_ptr<Map> pMergeMap = mpMergeMatchedKF->GetMap();
 
     {
         float s_on = mSold_new.scale();
@@ -2124,7 +2124,7 @@ void LoopClosing::SearchAndFuse(const KeyFrameAndPose &CorrectedPosesMap, vector
     {
         int num_replaces = 0;
         std::shared_ptr<KeyFrame> pKFi = mit->first;
-        Map* pMap = pKFi->GetMap();
+        std::shared_ptr<Map> pMap = pKFi->GetMap();
 
         g2o::Sim3 g2oScw = mit->second;
         Sophus::Sim3f Scw = Converter::toSophus(g2oScw);
@@ -2166,7 +2166,7 @@ void LoopClosing::SearchAndFuse(const vector<std::shared_ptr<KeyFrame>> &vConect
     {
         int num_replaces = 0;
         std::shared_ptr<KeyFrame> pKF = (*mit);
-        Map* pMap = pKF->GetMap();
+        std::shared_ptr<Map> pMap = pKF->GetMap();
         Sophus::SE3f Tcw = pKF->GetPose();
         Sophus::Sim3f Scw(Tcw.unit_quaternion(),Tcw.translation());
         Scw.setScale(1.f);
@@ -2215,7 +2215,7 @@ void LoopClosing::RequestReset()
     }
 }
 
-void LoopClosing::RequestResetActiveMap(Map *pMap)
+void LoopClosing::RequestResetActiveMap(std::shared_ptr<Map>pMap)
 {
     {
         unique_lock<mutex> lock(mMutexReset);
@@ -2265,7 +2265,7 @@ void LoopClosing::ResetIfRequested()
     }
 }
 
-void LoopClosing::RunGlobalBundleAdjustment(Map* pActiveMap, unsigned long nLoopKF)
+void LoopClosing::RunGlobalBundleAdjustment(std::shared_ptr<Map> pActiveMap, unsigned long nLoopKF)
 {  
     Verbose::PrintMess("Starting Global Bundle Adjustment", Verbose::VERBOSITY_NORMAL);
 

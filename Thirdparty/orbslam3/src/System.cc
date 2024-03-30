@@ -40,7 +40,7 @@ Verbose::eLevel Verbose::th = Verbose::VERBOSITY_NORMAL;
 
 System::System(const string &strVocFile, const string &strSettingsFile, const eSensor sensor,
                const bool bUseViewer, const int initFr, const string &strSequence):
-    mSensor(sensor), mpViewer(static_cast<Viewer*>(NULL)), mbReset(false), mbResetActiveMap(false),
+    mSensor(sensor), mpViewer(static_cast<Viewer*>(nullptr)), mbReset(false), mbResetActiveMap(false),
     mbActivateLocalizationMode(false), mbDeactivateLocalizationMode(false), mbShutDown(false)
 {
     // Output welcome message
@@ -223,7 +223,7 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
     //usleep(10*1000*1000);
 
     // Fix verbosity
-    Verbose::SetTh(Verbose::VERBOSITY_NORMAL);
+    Verbose::SetTh(Verbose::VERBOSITY_DEBUG);
 
 }
 
@@ -494,11 +494,11 @@ void System::SaveTrajectoryEuRoC(const string &filename)
         return;
     }*/
 
-    vector<Map*> vpMaps = mpAtlas->GetAllMaps();
+    vector<std::shared_ptr<Map>> vpMaps = mpAtlas->GetAllMaps();
     int numMaxKFs = 0;
-    Map* pBiggerMap;
+    std::shared_ptr<Map> pBiggerMap;
     std::cout << "There are " << std::to_string(vpMaps.size()) << " maps in the atlas" << std::endl;
-    for(Map* pMap :vpMaps)
+    for(std::shared_ptr<Map> pMap :vpMaps)
     {
         std::cout << "  Map " << std::to_string(pMap->GetId()) << " has " << std::to_string(pMap->GetAllKeyFrames().size()) << " KFs" << std::endl;
         if(pMap->GetAllKeyFrames().size() > numMaxKFs)
@@ -601,7 +601,7 @@ void System::SaveTrajectoryEuRoC(const string &filename)
     cout << endl << "End of saving trajectory to " << filename << " ..." << endl;
 }
 
-void System::SaveTrajectoryEuRoC(const string &filename, Map* pMap)
+void System::SaveTrajectoryEuRoC(const string &filename, std::shared_ptr<Map> pMap)
 {
 
     cout << endl << "Saving trajectory of map " << pMap->GetId() << " to " << filename << " ..." << endl;
@@ -716,10 +716,10 @@ void System::SaveTrajectoryEuRoC(const string &filename, Map* pMap)
         return;
     }
 
-    vector<Map*> vpMaps = mpAtlas->GetAllMaps();
-    Map* pBiggerMap;
+    vector<std::shared_ptr<Map>> vpMaps = mpAtlas->GetAllMaps();
+    std::shared_ptr<Map> pBiggerMap;
     int numMaxKFs = 0;
-    for(Map* pMap :vpMaps)
+    for(std::shared_ptr<Map> pMap :vpMaps)
     {
         if(pMap->GetAllKeyFrames().size() > numMaxKFs)
         {
@@ -831,10 +831,10 @@ void System::SaveTrajectoryEuRoC(const string &filename, Map* pMap)
 {
     cout << endl << "Saving keyframe trajectory to " << filename << " ..." << endl;
 
-    vector<Map*> vpMaps = mpAtlas->GetAllMaps();
-    Map* pBiggerMap;
+    vector<std::shared_ptr<Map>> vpMaps = mpAtlas->GetAllMaps();
+    std::shared_ptr<Map> pBiggerMap;
     int numMaxKFs = 0;
-    for(Map* pMap :vpMaps)
+    for(std::shared_ptr<Map> pMap :vpMaps)
     {
         if(pMap->GetAllKeyFrames().size() > numMaxKFs)
         {
@@ -883,10 +883,10 @@ void System::SaveKeyFrameTrajectoryEuRoC(const string &filename)
 {
     cout << endl << "Saving keyframe trajectory to " << filename << " ..." << endl;
 
-    vector<Map*> vpMaps = mpAtlas->GetAllMaps();
-    Map* pBiggerMap;
+    vector<std::shared_ptr<Map>> vpMaps = mpAtlas->GetAllMaps();
+    std::shared_ptr<Map> pBiggerMap;
     int numMaxKFs = 0;
-    for(Map* pMap :vpMaps)
+    for(std::shared_ptr<Map> pMap :vpMaps)
     {
         if(pMap && pMap->GetAllKeyFrames().size() > numMaxKFs)
         {
@@ -937,7 +937,7 @@ void System::SaveKeyFrameTrajectoryEuRoC(const string &filename)
     f.close();
 }
 
-void System::SaveKeyFrameTrajectoryEuRoC(const string &filename, Map* pMap)
+void System::SaveKeyFrameTrajectoryEuRoC(const string &filename, std::shared_ptr<Map> pMap)
 {
     cout << endl << "Saving keyframe trajectory of map " << pMap->GetId() << " to " << filename << " ..." << endl;
 

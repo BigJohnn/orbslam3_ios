@@ -77,7 +77,7 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     ImuCamPose(){}
     ImuCamPose(std::shared_ptr<KeyFrame> pKF);
-    ImuCamPose(Frame* pF);
+    ImuCamPose(std::shared_ptr<Frame> pF);
     ImuCamPose(Eigen::Matrix3d &_Rwc, Eigen::Vector3d &_twc, std::shared_ptr<KeyFrame> pKF);
 
     void SetParam(const std::vector<Eigen::Matrix3d> &_Rcw, const std::vector<Eigen::Vector3d> &_tcw, const std::vector<Eigen::Matrix3d> &_Rbc,
@@ -135,7 +135,7 @@ public:
     VertexPose(std::shared_ptr<KeyFrame> pKF){
         setEstimate(ImuCamPose(pKF));
     }
-    VertexPose(Frame* pF){
+    VertexPose(std::shared_ptr<Frame> pF){
         setEstimate(ImuCamPose(pF));
     }
 
@@ -161,7 +161,7 @@ public:
     VertexPose4DoF(std::shared_ptr<KeyFrame> pKF){
         setEstimate(ImuCamPose(pKF));
     }
-    VertexPose4DoF(Frame* pF){
+    VertexPose4DoF(std::shared_ptr<Frame> pF){
         setEstimate(ImuCamPose(pF));
     }
     VertexPose4DoF(Eigen::Matrix3d &_Rwc, Eigen::Vector3d &_twc, std::shared_ptr<KeyFrame> pKF){
@@ -194,7 +194,7 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     VertexVelocity(){}
     VertexVelocity(std::shared_ptr<KeyFrame> pKF);
-    VertexVelocity(Frame* pF);
+    VertexVelocity(std::shared_ptr<Frame> pF);
 
     virtual bool read(std::istream& is){return false;}
     virtual bool write(std::ostream& os) const{return false;}
@@ -215,7 +215,7 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     VertexGyroBias(){}
     VertexGyroBias(std::shared_ptr<KeyFrame> pKF);
-    VertexGyroBias(Frame* pF);
+    VertexGyroBias(std::shared_ptr<Frame> pF);
 
     virtual bool read(std::istream& is){return false;}
     virtual bool write(std::ostream& os) const{return false;}
@@ -237,7 +237,7 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     VertexAccBias(){}
     VertexAccBias(std::shared_ptr<KeyFrame> pKF);
-    VertexAccBias(Frame* pF);
+    VertexAccBias(std::shared_ptr<Frame> pF);
 
     virtual bool read(std::istream& is){return false;}
     virtual bool write(std::ostream& os) const{return false;}

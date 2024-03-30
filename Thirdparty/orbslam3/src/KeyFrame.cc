@@ -32,17 +32,16 @@ KeyFrame::KeyFrame():
         mnTrackReferenceForFrame(0), mnFuseTargetForKF(0), mnBALocalForKF(0), mnBAFixedForKF(0), mnBALocalForMerge(0),
         mnLoopQuery(0), mnLoopWords(0), mnRelocQuery(0), mnRelocWords(0), mnMergeQuery(0), mnMergeWords(0), mnBAGlobalForKF(0),
         fx(0), fy(0), cx(0), cy(0), invfx(0), invfy(0), mnPlaceRecognitionQuery(0), mnPlaceRecognitionWords(0), mPlaceRecognitionScore(0),
-        mbf(0), mb(0), mThDepth(0), N(0), mvKeys(static_cast<vector<cv::KeyPoint> >(NULL)), mvKeysUn(static_cast<vector<cv::KeyPoint> >(NULL)),
-        mvuRight(static_cast<vector<float> >(NULL)), mvDepth(static_cast<vector<float> >(NULL)), mnScaleLevels(0), mfScaleFactor(0),
+        mbf(0), mb(0), mThDepth(0), N(0),mnScaleLevels(0), mfScaleFactor(0),
         mfLogScaleFactor(0), mvScaleFactors(0), mvLevelSigma2(0), mvInvLevelSigma2(0), mnMinX(0), mnMinY(0), mnMaxX(0),
-        mnMaxY(0), mPrevKF(nullptr), mNextKF(nullptr), mbFirstConnection(true), mpParent(NULL), mbNotErase(false),
+        mnMaxY(0), mPrevKF(nullptr), mNextKF(nullptr), mbFirstConnection(true), mpParent(nullptr), mbNotErase(false),
         mbToBeErased(false), mbBad(false), mHalfBaseline(0), mbCurrentPlaceRecognition(false), mnMergeCorrectedForKF(0),
         NLeft(0),NRight(0), mnNumberOfOpt(0), mbHasVelocity(false)
 {
 
 }
 
-KeyFrame::KeyFrame(std::shared_ptr<Frame> const& F, Map *pMap, KeyFrameDatabase *pKFDB):
+KeyFrame::KeyFrame(std::shared_ptr<Frame> const& F, std::shared_ptr<Map>pMap, KeyFrameDatabase *pKFDB):
     bImu(pMap->isImuInitialized()), mnFrameId(F->mnId),  mTimeStamp(F->mTimeStamp), mnGridCols(FRAME_GRID_COLS), mnGridRows(FRAME_GRID_ROWS),
     mfGridElementWidthInv(F->mfGridElementWidthInv), mfGridElementHeightInv(F->mfGridElementHeightInv),
     mnTrackReferenceForFrame(0), mnFuseTargetForKF(0), mnBALocalForKF(0), mnBAFixedForKF(0), mnBALocalForMerge(0),
@@ -53,9 +52,9 @@ KeyFrame::KeyFrame(std::shared_ptr<Frame> const& F, Map *pMap, KeyFrameDatabase 
     mBowVec(F->mBowVec), mFeatVec(F->mFeatVec), mnScaleLevels(F->mnScaleLevels), mfScaleFactor(F->mfScaleFactor),
     mfLogScaleFactor(F->mfLogScaleFactor), mvScaleFactors(F->mvScaleFactors), mvLevelSigma2(F->mvLevelSigma2),
     mvInvLevelSigma2(F->mvInvLevelSigma2), mnMinX(F->mnMinX), mnMinY(F->mnMinY), mnMaxX(F->mnMaxX),
-    mnMaxY(F->mnMaxY), mK_(F->mK_), mPrevKF(NULL), mNextKF(NULL), mpImuPreintegrated(F->mpImuPreintegrated),
+    mnMaxY(F->mnMaxY), mK_(F->mK_), mPrevKF(nullptr), mNextKF(nullptr), mpImuPreintegrated(F->mpImuPreintegrated),
     mImuCalib(F->mImuCalib), mvpMapPoints(F->mvpMapPoints), mpKeyFrameDB(pKFDB),
-    mpORBvocabulary(F->mpORBvocabulary), mbFirstConnection(true), mpParent(NULL), mDistCoef(F->mDistCoef), mbNotErase(false), mnDataset(F->mnDataset),
+    mpORBvocabulary(F->mpORBvocabulary), mbFirstConnection(true), mpParent(nullptr), mDistCoef(F->mDistCoef), mbNotErase(false), mnDataset(F->mnDataset),
     mbToBeErased(false), mbBad(false), mHalfBaseline(F->mb/2), mpMap(pMap), mbCurrentPlaceRecognition(false), mNameFile(F->mNameFile), mnMergeCorrectedForKF(0),
     mpCamera(F->mpCamera), mpCamera2(F->mpCamera2),
     mvLeftToRightMatch(F->mvLeftToRightMatch),mvRightToLeftMatch(F->mvRightToLeftMatch), mTlr(F->GetRelativePoseTlr()),
@@ -832,13 +831,13 @@ IMU::Bias KeyFrame::GetImuBias()
     return mImuBias;
 }
 
-Map* KeyFrame::GetMap()
+std::shared_ptr<Map> KeyFrame::GetMap()
 {
     unique_lock<mutex> lock(mMutexMap);
     return mpMap;
 }
 
-void KeyFrame::UpdateMap(Map* pMap)
+void KeyFrame::UpdateMap(std::shared_ptr<Map> pMap)
 {
     unique_lock<mutex> lock(mMutexMap);
     mpMap = pMap;
@@ -846,15 +845,15 @@ void KeyFrame::UpdateMap(Map* pMap)
 
 void KeyFrame::PreSave(set<std::shared_ptr<KeyFrame>>& spKF,set<std::shared_ptr<MapPoint>>& spMP, set<GeometricCamera*>& spCam)
 {
-    // Save the id of each MapPoint in this KF, there can be null pointer in the vector
+    // Save the id of each MapPoint in this KF, there can be nullptr pointer in the vector
     mvBackupMapPointsId.clear();
     mvBackupMapPointsId.reserve(N);
     for(int i = 0; i < N; ++i)
     {
 
-        if(mvpMapPoints[i] && spMP.find(mvpMapPoints[i]) != spMP.end()) // Checks if the element is not null
+        if(mvpMapPoints[i] && spMP.find(mvpMapPoints[i]) != spMP.end()) // Checks if the element is not nullptr
             mvBackupMapPointsId.push_back(mvpMapPoints[i]->mnId);
-        else // If the element is null his value is -1 because all the id are positives
+        else // If the element is nullptr his value is -1 because all the id are positives
             mvBackupMapPointsId.push_back(-1);
     }
     // Save the id of each connected KF with it weight

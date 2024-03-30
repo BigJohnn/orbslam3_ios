@@ -70,7 +70,7 @@ ImuCamPose::ImuCamPose(std::shared_ptr<KeyFrame>pKF):its(0)
     DR.setIdentity();
 }
 
-ImuCamPose::ImuCamPose(Frame *pF):its(0)
+ImuCamPose::ImuCamPose(std::shared_ptr<Frame>pF):its(0)
 {
     // Load IMU pose
     twb = pF->GetImuPosition().cast<double>();
@@ -458,7 +458,7 @@ VertexVelocity::VertexVelocity(std::shared_ptr<KeyFrame> pKF)
     setEstimate(pKF->GetVelocity().cast<double>());
 }
 
-VertexVelocity::VertexVelocity(Frame* pF)
+VertexVelocity::VertexVelocity(std::shared_ptr<Frame> pF)
 {
     setEstimate(pF->GetVelocity().cast<double>());
 }
@@ -468,7 +468,7 @@ VertexGyroBias::VertexGyroBias(std::shared_ptr<KeyFrame>pKF)
     setEstimate(pKF->GetGyroBias().cast<double>());
 }
 
-VertexGyroBias::VertexGyroBias(Frame *pF)
+VertexGyroBias::VertexGyroBias(std::shared_ptr<Frame>pF)
 {
     Eigen::Vector3d bg;
     bg << pF->mImuBias.bwx, pF->mImuBias.bwy,pF->mImuBias.bwz;
@@ -480,7 +480,7 @@ VertexAccBias::VertexAccBias(std::shared_ptr<KeyFrame>pKF)
     setEstimate(pKF->GetAccBias().cast<double>());
 }
 
-VertexAccBias::VertexAccBias(Frame *pF)
+VertexAccBias::VertexAccBias(std::shared_ptr<Frame>pF)
 {
     Eigen::Vector3d ba;
     ba << pF->mImuBias.bax, pF->mImuBias.bay,pF->mImuBias.baz;

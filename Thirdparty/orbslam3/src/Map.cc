@@ -30,7 +30,7 @@ Map::Map():mnMaxKFid(0),mnBigChangeIdx(0), mbImuInitialized(false), mnMapChange(
 mbFail(false), mIsInUse(false), mHasTumbnail(false), mbBad(false), mnMapChangeNotified(0), mbIsInertial(false), mbIMU_BA1(false), mbIMU_BA2(false)
 {
     mnId=nNextId++;
-//    mThumbnail = static_cast<GLubyte*>(NULL);
+//    mThumbnail = static_cast<GLubyte*>(nullptr);
 }
 
 Map::Map(int initKFid):mnInitKFid(initKFid), mnMaxKFid(initKFid),/*mnLastLoopKFid(initKFid),*/ mnBigChangeIdx(0), mIsInUse(false),
@@ -38,7 +38,7 @@ Map::Map(int initKFid):mnInitKFid(initKFid), mnMaxKFid(initKFid),/*mnLastLoopKFi
                        mnMapChange(0), mbFail(false), mnMapChangeNotified(0), mbIsInertial(false), mbIMU_BA1(false), mbIMU_BA2(false)
 {
     mnId=nNextId++;
-//    mThumbnail = static_cast<GLubyte*>(NULL);
+//    mThumbnail = static_cast<GLubyte*>(nullptr);
 }
 
 Map::~Map()
@@ -51,7 +51,7 @@ Map::~Map()
 
 //    if(mThumbnail)
 //        delete mThumbnail;
-//    mThumbnail = static_cast<GLubyte*>(NULL);
+//    mThumbnail = static_cast<GLubyte*>(nullptr);
 
     mvpReferenceMapPoints.clear();
     mvpKeyFrameOrigins.clear();
@@ -219,7 +219,7 @@ void Map::clear()
     for(auto sit=mspKeyFrames.begin(), send=mspKeyFrames.end(); sit!=send; sit++)
     {
         auto pKF = *sit;
-        pKF->UpdateMap(static_cast<Map*>(NULL));
+        pKF->UpdateMap(nullptr);
 //        delete *sit;
     }
 
@@ -371,7 +371,7 @@ void Map::PreSave(std::set<GeometricCamera*> &spCams)
         map<std::shared_ptr<KeyFrame>, std::tuple<int,int>> mpObs = pMPi->GetObservations();
         for(map<std::shared_ptr<KeyFrame>, std::tuple<int,int>>::iterator it= mpObs.begin(), end=mpObs.end(); it!=end; ++it)
         {
-            if(it->first->GetMap() != this || it->first->isBad())
+            if(it->first->GetMap() != shared_from_this() || it->first->isBad())
             {
                 pMPi->EraseObservation(it->first);
             }
@@ -435,7 +435,7 @@ void Map::PostLoad(KeyFrameDatabase* pKFDB, ORBVocabulary* pORBVoc/*, map<long u
         if(!pMPi || pMPi->isBad())
             continue;
 
-        pMPi->UpdateMap(this);
+        pMPi->UpdateMap(shared_from_this());
         mpMapPointId[pMPi->mnId] = pMPi;
     }
 
@@ -445,7 +445,7 @@ void Map::PostLoad(KeyFrameDatabase* pKFDB, ORBVocabulary* pORBVoc/*, map<long u
         if(!pKFi || pKFi->isBad())
             continue;
 
-        pKFi->UpdateMap(this);
+        pKFi->UpdateMap(shared_from_this());
         pKFi->SetORBVocabulary(pORBVoc);
         pKFi->SetKeyFrameDatabase(pKFDB);
         mpKeyFrameId[pKFi->mnId] = pKFi;

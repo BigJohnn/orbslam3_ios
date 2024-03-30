@@ -58,15 +58,15 @@ class Atlas
 
         // Save/load a set structure, the set structure is broken in libboost 1.58 for ubuntu 16.04, a vector is serializated
         //ar & mspMaps;
-        ar & mvpBackupMaps;
-        ar & mvpCameras;
+//        ar & mvpBackupMaps;
+//        ar & mvpCameras;
         // Need to save/load the static Id from Frame, KeyFrame, MapPoint and Map
         ar & Map::nNextId;
         ar & Frame::nNextId;
         ar & KeyFrame::nNextId;
         ar & MapPoint::nNextId;
         ar & GeometricCamera::nNextId;
-        ar & mnLastInitKFidMap;
+//        ar & mnLastInitKFidMap;
     }
 
 public:
@@ -77,7 +77,7 @@ public:
     ~Atlas();
 
     void CreateNewMap();
-    void ChangeMap(Map* pMap);
+    void ChangeMap(std::shared_ptr<Map> pMap);
 
     unsigned long int GetLastInitKFid();
 
@@ -92,7 +92,7 @@ public:
     GeometricCamera* AddCamera(GeometricCamera* pCam);
     std::vector<GeometricCamera*> GetAllCameras();
 
-    /* All methods without Map pointer work on current map */
+    /* All methods without Map pointer work on current Map  */
     void SetReferenceMapPoints(const std::vector<std::shared_ptr<MapPoint>> &vpMPs);
     void InformNewBigChange();
     int GetLastBigChangeIdx();
@@ -105,7 +105,7 @@ public:
     std::vector<std::shared_ptr<MapPoint>> GetAllMapPoints();
     std::vector<std::shared_ptr<MapPoint>> GetReferenceMapPoints();
 
-    vector<Map*> GetAllMaps();
+    vector<std::shared_ptr<Map>> GetAllMaps();
 
     int CountMaps();
 
@@ -113,9 +113,9 @@ public:
 
     void clearAtlas();
 
-    Map* GetCurrentMap();
+    std::shared_ptr<Map> GetCurrentMap();
 
-    void SetMapBad(Map* pMap);
+    void SetMapBad(std::shared_ptr<Map> pMap);
     void RemoveBadMaps();
 
     bool isInertial();
@@ -141,12 +141,12 @@ public:
 
 protected:
 
-    std::set<Map*> mspMaps;
-    std::set<Map*> mspBadMaps;
+    std::set<std::shared_ptr<Map>> mspMaps;
+    std::set<std::shared_ptr<Map>> mspBadMaps;
     // Its necessary change the container from set to vector because libboost 1.58 and Ubuntu 16.04 have an error with this cointainer
-    std::vector<Map*> mvpBackupMaps;
+    std::vector<std::shared_ptr<Map>> mvpBackupMaps;
 
-    Map* mpCurrentMap;
+    std::shared_ptr<Map> mpCurrentMap;
 
     std::vector<GeometricCamera*> mvpCameras;
 

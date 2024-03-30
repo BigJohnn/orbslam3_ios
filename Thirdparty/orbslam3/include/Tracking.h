@@ -100,7 +100,7 @@ public:
 
     //DEBUG
     void SaveSubTrajectory(string strNameFile_frames, string strNameFile_kf, string strFolder="");
-    void SaveSubTrajectory(string strNameFile_frames, string strNameFile_kf, Map* pMap);
+    void SaveSubTrajectory(string strNameFile_frames, string strNameFile_kf, std::shared_ptr<Map> pMap);
 
     float GetImageScale();
 
