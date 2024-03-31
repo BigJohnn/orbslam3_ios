@@ -106,13 +106,6 @@ public:
 
     vector<size_t> GetFeaturesInArea(const float &x, const float  &y, const float  &r, const int minLevel=-1, const int maxLevel=-1, const bool bRight = false) const;
 
-    // Search a match for each keypoint in the left image to a keypoint in the right image.
-    // If there is a match, depth is computed and the right coordinate associated to the left keypoint is stored.
-    void ComputeStereoMatches();
-
-    // Associate a "right" coordinate to a keypoint if there is valid depth in the depthmap.
-    void ComputeStereoFromRGBD(const cv::Mat &imDepth);
-
     // Backprojects a keypoint (if stereo/depth info available) into 3D world coordinates.
     bool UnprojectStereo(const int &i, Eigen::Vector3f &x3D);
 
@@ -188,7 +181,7 @@ public:
     ORBVocabulary* mpORBvocabulary = nullptr;
 
     // Feature extractor. The right is used only in the stereo case.
-    ORBextractor* mpORBextractorLeft = nullptr, *mpORBextractorRight = nullptr;
+    ORBextractor* mpORBextractorLeft = nullptr;//, *mpORBextractorRight = nullptr;
 
     // Frame timestamp.
     double mTimeStamp;
@@ -315,7 +308,7 @@ private:
 
     bool mbImuPreintegrated;
 
-    std::mutex *mpMutexImu = nullptr;
+    std::shared_ptr<std::mutex> mpMutexImu;
 
 public:
     GeometricCamera* mpCamera = nullptr, *mpCamera2 = nullptr;
@@ -336,16 +329,12 @@ public:
     std::vector<Eigen::Vector3f> mvStereo3Dpoints;
 
     //Grid for the right image
-    std::vector<std::size_t> mGridRight[FRAME_GRID_COLS][FRAME_GRID_ROWS];
+//    std::vector<std::size_t> mGridRight[FRAME_GRID_COLS][FRAME_GRID_ROWS];
 
-    Frame(const cv::Mat &imLeft, const cv::Mat &imRight, const double &timeStamp, ORBextractor* extractorLeft, ORBextractor* extractorRight, ORBVocabulary* voc, cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth, GeometricCamera* pCamera, GeometricCamera* pCamera2, Sophus::SE3f& Tlr,std::shared_ptr<Frame> pPrevF = nullptr, const IMU::Calib &ImuCalib = IMU::Calib());
-
-    //Stereo fisheye
-    void ComputeStereoFishEyeMatches();
+//    Frame(const cv::Mat &imLeft, const cv::Mat &imRight, const double &timeStamp, ORBextractor* extractorLeft, ORBextractor* extractorRight, ORBVocabulary* voc, cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth, GeometricCamera* pCamera, GeometricCamera* pCamera2, Sophus::SE3f& Tlr,std::shared_ptr<Frame> pPrevF = nullptr, const IMU::Calib &ImuCalib = IMU::Calib());
 
     bool isInFrustumChecks(std::shared_ptr<MapPoint> pMP, float viewingCosLimit, bool bRight = false);
 
-    Eigen::Vector3f UnprojectStereoFishEye(const int &i);
 
     cv::Mat imgLeft, imgRight;
 

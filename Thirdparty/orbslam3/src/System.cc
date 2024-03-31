@@ -242,7 +242,8 @@ Sophus::SE3f System::TrackMonocular(const cv::Mat &im, const double &timestamp, 
         exit(-1);
     }
 
-    cv::Mat imToFeed = im.clone();
+//    cv::Mat imToFeed = im.clone();
+    cv::Mat imToFeed = im;
     if(settings_ && settings_->needToResize()){
         cv::Mat resizedIm;
         cv::resize(im,resizedIm,settings_->newImSize());

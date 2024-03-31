@@ -230,6 +230,7 @@ private:
     std::mutex mMutexMode;
     bool mbActivateLocalizationMode;
     bool mbDeactivateLocalizationMode;
+    
 
     // Shutdown flag
     bool mbShutDown;

@@ -2616,9 +2616,6 @@ void Tracking::UpdateLastFrame()
             if(mpLastFrame->Nleft == -1){
                 mpLastFrame->UnprojectStereo(i, x3D);
             }
-            else{
-                x3D = mpLastFrame->UnprojectStereoFishEye(i);
-            }
 
             std::shared_ptr<MapPoint> pNewMP = std::make_shared<MapPoint>(x3D,mpAtlas->GetCurrentMap(),mpLastFrame,i);
             mpLastFrame->mvpMapPoints[i]=pNewMP;
@@ -3087,9 +3084,6 @@ void Tracking::CreateNewKeyFrame()
 
                     if(mpCurrentFrame->Nleft == -1){
                         mpCurrentFrame->UnprojectStereo(i, x3D);
-                    }
-                    else{
-                        x3D = mpCurrentFrame->UnprojectStereoFishEye(i);
                     }
 
                     std::shared_ptr<MapPoint> pNewMP = std::make_shared<MapPoint>(x3D,pKF,mpAtlas->GetCurrentMap());
