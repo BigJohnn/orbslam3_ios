@@ -42,7 +42,7 @@ namespace ORB_SLAM3
 
     int ORBmatcher::SearchByProjection(Frame &F, const vector<std::shared_ptr<MapPoint>> &vpMapPoints, const float th, const bool bFarPoints, const float thFarPoints)
     {
-        int nmatches=0, left = 0, right = 0;
+        int nmatches=0, left = 0;
 
         const bool bFactor = th!=1.0;
 
@@ -88,13 +88,6 @@ namespace ORB_SLAM3
                         if(F.mvpMapPoints[idx])
                             if(F.mvpMapPoints[idx]->Observations()>0)
                                 continue;
-
-                        if(F.Nleft == -1 && F.mvuRight[idx]>0)
-                        {
-                            const float er = fabs(pMP->mTrackProjXR-F.mvuRight[idx]);
-                            if(er>r*F.mvScaleFactors[nPredictedLevel])
-                                continue;
-                        }
 
                         const cv::Mat &d = F.mDescriptors.row(idx);
 
@@ -194,56 +187,27 @@ namespace ORB_SLAM3
 
                     for(size_t iF=0; iF<vIndicesF.size(); iF++)
                     {
-                        if(F.Nleft == -1){
-                            const unsigned int realIdxF = vIndicesF[iF];
+                        
+                        const unsigned int realIdxF = vIndicesF[iF];
 
-                            if(vpMapPointMatches[realIdxF])
-                                continue;
+                        if(vpMapPointMatches[realIdxF])
+                            continue;
 
-                            const cv::Mat &dF = F.mDescriptors.row(realIdxF);
+                        const cv::Mat &dF = F.mDescriptors.row(realIdxF);
 
-                            const int dist =  DescriptorDistance(dKF,dF);
+                        const int dist =  DescriptorDistance(dKF,dF);
 
-                            if(dist<bestDist1)
-                            {
-                                bestDist2=bestDist1;
-                                bestDist1=dist;
-                                bestIdxF=realIdxF;
-                            }
-                            else if(dist<bestDist2)
-                            {
-                                bestDist2=dist;
-                            }
+                        if(dist<bestDist1)
+                        {
+                            bestDist2=bestDist1;
+                            bestDist1=dist;
+                            bestIdxF=realIdxF;
                         }
-                        else{
-                            const unsigned int realIdxF = vIndicesF[iF];
-
-                            if(vpMapPointMatches[realIdxF])
-                                continue;
-
-                            const cv::Mat &dF = F.mDescriptors.row(realIdxF);
-
-                            const int dist =  DescriptorDistance(dKF,dF);
-
-                            if(realIdxF < F.Nleft && dist<bestDist1){
-                                bestDist2=bestDist1;
-                                bestDist1=dist;
-                                bestIdxF=realIdxF;
-                            }
-                            else if(realIdxF < F.Nleft && dist<bestDist2){
-                                bestDist2=dist;
-                            }
-
-                            if(realIdxF >= F.Nleft && dist<bestDist1R){
-                                bestDist2R=bestDist1R;
-                                bestDist1R=dist;
-                                bestIdxFR=realIdxF;
-                            }
-                            else if(realIdxF >= F.Nleft && dist<bestDist2R){
-                                bestDist2R=dist;
-                            }
+                        else if(dist<bestDist2)
+                        {
+                            bestDist2=dist;
                         }
-
+                    
                     }
 
                     if(bestDist1<=TH_LOW)
@@ -707,9 +671,6 @@ namespace ORB_SLAM3
                 for(size_t i1=0, iend1=f1it->second.size(); i1<iend1; i1++)
                 {
                     const size_t idx1 = f1it->second[i1];
-                    if(pKF1 -> NLeft != -1 && idx1 >= pKF1 -> mvKeysUn.size()){
-                        continue;
-                    }
 
                     std::shared_ptr<MapPoint> pMP1 = vpMapPoints1[idx1];
                     if(!pMP1)
@@ -726,10 +687,6 @@ namespace ORB_SLAM3
                     for(size_t i2=0, iend2=f2it->second.size(); i2<iend2; i2++)
                     {
                         const size_t idx2 = f2it->second[i2];
-
-                        if(pKF2 -> NLeft != -1 && idx2 >= pKF2 -> mvKeysUn.size()){
-                            continue;
-                        }
 
                         std::shared_ptr<MapPoint> pMP2 = vpMapPoints2[idx2];
 
@@ -876,16 +833,7 @@ namespace ORB_SLAM3
                         continue;
                     }
 
-                    const bool bStereo1 = (pKF1->mvuRight[idx1]>=0);
-
-                    if(bOnlyStereo)
-                        if(!bStereo1)
-                            continue;
-
                     const cv::KeyPoint &kp1 = pKF1->mvKeysUn[idx1];
-
-                    const bool bRight1 = (pKF1 -> NLeft == -1 || idx1 < pKF1 -> NLeft) ? false
-                                                                                       : true;
 
                     const cv::Mat &d1 = pKF1->mDescriptors.row(idx1);
 
@@ -902,12 +850,6 @@ namespace ORB_SLAM3
                         if(vbMatched2[idx2] || pMP2)
                             continue;
 
-                        const bool bStereo2 = (pKF2->mvuRight[idx2]>=0);
-
-                        if(bOnlyStereo)
-                            if(!bStereo2)
-                                continue;
-
                         const cv::Mat &d2 = pKF2->mDescriptors.row(idx2);
 
                         const int dist = DescriptorDistance(d1,d2);
@@ -916,17 +858,12 @@ namespace ORB_SLAM3
                             continue;
 
                         const cv::KeyPoint &kp2 = pKF2->mvKeysUn[idx2];
-                        const bool bRight2 = (pKF2 -> NLeft == -1 || idx2 < pKF2 -> NLeft) ? false
-                                                                                           : true;
 
-                        if(!bStereo1 && !bStereo2)
+                        const float distex = ep(0)-kp2.pt.x;
+                        const float distey = ep(1)-kp2.pt.y;
+                        if(distex*distex+distey*distey<100*pKF2->mvScaleFactors[kp2.octave])
                         {
-                            const float distex = ep(0)-kp2.pt.x;
-                            const float distey = ep(1)-kp2.pt.y;
-                            if(distex*distex+distey*distey<100*pKF2->mvScaleFactors[kp2.octave])
-                            {
-                                continue;
-                            }
+                            continue;
                         }
 
                         if(bCoarse || pCamera1->epipolarConstrain(pCamera2,kp1,kp2,R12,t12,pKF1->mvLevelSigma2[kp1.octave],pKF2->mvLevelSigma2[kp2.octave])) // MODIFICATION_2
@@ -1009,17 +946,9 @@ namespace ORB_SLAM3
         Sophus::SE3f Tcw;
         Eigen::Vector3f Ow;
 
-        if(bRight){
-            cerr << "FATAL should NOT be right!!" <<endl;
-//            Tcw = pKF->GetRightPose();
-//            Ow = pKF->GetRightCameraCenter();
-//            pCamera = pKF->mpCamera2;
-        }
-        else{
-            Tcw = pKF->GetPose();
-            Ow = pKF->GetCameraCenter();
-            pCamera = pKF->mpCamera;
-        }
+        Tcw = pKF->GetPose();
+        Ow = pKF->GetCameraCenter();
+        pCamera = pKF->mpCamera;
 
         const float &fx = pKF->fx;
         const float &fy = pKF->fy;
@@ -1151,8 +1080,6 @@ namespace ORB_SLAM3
                     if(e2*pKF->mvInvLevelSigma2[kpLevel]>5.99)
                         continue;
                 }
-
-                if(bRight) idx += pKF->NLeft;
 
                 const cv::Mat &dKF = pKF->mDescriptors.row(idx);
 
@@ -1603,14 +1530,6 @@ namespace ORB_SLAM3
                         if(CurrentFrame.mvpMapPoints[i2])
                             if(CurrentFrame.mvpMapPoints[i2]->Observations()>0)
                                 continue;
-
-                        if(CurrentFrame.Nleft == -1 && CurrentFrame.mvuRight[i2]>0)
-                        {
-                            const float ur = uv(0) - CurrentFrame.mbf*invzc;
-                            const float er = fabs(ur - CurrentFrame.mvuRight[i2]);
-                            if(er>radius)
-                                continue;
-                        }
 
                         const cv::Mat &d = CurrentFrame.mDescriptors.row(i2);
 

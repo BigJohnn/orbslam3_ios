@@ -4083,7 +4083,6 @@ int Optimizer::PoseInertialOptimizationLastKeyFrame(std::shared_ptr<Frame>pFrame
 
     // Set MapPoint vertices
     const int N = pFrame->N;
-    const int Nleft = pFrame->Nleft;
 
     vector<EdgeMonoOnlyPose*> vpEdgesMono;
     vector<size_t> vnIndexEdgeMono;
@@ -4343,7 +4342,6 @@ int Optimizer::PoseInertialOptimizationLastFrame(std::shared_ptr<Frame>pFrame, b
 
     // Set MapPoint vertices
     const int N = pFrame->N;
-    const int Nleft = pFrame->Nleft;
 
     vector<EdgeMonoOnlyPose*> vpEdgesMono;
     
@@ -4364,12 +4362,8 @@ int Optimizer::PoseInertialOptimizationLastFrame(std::shared_ptr<Frame>pFrame, b
             if(pMP)
             {
                 cv::KeyPoint kpUn;
-                // Left monocular observation
-                
-                if(i < Nleft) // pair left-right
-                    kpUn = pFrame->mvKeys[i];
-                else
-                    kpUn = pFrame->mvKeysUn[i];
+                // Left monocular observation    
+                kpUn = pFrame->mvKeysUn[i];
 
                 nInitialMonoCorrespondences++;
                 pFrame->mvbOutlier[i] = false;

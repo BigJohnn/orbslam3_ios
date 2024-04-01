@@ -342,8 +342,6 @@ protected:
 
     int initID, lastID;
 
-    Sophus::SE3f mTlr;
-
     void newParameterLoader(Settings* settings);
 
 #ifdef REGISTER_LOOP

@@ -171,13 +171,6 @@ class KeyFrame : public std::enable_shared_from_this<KeyFrame>
         ar & mnBackupIdCamera;
         ar & mnBackupIdCamera2;
 
-        // Fisheye variables
-        ar & mvLeftToRightMatch;
-        ar & mvRightToLeftMatch;
-        ar & const_cast<int&>(NLeft);
-        
-        serializeSophusSE3<Archive>(ar, mTlr, version);
-
         // Inertial variables
         ar & mImuBias;
         ar & *mBackupImuPreintegrated;
@@ -436,10 +429,6 @@ protected:
     Eigen::Vector3f mVw;
     bool mbHasVelocity;
 
-    //Transformation matrix between cameras in stereo fisheye
-    Sophus::SE3<float> mTlr;
-    Sophus::SE3<float> mTrl;
-
     // Imu bias
     IMU::Bias mImuBias;
 
@@ -503,29 +492,9 @@ protected:
 public:
     GeometricCamera* mpCamera = nullptr;
 
-    //Indexes of stereo observations correspondences
-    std::vector<int> mvLeftToRightMatch, mvRightToLeftMatch;
-
-    Sophus::SE3f GetRelativePoseTrl();
-    Sophus::SE3f GetRelativePoseTlr();
-
-    //KeyPoints in the right image (for stereo fisheye, coordinates are needed)
-//    const std::vector<cv::KeyPoint> mvKeysRight;
-
-    const int NLeft;
-
-//    std::vector< std::vector <std::vector<size_t> > > mGridRight;
-
-    Sophus::SE3<float> GetRightPose();
-    Sophus::SE3<float> GetRightPoseInverse();
-
-    Eigen::Vector3f GetRightCameraCenter();
-    Eigen::Matrix<float,3,3> GetRightRotation();
-    Eigen::Vector3f GetRightTranslation();
-
     void PrintPointDistribution(){
         int left = 0, right = 0;
-        int Nlim = (NLeft != -1) ? NLeft : N;
+        int Nlim = N;
         for(int i = 0; i < N; i++){
             if(mvpMapPoints[i]){
                 if(i < Nlim) left++;

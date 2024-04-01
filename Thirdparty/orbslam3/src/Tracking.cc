@@ -1663,12 +1663,9 @@ bool Tracking::TrackReferenceKeyFrame()
 
                 mpCurrentFrame->mvpMapPoints[i]=nullptr;
                 mpCurrentFrame->mvbOutlier[i]=false;
-                if(i < mpCurrentFrame->Nleft){
-                    pMP->mbTrackInView = false;
-                }
-                else{
-                    pMP->mbTrackInViewR = false;
-                }
+                
+                pMP->mbTrackInViewR = false;
+                
                 pMP->mbTrackInView = false;
                 pMP->mnLastFrameSeen = mpCurrentFrame->mnId;
                 nmatches--;
@@ -1691,68 +1688,8 @@ void Tracking::UpdateLastFrame()
     std::shared_ptr<KeyFrame> pRef = mpLastFrame->mpReferenceKF;
     Sophus::SE3f Tlr = mlRelativeFramePoses.back();
     mpLastFrame->SetPose(Tlr * pRef->GetPose());
-
-    if(mnLastKeyFrameId==mpLastFrame->mnId || mSensor==System::MONOCULAR || mSensor==System::IMU_MONOCULAR || !mbOnlyTracking)
-        return;
-
-    // Create "visual odometry" MapPoints
-    // We sort points according to their measured depth by the stereo/RGB-D sensor
-    vector<pair<float,int> > vDepthIdx;
-    const int Nfeat = mpLastFrame->Nleft == -1? mpLastFrame->N : mpLastFrame->Nleft;
-    vDepthIdx.reserve(Nfeat);
-    for(int i=0; i<Nfeat;i++)
-    {
-        float z = mpLastFrame->mvDepth[i];
-        if(z>0)
-        {
-            vDepthIdx.push_back(make_pair(z,i));
-        }
-    }
-
-    if(vDepthIdx.empty())
-        return;
-
-    sort(vDepthIdx.begin(),vDepthIdx.end());
-
-    // We insert all close points (depth<mThDepth)
-    // If less than 100 close points, we insert the 100 closest ones.
-    int nPoints = 0;
-    for(size_t j=0; j<vDepthIdx.size();j++)
-    {
-        int i = vDepthIdx[j].second;
-
-        bool bCreateNew = false;
-
-        std::shared_ptr<MapPoint> pMP = mpLastFrame->mvpMapPoints[i];
-
-        if(!pMP)
-            bCreateNew = true;
-        else if(pMP->Observations()<1)
-            bCreateNew = true;
-
-        if(bCreateNew)
-        {
-            Eigen::Vector3f x3D;
-
-            if(mpLastFrame->Nleft == -1){
-                mpLastFrame->UnprojectStereo(i, x3D);
-            }
-
-            std::shared_ptr<MapPoint> pNewMP = std::make_shared<MapPoint>(x3D,mpAtlas->GetCurrentMap(),mpLastFrame,i);
-            mpLastFrame->mvpMapPoints[i]=pNewMP;
-
-            mlpTemporalPoints.push_back(pNewMP);
-            nPoints++;
-        }
-        else
-        {
-            nPoints++;
-        }
-
-        if(vDepthIdx[j].first>mThDepth && nPoints>100)
-            break;
-
-    }
+    
+    return;
 }
 
 bool Tracking::TrackWithMotionModel()
@@ -1780,12 +1717,7 @@ bool Tracking::TrackWithMotionModel()
     fill(mpCurrentFrame->mvpMapPoints.begin(),mpCurrentFrame->mvpMapPoints.end(),nullptr);
 
     // Project points seen in previous frame
-    int th;
-
-    if(mSensor==System::STEREO)
-        th=7;
-    else
-        th=15;
+    int th=15;
 
     int nmatches = matcher.SearchByProjection(*mpCurrentFrame,*mpLastFrame,th,mSensor==System::MONOCULAR || mSensor==System::IMU_MONOCULAR);
 
@@ -1824,12 +1756,9 @@ bool Tracking::TrackWithMotionModel()
 
                 mpCurrentFrame->mvpMapPoints[i]=nullptr;
                 mpCurrentFrame->mvbOutlier[i]=false;
-                if(i < mpCurrentFrame->Nleft){
-                    pMP->mbTrackInView = false;
-                }
-                else{
-                    pMP->mbTrackInViewR = false;
-                }
+                    
+                pMP->mbTrackInViewR = false;
+                
                 pMP->mnLastFrameSeen = mpCurrentFrame->mnId;
                 nmatches--;
             }

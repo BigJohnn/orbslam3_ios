@@ -718,7 +718,6 @@ void LocalMapping::SearchInNeighbors()
         std::shared_ptr<KeyFrame> pKFi = *vit;
 
         matcher.Fuse(pKFi,vpMapPointMatches);
-        if(pKFi->NLeft != -1) matcher.Fuse(pKFi,vpMapPointMatches,true);
     }
 
 
@@ -748,8 +747,6 @@ void LocalMapping::SearchInNeighbors()
     }
 
     matcher.Fuse(mpCurrentKeyFrame,vpFuseCandidates);
-    if(mpCurrentKeyFrame->NLeft != -1) matcher.Fuse(mpCurrentKeyFrame,vpFuseCandidates,true);
-
 
     // Update points
     vpMapPointMatches = mpCurrentKeyFrame->GetMapPointMatches();
@@ -924,20 +921,7 @@ void LocalMapping::KeyFrameCulling()
                             tuple<int,int> indexes = mit->second;
                             int leftIndex = get<0>(indexes), rightIndex = get<1>(indexes);
                             int scaleLeveli = -1;
-                            if(pKFi -> NLeft == -1)
-                                scaleLeveli = pKFi->mvKeysUn[leftIndex].octave;
-                            else {
-                                if (leftIndex != -1) {
-                                    scaleLeveli = pKFi->mvKeys[leftIndex].octave;
-                                }
-                                if (rightIndex != -1) {
-                                    cout << "FATAL 12!!" <<endl;
-                                    exit(12);
-//                                    int rightLevel = pKFi->mvKeysRight[rightIndex - pKFi->NLeft].octave;
-//                                    scaleLeveli = (scaleLeveli == -1 || scaleLeveli > rightLevel) ? rightLevel
-//                                                                                                  : scaleLeveli;
-                                }
-                            }
+                            scaleLeveli = pKFi->mvKeysUn[leftIndex].octave;
 
                             if(scaleLeveli<=scaleLevel+1)
                             {
@@ -1190,6 +1174,9 @@ void LocalMapping::InitializeIMU(float priorG, float priorA, bool bFIBA)
                 continue;
 
             dirG -= (*itKF)->mPrevKF->GetImuRotation() * (*itKF)->mpImuPreintegrated->GetUpdatedDeltaVelocity();
+            if(isnan(dirG.x())) {
+                printf("stop...");
+            }
             Eigen::Vector3f _vel = ((*itKF)->GetImuPosition() - (*itKF)->mPrevKF->GetImuPosition())/(*itKF)->mpImuPreintegrated->dT;
             (*itKF)->SetVelocity(_vel);
             (*itKF)->mPrevKF->SetVelocity(_vel);

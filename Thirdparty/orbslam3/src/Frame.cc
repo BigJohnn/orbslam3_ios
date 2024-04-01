@@ -108,8 +108,6 @@ Frame& Frame::operator=(const Frame& frame) {
     mbImuPreintegrated = frame.mbImuPreintegrated;
     mpMutexImu = frame.mpMutexImu;
     mpCamera = frame.mpCamera;
-    
-    Nleft = frame.Nleft;  // Number of left keypoints
       
       monoLeft = frame.monoLeft;  // Monocular flag for left camera
       
@@ -118,9 +116,6 @@ Frame& Frame::operator=(const Frame& frame) {
     for(int i=0;i<FRAME_GRID_COLS;i++)
         for(int j=0; j<FRAME_GRID_ROWS; j++){
             mGrid[i][j]=frame.mGrid[i][j];
-//            if(frame.Nleft > 0){
-//                mGridRight[i][j] = frame.mGridRight[i][j];
-//            }
         }
 
     if(frame.mbHasPose)
@@ -154,15 +149,11 @@ Frame::Frame(const Frame &frame)
      mbIsSet(frame.mbIsSet), mbImuPreintegrated(frame.mbImuPreintegrated), mpMutexImu(frame.mpMutexImu),
      mpCamera(frame.mpCamera),
      monoLeft(frame.monoLeft),mvStereo3Dpoints(frame.mvStereo3Dpoints),
-     mTlr(frame.mTlr), mRlr(frame.mRlr), mtlr(frame.mtlr), mTrl(frame.mTrl),
      mTcw(frame.mTcw), mbHasPose(false), mbHasVelocity(false)
 {
     for(int i=0;i<FRAME_GRID_COLS;i++)
         for(int j=0; j<FRAME_GRID_ROWS; j++){
             mGrid[i][j]=frame.mGrid[i][j];
-//            if(frame.Nleft > 0){
-//                mGridRight[i][j] = frame.mGridRight[i][j];
-//            }
         }
 
     if(frame.mbHasPose)
@@ -267,9 +258,6 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
 
 
     mb = mbf/fx;
-
-    //Set no stereo fisheye information
-    Nleft = -1;
     
     mvStereo3Dpoints = vector<Eigen::Vector3f>(0);
     monoLeft = -1;
@@ -302,9 +290,6 @@ void Frame::AssignFeaturesToGrid()
     for(unsigned int i=0; i<FRAME_GRID_COLS;i++)
         for (unsigned int j=0; j<FRAME_GRID_ROWS;j++){
             mGrid[i][j].reserve(nReserve);
-//            if(Nleft != -1){
-//                mGridRight[i][j].reserve(nReserve);
-//            }
         }
 
 
@@ -315,10 +300,7 @@ void Frame::AssignFeaturesToGrid()
 
         int nGridPosX, nGridPosY;
         if(PosInGrid(kp,nGridPosX,nGridPosY)){
-            if(Nleft == -1 || i < Nleft)
-                mGrid[nGridPosX][nGridPosY].push_back(i);
-//            else
-//                mGridRight[nGridPosX][nGridPosY].push_back(i - Nleft);
+            mGrid[nGridPosX][nGridPosY].push_back(i);
         }
     }
 }
@@ -396,99 +378,67 @@ Sophus::SE3<float> Frame::GetImuPose() {
     return mTcw.inverse() * mImuCalib->mTcb;
 }
 
-Sophus::SE3f Frame::GetRelativePoseTrl()
-{
-    return mTrl;
-}
-
-Sophus::SE3f Frame::GetRelativePoseTlr()
-{
-    return mTlr;
-}
-
-Eigen::Matrix3f Frame::GetRelativePoseTlr_rotation(){
-    return mTlr.rotationMatrix();
-}
-
-Eigen::Vector3f Frame::GetRelativePoseTlr_translation() {
-    return mTlr.translation();
-}
-
-
 bool Frame::isInFrustum(std::shared_ptr<MapPoint>pMP, float viewingCosLimit)
 {
-    if(Nleft == -1){
-        pMP->mbTrackInView = false;
-        pMP->mTrackProjX = -1;
-        pMP->mTrackProjY = -1;
+    pMP->mbTrackInView = false;
+    pMP->mTrackProjX = -1;
+    pMP->mTrackProjY = -1;
 
-        // 3D in absolute coordinates
-        Eigen::Matrix<float,3,1> P = pMP->GetWorldPos();
+    // 3D in absolute coordinates
+    Eigen::Matrix<float,3,1> P = pMP->GetWorldPos();
 
-        // 3D in camera coordinates
-        const Eigen::Matrix<float,3,1> Pc = mRcw * P + mtcw;
-        const float Pc_dist = Pc.norm();
+    // 3D in camera coordinates
+    const Eigen::Matrix<float,3,1> Pc = mRcw * P + mtcw;
+    const float Pc_dist = Pc.norm();
 
-        // Check positive depth
-        const float &PcZ = Pc(2);
-        const float invz = 1.0f/PcZ;
-        if(PcZ<0.0f)
-            return false;
+    // Check positive depth
+    const float &PcZ = Pc(2);
+    const float invz = 1.0f/PcZ;
+    if(PcZ<0.0f)
+        return false;
 
-        const Eigen::Vector2f uv = mpCamera->project(Pc);
+    const Eigen::Vector2f uv = mpCamera->project(Pc);
 
-        if(uv(0)<mnMinX || uv(0)>mnMaxX)
-            return false;
-        if(uv(1)<mnMinY || uv(1)>mnMaxY)
-            return false;
+    if(uv(0)<mnMinX || uv(0)>mnMaxX)
+        return false;
+    if(uv(1)<mnMinY || uv(1)>mnMaxY)
+        return false;
 
-        pMP->mTrackProjX = uv(0);
-        pMP->mTrackProjY = uv(1);
+    pMP->mTrackProjX = uv(0);
+    pMP->mTrackProjY = uv(1);
 
-        // Check distance is in the scale invariance region of the MapPoint
-        const float maxDistance = pMP->GetMaxDistanceInvariance();
-        const float minDistance = pMP->GetMinDistanceInvariance();
-        const Eigen::Vector3f PO = P - mOw;
-        const float dist = PO.norm();
+    // Check distance is in the scale invariance region of the MapPoint
+    const float maxDistance = pMP->GetMaxDistanceInvariance();
+    const float minDistance = pMP->GetMinDistanceInvariance();
+    const Eigen::Vector3f PO = P - mOw;
+    const float dist = PO.norm();
 
-        if(dist<minDistance || dist>maxDistance)
-            return false;
+    if(dist<minDistance || dist>maxDistance)
+        return false;
 
-        // Check viewing angle
-        Eigen::Vector3f Pn = pMP->GetNormal();
+    // Check viewing angle
+    Eigen::Vector3f Pn = pMP->GetNormal();
 
-        const float viewCos = PO.dot(Pn)/dist;
+    const float viewCos = PO.dot(Pn)/dist;
 
-        if(viewCos<viewingCosLimit)
-            return false;
+    if(viewCos<viewingCosLimit)
+        return false;
 
-        // Predict scale in the image
-        const int nPredictedLevel = pMP->PredictScale(dist,this);
+    // Predict scale in the image
+    const int nPredictedLevel = pMP->PredictScale(dist,this);
 
-        // Data used by the tracking
-        pMP->mbTrackInView = true;
-        pMP->mTrackProjX = uv(0);
-        pMP->mTrackProjXR = uv(0) - mbf*invz;
+    // Data used by the tracking
+    pMP->mbTrackInView = true;
+    pMP->mTrackProjX = uv(0);
+    pMP->mTrackProjXR = uv(0) - mbf*invz;
 
-        pMP->mTrackDepth = Pc_dist;
+    pMP->mTrackDepth = Pc_dist;
 
-        pMP->mTrackProjY = uv(1);
-        pMP->mnTrackScaleLevel= nPredictedLevel;
-        pMP->mTrackViewCos = viewCos;
+    pMP->mTrackProjY = uv(1);
+    pMP->mnTrackScaleLevel= nPredictedLevel;
+    pMP->mTrackViewCos = viewCos;
 
-        return true;
-    }
-    else{
-        pMP->mbTrackInView = false;
-        pMP->mbTrackInViewR = false;
-        pMP -> mnTrackScaleLevel = -1;
-        pMP -> mnTrackScaleLevelR = -1;
-
-        pMP->mbTrackInView = isInFrustumChecks(pMP,viewingCosLimit);
-        pMP->mbTrackInViewR = isInFrustumChecks(pMP,viewingCosLimit,true);
-
-        return pMP->mbTrackInView || pMP->mbTrackInViewR;
-    }
+    return true;
 }
 
 bool Frame::ProjectPointDistort(std::shared_ptr<MapPoint> pMP, cv::Point2f &kp, float &u, float &v)
@@ -749,19 +699,11 @@ bool Frame::isInFrustumChecks(std::shared_ptr<MapPoint>pMP, float viewingCosLimi
 
     Eigen::Matrix3f mR;
     Eigen::Vector3f mt, twc;
-    if(bRight){
-        Eigen::Matrix3f Rrl = mTrl.rotationMatrix();
-        Eigen::Vector3f trl = mTrl.translation();
-        mR = Rrl * mRcw;
-        mt = Rrl * mtcw + trl;
-        twc = mRwc * mTlr.translation() + mOw;
-    }
-    else{
-        mR = mRcw;
-        mt = mtcw;
-        twc = mOw;
-    }
-
+    
+    mR = mRcw;
+    mt = mtcw;
+    twc = mOw;
+    
     // 3D in camera coordinates
     Eigen::Vector3f Pc = mR * P + mt;
     const float Pc_dist = Pc.norm();

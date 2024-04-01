@@ -84,16 +84,9 @@ MapPoint::MapPoint(const Eigen::Vector3f &Pos, std::shared_ptr<Map> pMap, std::s
     SetWorldPos(Pos);
 
     Eigen::Vector3f Ow;
-    if(pFrame -> Nleft == -1 || idxF < pFrame -> Nleft){
-        Ow = pFrame->GetCameraCenter();
-    }
-    else{
-        Eigen::Matrix3f Rwl = pFrame->GetRwc();
-        Eigen::Vector3f tlr = pFrame->GetRelativePoseTlr().translation();
-        Eigen::Vector3f twl = pFrame->GetOw();
-
-        Ow = Rwl * tlr + twl;
-    }
+    
+    Ow = pFrame->GetCameraCenter();
+    
     mNormalVector = mWorldPos - Ow;
     mNormalVector = mNormalVector / mNormalVector.norm();
 
@@ -148,19 +141,12 @@ void MapPoint::AddObservation(std::shared_ptr<KeyFrame> pKF, int idx)
         indexes = tuple<int,int>(-1,-1);
     }
 
-    if(pKF -> NLeft != -1 && idx >= pKF -> NLeft){
-        get<1>(indexes) = idx;
-    }
-    else{
-        get<0>(indexes) = idx;
-    }
-
+    
+    get<0>(indexes) = idx;
+    
     mObservations[pKF]=indexes;
-
-    if(pKF->mvuRight[idx]>=0)
-        nObs+=2;
-    else
-        nObs++;
+    
+    nObs++;
 }
 
 void MapPoint::EraseObservation(std::shared_ptr<KeyFrame> pKF)
@@ -447,16 +433,10 @@ void MapPoint::UpdateNormalAndDepth()
         std::shared_ptr<KeyFrame> pKF = mit->first;
 
         tuple<int,int> indexes = mit -> second;
-        int leftIndex = get<0>(indexes), rightIndex = get<1>(indexes);
+        int leftIndex = get<0>(indexes);
 
         if(leftIndex != -1){
             Eigen::Vector3f Owi = pKF->GetCameraCenter();
-            Eigen::Vector3f normali = Pos - Owi;
-            normal = normal + normali / normali.norm();
-            n++;
-        }
-        if(rightIndex != -1){
-            Eigen::Vector3f Owi = pKF->GetRightCameraCenter();
             Eigen::Vector3f normali = Pos - Owi;
             normal = normal + normali / normali.norm();
             n++;
@@ -469,16 +449,7 @@ void MapPoint::UpdateNormalAndDepth()
     tuple<int ,int> indexes = observations[pRefKF];
     int leftIndex = get<0>(indexes), rightIndex = get<1>(indexes);
     int level;
-    if(pRefKF -> NLeft == -1){
-        level = pRefKF->mvKeysUn[leftIndex].octave;
-    }
-    else if(leftIndex != -1){
-        level = pRefKF -> mvKeys[leftIndex].octave;
-    }
-    else{
-        cout << "FATAL: should NOT have right camera stuff!!" <<endl;
-        exit(11);
-    }
+    level = pRefKF->mvKeysUn[leftIndex].octave;
 
     //const int level = pRefKF->mvKeysUn[observations[pRefKF]].octave;
     const float levelScaleFactor =  pRefKF->mvScaleFactors[level];

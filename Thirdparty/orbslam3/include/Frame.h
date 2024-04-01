@@ -165,10 +165,6 @@ private:
     //tcw_ not necessary as Sophus has a method for extracting the translation vector: Tcw_.translation()
     //Twc_ not necessary as Sophus has a method for easily computing the inverse pose: Tcw_.inverse()
 
-    Sophus::SE3<float> mTlr, mTrl;
-    Eigen::Matrix<float,3,3> mRlr;
-    Eigen::Vector3f mtlr;
-
 
     // IMU linear velocity
     Eigen::Vector3f mVw;
@@ -313,8 +309,6 @@ private:
 public:
     GeometricCamera* mpCamera = nullptr;
 
-    //Number of KeyPoints extracted in the left and right images
-    int Nleft = -1;
     //Number of Non Lapping Keypoints
     int monoLeft;
 
@@ -332,7 +326,7 @@ public:
 
     void PrintPointDistribution(){
         int left = 0, right = 0;
-        int Nlim = (Nleft != -1) ? Nleft : N;
+        int Nlim = N;
         for(int i = 0; i < N; i++){
             if(mvpMapPoints[i] && !mvbOutlier[i]){
                 if(i < Nlim) left++;

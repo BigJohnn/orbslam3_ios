@@ -36,7 +36,7 @@ KeyFrame::KeyFrame():
         mfLogScaleFactor(0), mvScaleFactors(0), mvLevelSigma2(0), mvInvLevelSigma2(0), mnMinX(0), mnMinY(0), mnMaxX(0),
         mnMaxY(0), mPrevKF(nullptr), mNextKF(nullptr), mbFirstConnection(true), mpParent(nullptr), mbNotErase(false),
         mbToBeErased(false), mbBad(false), mHalfBaseline(0), mbCurrentPlaceRecognition(false), mnMergeCorrectedForKF(0),
-        NLeft(0), mnNumberOfOpt(0), mbHasVelocity(false)
+        mnNumberOfOpt(0), mbHasVelocity(false)
 {
 
 }
@@ -57,22 +57,18 @@ KeyFrame::KeyFrame(std::shared_ptr<Frame> const& F, std::shared_ptr<Map>pMap, Ke
     mpORBvocabulary(F->mpORBvocabulary), mbFirstConnection(true), mpParent(nullptr), mDistCoef(F->mDistCoef), mbNotErase(false), mnDataset(F->mnDataset),
     mbToBeErased(false), mbBad(false), mHalfBaseline(F->mb/2), mpMap(pMap), mbCurrentPlaceRecognition(false), mNameFile(F->mNameFile), mnMergeCorrectedForKF(0),
     mpCamera(F->mpCamera), 
-     mTlr(F->GetRelativePoseTlr()),
-     NLeft(F->Nleft), mTrl(F->GetRelativePoseTrl()), mnNumberOfOpt(0), mbHasVelocity(false)
+     mnNumberOfOpt(0), mbHasVelocity(false)
 {
     mnId=nNextId++;
 
     mGrid.resize(mnGridCols);
-//    if(F->Nleft != -1)  mGridRight.resize(mnGridCols);
+
     for(int i=0; i<mnGridCols;i++)
     {
         mGrid[i].resize(mnGridRows);
-//        if(F->Nleft != -1) mGridRight[i].resize(mnGridRows);
+
         for(int j=0; j<mnGridRows; j++){
             mGrid[i][j] = F->mGrid[i][j];
-//            if(F->Nleft != -1){
-//                mGridRight[i][j] = F->mGridRight[i][j];
-//            }
         }
     }
 
@@ -921,8 +917,6 @@ void KeyFrame::PostLoad(map<long unsigned int, std::shared_ptr<KeyFrame>>& mpKFi
     // Pose
     SetPose(mTcw);
 
-    mTrl = mTlr.inverse();
-
     // Reference reconstruction
     // Each MapPoint sight from this KeyFrame
     mvpMapPoints.clear();
@@ -1095,47 +1089,6 @@ bool KeyFrame::ProjectPointUnDistort(std::shared_ptr<MapPoint> pMP, cv::Point2f 
     kp = cv::Point2f(u, v);
 
     return true;
-}
-
-Sophus::SE3f KeyFrame::GetRelativePoseTrl()
-{
-    unique_lock<mutex> lock(mMutexPose);
-    return mTrl;
-}
-
-Sophus::SE3f KeyFrame::GetRelativePoseTlr()
-{
-    unique_lock<mutex> lock(mMutexPose);
-    return mTlr;
-}
-
-Sophus::SE3<float> KeyFrame::GetRightPose() {
-    unique_lock<mutex> lock(mMutexPose);
-
-    return mTrl * mTcw;
-}
-
-Sophus::SE3<float> KeyFrame::GetRightPoseInverse() {
-    unique_lock<mutex> lock(mMutexPose);
-
-    return mTwc * mTlr;
-}
-
-Eigen::Vector3f KeyFrame::GetRightCameraCenter() {
-    unique_lock<mutex> lock(mMutexPose);
-
-    return (mTwc * mTlr).translation();
-}
-
-Eigen::Matrix<float,3,3> KeyFrame::GetRightRotation() {
-    unique_lock<mutex> lock(mMutexPose);
-
-    return (mTrl.so3() * mTcw.so3()).matrix();
-}
-
-Eigen::Vector3f KeyFrame::GetRightTranslation() {
-    unique_lock<mutex> lock(mMutexPose);
-    return (mTrl * mTcw).translation();
 }
 
 void KeyFrame::SetORBVocabulary(ORBVocabulary* pORBVoc)
