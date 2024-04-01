@@ -78,13 +78,13 @@
             filePath = "Thirdparty/orbslam3/src/Tracking.cc"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2045"
-            endingLineNumber = "2045"
+            startingLineNumber = "1190"
+            endingLineNumber = "1190"
             landmarkName = "Tracking::Track()"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "6A0F0389-77FC-4C92-A76C-D48BB471D204 - c7336a9d4357088"
+                  uuid = "6A0F0389-77FC-4C92-A76C-D48BB471D204 - c7336a9d435f034"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -94,147 +94,12 @@
                   urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2188"
-                  endingLineNumber = "2188"
-                  offsetFromSymbolStart = "5692">
-               </Location>
-               <Location
-                  uuid = "6A0F0389-77FC-4C92-A76C-D48BB471D204 - c7336a9d43570ca"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ORB_SLAM3::Tracking::Track()"
-                  moduleName = "orbslam3_ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2186"
-                  endingLineNumber = "2186"
-                  offsetFromSymbolStart = "5868">
-               </Location>
-               <Location
-                  uuid = "6A0F0389-77FC-4C92-A76C-D48BB471D204 - c7336a9d43570ca"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ORB_SLAM3::Tracking::Track()"
-                  moduleName = "orbslam3_ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2186"
-                  endingLineNumber = "2186"
-                  offsetFromSymbolStart = "5952">
-               </Location>
-               <Location
-                  uuid = "6A0F0389-77FC-4C92-A76C-D48BB471D204 - c7336a9d43570ca"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ORB_SLAM3::Tracking::Track()"
-                  moduleName = "orbslam3_ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2186"
-                  endingLineNumber = "2186"
-                  offsetFromSymbolStart = "5960">
-               </Location>
-               <Location
-                  uuid = "6A0F0389-77FC-4C92-A76C-D48BB471D204 - c7336a9d43570ca"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ORB_SLAM3::Tracking::Track()"
-                  moduleName = "orbslam3_ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2186"
-                  endingLineNumber = "2186"
-                  offsetFromSymbolStart = "5684">
-               </Location>
-               <Location
-                  uuid = "6A0F0389-77FC-4C92-A76C-D48BB471D204 - c7336a9d4357088"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ORB_SLAM3::Tracking::Track()"
-                  moduleName = "orbslam3_ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2188"
-                  endingLineNumber = "2188"
-                  offsetFromSymbolStart = "5732">
-               </Location>
-               <Location
-                  uuid = "6A0F0389-77FC-4C92-A76C-D48BB471D204 - c7336a9d4356031"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ORB_SLAM3::Tracking::Track()"
-                  moduleName = "orbslam3_ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2069"
-                  endingLineNumber = "2069"
-                  offsetFromSymbolStart = "5408">
-               </Location>
-               <Location
-                  uuid = "6A0F0389-77FC-4C92-A76C-D48BB471D204 - c7336a9d4356031"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ORB_SLAM3::Tracking::Track()"
-                  moduleName = "orbslam3_ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2069"
-                  endingLineNumber = "2069"
-                  offsetFromSymbolStart = "5428">
-               </Location>
-               <Location
-                  uuid = "6A0F0389-77FC-4C92-A76C-D48BB471D204 - c7336a9d4356031"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ORB_SLAM3::Tracking::Track()"
-                  moduleName = "orbslam3_ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2069"
-                  endingLineNumber = "2069"
-                  offsetFromSymbolStart = "5608">
-               </Location>
-               <Location
-                  uuid = "6A0F0389-77FC-4C92-A76C-D48BB471D204 - c7336a9d4356031"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ORB_SLAM3::Tracking::Track()"
-                  moduleName = "orbslam3_ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2069"
-                  endingLineNumber = "2069"
+                  startingLineNumber = "1200"
+                  endingLineNumber = "1200"
                   offsetFromSymbolStart = "5532">
                </Location>
                <Location
-                  uuid = "6A0F0389-77FC-4C92-A76C-D48BB471D204 - c7336a9d43560f7"
+                  uuid = "6A0F0389-77FC-4C92-A76C-D48BB471D204 - c7336a9d435f16e"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -244,23 +109,8 @@
                   urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2063"
-                  endingLineNumber = "2063"
-                  offsetFromSymbolStart = "5404">
-               </Location>
-               <Location
-                  uuid = "6A0F0389-77FC-4C92-A76C-D48BB471D204 - c7336a9d4356719"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ORB_SLAM3::Tracking::Track()"
-                  moduleName = "orbslam3_ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2045"
-                  endingLineNumber = "2045"
+                  startingLineNumber = "1190"
+                  endingLineNumber = "1190"
                   offsetFromSymbolStart = "5532">
                </Location>
             </Locations>
@@ -601,13 +451,13 @@
             filePath = "Thirdparty/orbslam3/src/Tracking.cc"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2039"
-            endingLineNumber = "2039"
+            startingLineNumber = "1184"
+            endingLineNumber = "1184"
             landmarkName = "Tracking::Track()"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "B4B32F3E-D1BA-4106-8DC7-1E472A1CC44C - c7336a9d43560f7"
+                  uuid = "B4B32F3E-D1BA-4106-8DC7-1E472A1CC44C - c7336a9d435f0ea"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -617,57 +467,12 @@
                   urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2063"
-                  endingLineNumber = "2063"
-                  offsetFromSymbolStart = "5212">
-               </Location>
-               <Location
-                  uuid = "B4B32F3E-D1BA-4106-8DC7-1E472A1CC44C - c7336a9d43560f7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ORB_SLAM3::Tracking::Track()"
-                  moduleName = "orbslam3_ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2063"
-                  endingLineNumber = "2063"
-                  offsetFromSymbolStart = "5232">
-               </Location>
-               <Location
-                  uuid = "B4B32F3E-D1BA-4106-8DC7-1E472A1CC44C - c7336a9d43560f7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ORB_SLAM3::Tracking::Track()"
-                  moduleName = "orbslam3_ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2063"
-                  endingLineNumber = "2063"
-                  offsetFromSymbolStart = "5480">
-               </Location>
-               <Location
-                  uuid = "B4B32F3E-D1BA-4106-8DC7-1E472A1CC44C - c7336a9d43560f7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ORB_SLAM3::Tracking::Track()"
-                  moduleName = "orbslam3_ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2063"
-                  endingLineNumber = "2063"
+                  startingLineNumber = "1194"
+                  endingLineNumber = "1194"
                   offsetFromSymbolStart = "5404">
                </Location>
                <Location
-                  uuid = "B4B32F3E-D1BA-4106-8DC7-1E472A1CC44C - c7336a9d435616b"
+                  uuid = "B4B32F3E-D1BA-4106-8DC7-1E472A1CC44C - c7336a9d435f624"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -677,23 +482,8 @@
                   urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2059"
-                  endingLineNumber = "2059"
-                  offsetFromSymbolStart = "5188">
-               </Location>
-               <Location
-                  uuid = "B4B32F3E-D1BA-4106-8DC7-1E472A1CC44C - c7336a9d43567df"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ORB_SLAM3::Tracking::Track()"
-                  moduleName = "orbslam3_ios"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Tracking.cc"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2039"
-                  endingLineNumber = "2039"
+                  startingLineNumber = "1184"
+                  endingLineNumber = "1184"
                   offsetFromSymbolStart = "5404">
                </Location>
             </Locations>
@@ -709,8 +499,8 @@
             filePath = "Thirdparty/orbslam3/src/Optimizer.cc"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "4469"
-            endingLineNumber = "4469"
+            startingLineNumber = "4370"
+            endingLineNumber = "4370"
             landmarkName = "Optimizer::PoseInertialOptimizationLastFrame(pFrame, bRecInit)"
             landmarkType = "7">
             <Locations>
@@ -789,6 +579,36 @@
                   endingLineNumber = "4469"
                   offsetFromSymbolStart = "1312">
                </Location>
+               <Location
+                  uuid = "86DF1674-A906-434A-BEC9-5CE0CFDDDA17 - 6bcd053adf695e0e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ORB_SLAM3::Optimizer::PoseInertialOptimizationLastFrame(std::__1::shared_ptr&lt;ORB_SLAM3::Frame&gt;, bool)"
+                  moduleName = "orbslam3_ios"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Optimizer.cc"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "4404"
+                  endingLineNumber = "4404"
+                  offsetFromSymbolStart = "1312">
+               </Location>
+               <Location
+                  uuid = "86DF1674-A906-434A-BEC9-5CE0CFDDDA17 - 6bcd053adf695aac"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ORB_SLAM3::Optimizer::PoseInertialOptimizationLastFrame(std::__1::shared_ptr&lt;ORB_SLAM3::Frame&gt;, bool)"
+                  moduleName = "orbslam3_ios"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/Optimizer.cc"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "4370"
+                  endingLineNumber = "4370"
+                  offsetFromSymbolStart = "1312">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -818,10 +638,57 @@
             filePath = "Thirdparty/orbslam3/src/ORBmatcher.cc"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "307"
-            endingLineNumber = "307"
+            startingLineNumber = "229"
+            endingLineNumber = "229"
             landmarkName = "ORBmatcher::SearchByBoW(pKF, F, vpMapPointMatches)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "4D1170FD-5786-4F60-B7CA-3C8805253AC9 - 42d1185da1d9cda2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ORB_SLAM3::ORBmatcher::SearchByBoW(std::__1::shared_ptr&lt;ORB_SLAM3::KeyFrame&gt;, ORB_SLAM3::Frame&amp;, std::__1::vector&lt;std::__1::shared_ptr&lt;ORB_SLAM3::MapPoint&gt;, std::__1::allocator&lt;std::__1::shared_ptr&lt;ORB_SLAM3::MapPoint&gt;&gt;&gt;&amp;)"
+                  moduleName = "orbslam3_ios"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/ORBmatcher.cc"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "307"
+                  endingLineNumber = "307"
+                  offsetFromSymbolStart = "1468">
+               </Location>
+               <Location
+                  uuid = "4D1170FD-5786-4F60-B7CA-3C8805253AC9 - 42d1185da1d9cd6c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ORB_SLAM3::ORBmatcher::SearchByBoW(std::__1::shared_ptr&lt;ORB_SLAM3::KeyFrame&gt;, ORB_SLAM3::Frame&amp;, std::__1::vector&lt;std::__1::shared_ptr&lt;ORB_SLAM3::MapPoint&gt;, std::__1::allocator&lt;std::__1::shared_ptr&lt;ORB_SLAM3::MapPoint&gt;&gt;&gt;&amp;)"
+                  moduleName = "orbslam3_ios"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/ORBmatcher.cc"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "301"
+                  endingLineNumber = "301"
+                  offsetFromSymbolStart = "1468">
+               </Location>
+               <Location
+                  uuid = "4D1170FD-5786-4F60-B7CA-3C8805253AC9 - 42d1185da1d9bb94"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ORB_SLAM3::ORBmatcher::SearchByBoW(std::__1::shared_ptr&lt;ORB_SLAM3::KeyFrame&gt;, ORB_SLAM3::Frame&amp;, std::__1::vector&lt;std::__1::shared_ptr&lt;ORB_SLAM3::MapPoint&gt;, std::__1::allocator&lt;std::__1::shared_ptr&lt;ORB_SLAM3::MapPoint&gt;&gt;&gt;&amp;)"
+                  moduleName = "orbslam3_ios"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/ORBmatcher.cc"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "229"
+                  endingLineNumber = "229"
+                  offsetFromSymbolStart = "1468">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -834,25 +701,104 @@
             filePath = "Thirdparty/orbslam3/src/ORBmatcher.cc"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "312"
-            endingLineNumber = "312"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
             landmarkName = "ORBmatcher::SearchByBoW(pKF, F, vpMapPointMatches)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "8DE44940-26C5-4A80-934F-ED3CF4831D2D - 42d1185da1d9ccd9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ORB_SLAM3::ORBmatcher::SearchByBoW(std::__1::shared_ptr&lt;ORB_SLAM3::KeyFrame&gt;, ORB_SLAM3::Frame&amp;, std::__1::vector&lt;std::__1::shared_ptr&lt;ORB_SLAM3::MapPoint&gt;, std::__1::allocator&lt;std::__1::shared_ptr&lt;ORB_SLAM3::MapPoint&gt;&gt;&gt;&amp;)"
+                  moduleName = "orbslam3_ios"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/ORBmatcher.cc"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "312"
+                  endingLineNumber = "312"
+                  offsetFromSymbolStart = "1580">
+               </Location>
+               <Location
+                  uuid = "8DE44940-26C5-4A80-934F-ED3CF4831D2D - 42d1185da1d9cd83"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ORB_SLAM3::ORBmatcher::SearchByBoW(std::__1::shared_ptr&lt;ORB_SLAM3::KeyFrame&gt;, ORB_SLAM3::Frame&amp;, std::__1::vector&lt;std::__1::shared_ptr&lt;ORB_SLAM3::MapPoint&gt;, std::__1::allocator&lt;std::__1::shared_ptr&lt;ORB_SLAM3::MapPoint&gt;&gt;&gt;&amp;)"
+                  moduleName = "orbslam3_ios"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/ORBmatcher.cc"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "306"
+                  endingLineNumber = "306"
+                  offsetFromSymbolStart = "1580">
+               </Location>
+               <Location
+                  uuid = "8DE44940-26C5-4A80-934F-ED3CF4831D2D - 42d1185da1d9bacb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ORB_SLAM3::ORBmatcher::SearchByBoW(std::__1::shared_ptr&lt;ORB_SLAM3::KeyFrame&gt;, ORB_SLAM3::Frame&amp;, std::__1::vector&lt;std::__1::shared_ptr&lt;ORB_SLAM3::MapPoint&gt;, std::__1::allocator&lt;std::__1::shared_ptr&lt;ORB_SLAM3::MapPoint&gt;&gt;&gt;&amp;)"
+                  moduleName = "orbslam3_ios"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/hph/Codes/orbslam3_ios/Thirdparty/orbslam3/src/ORBmatcher.cc"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "234"
+                  endingLineNumber = "234"
+                  offsetFromSymbolStart = "1580">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C96E6A60-7196-4EC4-888B-C54C548EAFE8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Thirdparty/orbslam3/src/MapPoint.cc"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "161"
+            endingLineNumber = "161"
+            landmarkName = "MapPoint::AddObservation(pKF, idx)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "052FB701-2673-4AB7-BB48-F9C6786CA308"
+            uuid = "D947F372-F95D-424C-A9D1-7A7350CB1073"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Thirdparty/orbslam3/src/ORBmatcher.cc"
+            filePath = "Thirdparty/orbslam3/src/MapPoint.cc"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "132"
-            endingLineNumber = "132"
-            landmarkName = "ORBmatcher::SearchByProjection(F, vpMapPoints, th, bFarPoints, thFarPoints)"
+            startingLineNumber = "178"
+            endingLineNumber = "178"
+            landmarkName = "MapPoint::EraseObservation(pKF)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "620AAA52-1CAB-4411-B908-1C7DC5B422DD"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Thirdparty/orbslam3/src/KeyFrame.cc"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "766"
+            endingLineNumber = "766"
+            landmarkName = "KeyFrame::UnprojectStereo(i, x3D)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

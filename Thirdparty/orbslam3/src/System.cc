@@ -33,6 +33,7 @@
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
 
+#define DEACTIVATE_LC_MODE
 namespace ORB_SLAM3
 {
 
@@ -55,17 +56,9 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
 
     if(mSensor==MONOCULAR)
         cout << "Monocular" << endl;
-    else if(mSensor==STEREO)
-        cout << "Stereo" << endl;
-    else if(mSensor==RGBD)
-        cout << "RGB-D" << endl;
     else if(mSensor==IMU_MONOCULAR)
         cout << "Monocular-Inertial" << endl;
-    else if(mSensor==IMU_STEREO)
-        cout << "Stereo-Inertial" << endl;
-    else if(mSensor==IMU_RGBD)
-        cout << "RGB-D-Inertial" << endl;
-
+    
     //Check settings file
     cv::FileStorage fsSettings(strSettingsFile.c_str(), cv::FileStorage::READ);
     if(!fsSettings.isOpened())
@@ -205,11 +198,13 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
     else
         mpLocalMapper->mbFarPoints = false;
 
+#ifndef DEACTIVATE_LC_MODE
     //Initialize the Loop Closing thread and launch
     // mSensor!=MONOCULAR && mSensor!=IMU_MONOCULAR
     mpLoopCloser = new LoopClosing(mpAtlas, mpKeyFrameDatabase, mpVocabulary, mSensor!=MONOCULAR, activeLC); // mSensor!=MONOCULAR);
     mptLoopClosing = new thread(&ORB_SLAM3::LoopClosing::Run, mpLoopCloser);
 
+#endif
     //Set pointers between threads
     mpTracker->SetLocalMapper(mpLocalMapper);
     mpTracker->SetLoopClosing(mpLoopCloser);
@@ -217,13 +212,15 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
     mpLocalMapper->SetTracker(mpTracker);
     mpLocalMapper->SetLoopCloser(mpLoopCloser);
 
+#ifndef DEACTIVATE_LC_MODE
     mpLoopCloser->SetTracker(mpTracker);
     mpLoopCloser->SetLocalMapper(mpLocalMapper);
+#endif
 
     //usleep(10*1000*1000);
 
     // Fix verbosity
-    Verbose::SetTh(Verbose::VERBOSITY_NORMAL);
+    Verbose::SetTh(Verbose::VERBOSITY_DEBUG);
 
 }
 
@@ -354,7 +351,9 @@ void System::Shutdown()
     cout << "Shutdown" << endl;
 
     mpLocalMapper->RequestFinish();
+#ifndef DEACTIVATE_LC_MODE
     mpLoopCloser->RequestFinish();
+#endif
 
     // Wait until all thread have effectively stopped
     /*while(!mpLocalMapper->isFinished() || !mpLoopCloser->isFinished() || mpLoopCloser->isRunningGBA())
@@ -582,7 +581,7 @@ void System::SaveTrajectoryEuRoC(const string &filename)
 
         if (mSensor == IMU_MONOCULAR || mSensor == IMU_STEREO || mSensor==IMU_RGBD)
         {
-            Sophus::SE3f Twb = (pKF->mImuCalib.mTbc * (*lit) * Trw).inverse();
+            Sophus::SE3f Twb = (pKF->mImuCalib->mTbc * (*lit) * Trw).inverse();
             Eigen::Quaternionf q = Twb.unit_quaternion();
             Eigen::Vector3f twb = Twb.translation();
             f << setprecision(6) << 1e9*(*lT) << " " <<  setprecision(9) << twb(0) << " " << twb(1) << " " << twb(2) << " " << q.x() << " " << q.y() << " " << q.z() << " " << q.w() << endl;
@@ -687,7 +686,7 @@ void System::SaveTrajectoryEuRoC(const string &filename, std::shared_ptr<Map> pM
 
         if (mSensor == IMU_MONOCULAR || mSensor == IMU_STEREO || mSensor==IMU_RGBD)
         {
-            Sophus::SE3f Twb = (pKF->mImuCalib.mTbc * (*lit) * Trw).inverse();
+            Sophus::SE3f Twb = (pKF->mImuCalib->mTbc * (*lit) * Trw).inverse();
             Eigen::Quaternionf q = Twb.unit_quaternion();
             Eigen::Vector3f twb = Twb.translation();
             f << setprecision(6) << 1e9*(*lT) << " " <<  setprecision(9) << twb(0) << " " << twb(1) << " " << twb(2) << " " << q.x() << " " << q.y() << " " << q.z() << " " << q.w() << endl;
@@ -803,7 +802,7 @@ void System::SaveTrajectoryEuRoC(const string &filename, std::shared_ptr<Map> pM
 
         if (mSensor == IMU_MONOCULAR || mSensor == IMU_STEREO || mSensor==IMU_RGBD)
         {
-            Sophus::SE3f Tbw = pKF->mImuCalib.Tbc_ * (*lit) * Trw;
+            Sophus::SE3f Tbw = pKF->mImuCalib->Tbc_ * (*lit) * Trw;
             Sophus::SE3f Twb = Tbw.inverse();
 
             Eigen::Vector3f twb = Twb.translation();

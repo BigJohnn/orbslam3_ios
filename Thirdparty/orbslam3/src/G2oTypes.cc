@@ -29,11 +29,7 @@ ImuCamPose::ImuCamPose(std::shared_ptr<KeyFrame>pKF):its(0)
     Rwb = pKF->GetImuRotation().cast<double>();
 
     // Load camera poses
-    int num_cams;
-    if(pKF->mpCamera2)
-        num_cams=2;
-    else
-        num_cams=1;
+    int num_cams=1;
 
     tcw.resize(num_cams);
     Rcw.resize(num_cams);
@@ -46,24 +42,12 @@ ImuCamPose::ImuCamPose(std::shared_ptr<KeyFrame>pKF):its(0)
     // Left camera
     tcw[0] = pKF->GetTranslation().cast<double>();
     Rcw[0] = pKF->GetRotation().cast<double>();
-    tcb[0] = pKF->mImuCalib.mTcb.translation().cast<double>();
-    Rcb[0] = pKF->mImuCalib.mTcb.rotationMatrix().cast<double>();
+    tcb[0] = pKF->mImuCalib->mTcb.translation().cast<double>();
+    Rcb[0] = pKF->mImuCalib->mTcb.rotationMatrix().cast<double>();
     Rbc[0] = Rcb[0].transpose();
-    tbc[0] = pKF->mImuCalib.mTbc.translation().cast<double>();
+    tbc[0] = pKF->mImuCalib->mTbc.translation().cast<double>();
     pCamera[0] = pKF->mpCamera;
     bf = pKF->mbf;
-
-    if(num_cams>1)
-    {
-        Eigen::Matrix4d Trl = pKF->GetRelativePoseTrl().matrix().cast<double>();
-        Rcw[1] = Trl.block<3,3>(0,0) * Rcw[0];
-        tcw[1] = Trl.block<3,3>(0,0) * tcw[0] + Trl.block<3,1>(0,3);
-        tcb[1] = Trl.block<3,3>(0,0) * tcb[0] + Trl.block<3,1>(0,3);
-        Rcb[1] = Trl.block<3,3>(0,0) * Rcb[0];
-        Rbc[1] = Rcb[1].transpose();
-        tbc[1] = -Rbc[1] * tcb[1];
-        pCamera[1] = pKF->mpCamera2;
-    }
 
     // For posegraph 4DoF
     Rwb0 = Rwb;
@@ -77,11 +61,7 @@ ImuCamPose::ImuCamPose(std::shared_ptr<Frame>pF):its(0)
     Rwb = pF->GetImuRotation().cast<double>();
 
     // Load camera poses
-    int num_cams;
-    if(pF->mpCamera2)
-        num_cams=2;
-    else
-        num_cams=1;
+    int num_cams=1;
 
     tcw.resize(num_cams);
     Rcw.resize(num_cams);
@@ -94,24 +74,12 @@ ImuCamPose::ImuCamPose(std::shared_ptr<Frame>pF):its(0)
     // Left camera
     tcw[0] = pF->GetPose().translation().cast<double>();
     Rcw[0] = pF->GetPose().rotationMatrix().cast<double>();
-    tcb[0] = pF->mImuCalib.mTcb.translation().cast<double>();
-    Rcb[0] = pF->mImuCalib.mTcb.rotationMatrix().cast<double>();
+    tcb[0] = pF->mImuCalib->mTcb.translation().cast<double>();
+    Rcb[0] = pF->mImuCalib->mTcb.rotationMatrix().cast<double>();
     Rbc[0] = Rcb[0].transpose();
-    tbc[0] = pF->mImuCalib.mTbc.translation().cast<double>();
+    tbc[0] = pF->mImuCalib->mTbc.translation().cast<double>();
     pCamera[0] = pF->mpCamera;
     bf = pF->mbf;
-
-    if(num_cams>1)
-    {
-        Eigen::Matrix4d Trl = pF->GetRelativePoseTrl().matrix().cast<double>();
-        Rcw[1] = Trl.block<3,3>(0,0) * Rcw[0];
-        tcw[1] = Trl.block<3,3>(0,0) * tcw[0] + Trl.block<3,1>(0,3);
-        tcb[1] = Trl.block<3,3>(0,0) * tcb[0] + Trl.block<3,1>(0,3);
-        Rcb[1] = Trl.block<3,3>(0,0) * Rcb[0];
-        Rbc[1] = Rcb[1].transpose();
-        tbc[1] = -Rbc[1] * tcb[1];
-        pCamera[1] = pF->mpCamera2;
-    }
 
     // For posegraph 4DoF
     Rwb0 = Rwb;
@@ -129,10 +97,10 @@ ImuCamPose::ImuCamPose(Eigen::Matrix3d &_Rwc, Eigen::Vector3d &_twc, std::shared
     tbc.resize(1);
     pCamera.resize(1);
 
-    tcb[0] = pKF->mImuCalib.mTcb.translation().cast<double>();
-    Rcb[0] = pKF->mImuCalib.mTcb.rotationMatrix().cast<double>();
+    tcb[0] = pKF->mImuCalib->mTcb.translation().cast<double>();
+    Rcb[0] = pKF->mImuCalib->mTcb.rotationMatrix().cast<double>();
     Rbc[0] = Rcb[0].transpose();
-    tbc[0] = pKF->mImuCalib.mTbc.translation().cast<double>();
+    tbc[0] = pKF->mImuCalib->mTbc.translation().cast<double>();
     twb = _Rwc * tcb[0] + _twc;
     Rwb = _Rwc * Rcb[0];
     Rcw[0] = _Rwc.transpose();

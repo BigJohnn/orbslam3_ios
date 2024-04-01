@@ -105,16 +105,12 @@ namespace ORB_SLAM3
                             bestDist2=bestDist;
                             bestDist=dist;
                             bestLevel2 = bestLevel;
-                            bestLevel = (F.Nleft == -1) ? F.mvKeysUn[idx].octave
-                                                        : (idx < F.Nleft) ? F.mvKeys[idx].octave
-                                                                          : F.mvKeysRight[idx - F.Nleft].octave;
+                            bestLevel = F.mvKeysUn[idx].octave;
                             bestIdx=idx;
                         }
                         else if(dist<bestDist2)
                         {
-                            bestLevel2 = (F.Nleft == -1) ? F.mvKeysUn[idx].octave
-                                                         : (idx < F.Nleft) ? F.mvKeys[idx].octave
-                                                                           : F.mvKeysRight[idx - F.Nleft].octave;
+                            bestLevel2 = F.mvKeysUn[idx].octave;
                             bestDist2=dist;
                         }
                     }
@@ -128,83 +124,9 @@ namespace ORB_SLAM3
                         if(bestLevel!=bestLevel2 || bestDist<=mfNNratio*bestDist2){
                             F.mvpMapPoints[bestIdx]=pMP;
 
-                            if(F.Nleft != -1 && F.mvLeftToRightMatch[bestIdx] != -1){ //Also match with the stereo observation at right camera
-                                F.mvpMapPoints[F.mvLeftToRightMatch[bestIdx] + F.Nleft] = pMP;
-                                nmatches++;
-                                right++;
-                            }
-
                             nmatches++;
                             left++;
                         }
-                    }
-                }
-            }
-
-            if(F.Nleft != -1 && pMP->mbTrackInViewR){
-                const int &nPredictedLevel = pMP->mnTrackScaleLevelR;
-                if(nPredictedLevel != -1){
-                    float r = RadiusByViewingCos(pMP->mTrackViewCosR);
-
-                    const vector<size_t> vIndices =
-                            F.GetFeaturesInArea(pMP->mTrackProjXR,pMP->mTrackProjYR,r*F.mvScaleFactors[nPredictedLevel],nPredictedLevel-1,nPredictedLevel,true);
-
-                    if(vIndices.empty())
-                        continue;
-
-                    const cv::Mat MPdescriptor = pMP->GetDescriptor();
-
-                    int bestDist=256;
-                    int bestLevel= -1;
-                    int bestDist2=256;
-                    int bestLevel2 = -1;
-                    int bestIdx =-1 ;
-
-                    // Get best and second matches with near keypoints
-                    for(vector<size_t>::const_iterator vit=vIndices.begin(), vend=vIndices.end(); vit!=vend; vit++)
-                    {
-                        const size_t idx = *vit;
-
-                        if(F.mvpMapPoints[idx + F.Nleft])
-                            if(F.mvpMapPoints[idx + F.Nleft]->Observations()>0)
-                                continue;
-
-
-                        const cv::Mat &d = F.mDescriptors.row(idx + F.Nleft);
-
-                        const int dist = DescriptorDistance(MPdescriptor,d);
-
-                        if(dist<bestDist)
-                        {
-                            bestDist2=bestDist;
-                            bestDist=dist;
-                            bestLevel2 = bestLevel;
-                            bestLevel = F.mvKeysRight[idx].octave;
-                            bestIdx=idx;
-                        }
-                        else if(dist<bestDist2)
-                        {
-                            bestLevel2 = F.mvKeysRight[idx].octave;
-                            bestDist2=dist;
-                        }
-                    }
-
-                    // Apply ratio to second match (only if best and second are in the same scale level)
-                    if(bestDist<=TH_HIGH)
-                    {
-                        if(bestLevel==bestLevel2 && bestDist>mfNNratio*bestDist2)
-                            continue;
-
-                        if(F.Nleft != -1 && F.mvRightToLeftMatch[bestIdx] != -1){ //Also match with the stereo observation at right camera
-                            F.mvpMapPoints[F.mvRightToLeftMatch[bestIdx]] = pMP;
-                            nmatches++;
-                            left++;
-                        }
-
-
-                        F.mvpMapPoints[bestIdx + F.Nleft]=pMP;
-                        nmatches++;
-                        right++;
                     }
                 }
             }
@@ -330,17 +252,11 @@ namespace ORB_SLAM3
                         {
                             vpMapPointMatches[bestIdxF]=pMP;
 
-                            const cv::KeyPoint &kp =
-                                    (!pKF->mpCamera2) ? pKF->mvKeysUn[realIdxKF] :
-                                    (realIdxKF >= pKF -> NLeft) ? pKF -> mvKeysRight[realIdxKF - pKF -> NLeft]
-                                                                : pKF -> mvKeys[realIdxKF];
+                            const cv::KeyPoint &kp = pKF->mvKeysUn[realIdxKF];
 
                             if(mbCheckOrientation)
                             {
-                                cv::KeyPoint &Fkp =
-                                        (!pKF->mpCamera2 || F.Nleft == -1) ? F.mvKeys[bestIdxF] :
-                                        (bestIdxF >= F.Nleft) ? F.mvKeysRight[bestIdxF - F.Nleft]
-                                                              : F.mvKeys[bestIdxF];
+                                cv::KeyPoint &Fkp = F.mvKeys[bestIdxF];
 
                                 float rot = kp.angle-Fkp.angle;
                                 if(rot<0.0)
@@ -360,17 +276,11 @@ namespace ORB_SLAM3
                             {
                                 vpMapPointMatches[bestIdxFR]=pMP;
 
-                                const cv::KeyPoint &kp =
-                                        (!pKF->mpCamera2) ? pKF->mvKeysUn[realIdxKF] :
-                                        (realIdxKF >= pKF -> NLeft) ? pKF -> mvKeysRight[realIdxKF - pKF -> NLeft]
-                                                                    : pKF -> mvKeys[realIdxKF];
+                                const cv::KeyPoint &kp = pKF->mvKeysUn[realIdxKF];
 
                                 if(mbCheckOrientation)
                                 {
-                                    cv::KeyPoint &Fkp =
-                                            (!F.mpCamera2) ? F.mvKeys[bestIdxFR] :
-                                            (bestIdxFR >= F.Nleft) ? F.mvKeysRight[bestIdxFR - F.Nleft]
-                                                                   : F.mvKeys[bestIdxFR];
+                                    cv::KeyPoint &Fkp = F.mvKeys[bestIdxFR];
 
                                     float rot = kp.angle-Fkp.angle;
                                     if(rot<0.0)
@@ -925,19 +835,9 @@ namespace ORB_SLAM3
 
         GeometricCamera* pCamera1 = pKF1->mpCamera, *pCamera2 = pKF2->mpCamera;
 
-        if(!pKF1->mpCamera2 && !pKF2->mpCamera2){
-            T12 = T1w * Tw2;
-            R12 = T12.rotationMatrix();
-            t12 = T12.translation();
-        }
-        else{
-            Sophus::SE3f Tr1w = pKF1->GetRightPose();
-            Sophus::SE3f Twr2 = pKF2->GetRightPoseInverse();
-            Tll = T1w * Tw2;
-            Tlr = T1w * Twr2;
-            Trl = Tr1w * Tw2;
-            Trr = Tr1w * Twr2;
-        }
+        T12 = T1w * Tw2;
+        R12 = T12.rotationMatrix();
+        t12 = T12.translation();
 
         Eigen::Matrix3f Rll = Tll.rotationMatrix(), Rlr  = Tlr.rotationMatrix(), Rrl  = Trl.rotationMatrix(), Rrr  = Trr.rotationMatrix();
         Eigen::Vector3f tll = Tll.translation(), tlr = Tlr.translation(), trl = Trl.translation(), trr = Trr.translation();
@@ -976,15 +876,13 @@ namespace ORB_SLAM3
                         continue;
                     }
 
-                    const bool bStereo1 = (!pKF1->mpCamera2 && pKF1->mvuRight[idx1]>=0);
+                    const bool bStereo1 = (pKF1->mvuRight[idx1]>=0);
 
                     if(bOnlyStereo)
                         if(!bStereo1)
                             continue;
 
-                    const cv::KeyPoint &kp1 = (pKF1 -> NLeft == -1) ? pKF1->mvKeysUn[idx1]
-                                                                    : (idx1 < pKF1 -> NLeft) ? pKF1 -> mvKeys[idx1]
-                                                                                             : pKF1 -> mvKeysRight[idx1 - pKF1 -> NLeft];
+                    const cv::KeyPoint &kp1 = pKF1->mvKeysUn[idx1];
 
                     const bool bRight1 = (pKF1 -> NLeft == -1 || idx1 < pKF1 -> NLeft) ? false
                                                                                        : true;
@@ -1004,7 +902,7 @@ namespace ORB_SLAM3
                         if(vbMatched2[idx2] || pMP2)
                             continue;
 
-                        const bool bStereo2 = (!pKF2->mpCamera2 &&  pKF2->mvuRight[idx2]>=0);
+                        const bool bStereo2 = (pKF2->mvuRight[idx2]>=0);
 
                         if(bOnlyStereo)
                             if(!bStereo2)
@@ -1017,13 +915,11 @@ namespace ORB_SLAM3
                         if(dist>TH_LOW || dist>bestDist)
                             continue;
 
-                        const cv::KeyPoint &kp2 = (pKF2 -> NLeft == -1) ? pKF2->mvKeysUn[idx2]
-                                                                        : (idx2 < pKF2 -> NLeft) ? pKF2 -> mvKeys[idx2]
-                                                                                                 : pKF2 -> mvKeysRight[idx2 - pKF2 -> NLeft];
+                        const cv::KeyPoint &kp2 = pKF2->mvKeysUn[idx2];
                         const bool bRight2 = (pKF2 -> NLeft == -1 || idx2 < pKF2 -> NLeft) ? false
                                                                                            : true;
 
-                        if(!bStereo1 && !bStereo2 && !pKF1->mpCamera2)
+                        if(!bStereo1 && !bStereo2)
                         {
                             const float distex = ep(0)-kp2.pt.x;
                             const float distey = ep(1)-kp2.pt.y;
@@ -1031,42 +927,6 @@ namespace ORB_SLAM3
                             {
                                 continue;
                             }
-                        }
-
-                        if(pKF1->mpCamera2 && pKF2->mpCamera2){
-                            if(bRight1 && bRight2){
-                                R12 = Rrr;
-                                t12 = trr;
-                                T12 = Trr;
-
-                                pCamera1 = pKF1->mpCamera2;
-                                pCamera2 = pKF2->mpCamera2;
-                            }
-                            else if(bRight1 && !bRight2){
-                                R12 = Rrl;
-                                t12 = trl;
-                                T12 = Trl;
-
-                                pCamera1 = pKF1->mpCamera2;
-                                pCamera2 = pKF2->mpCamera;
-                            }
-                            else if(!bRight1 && bRight2){
-                                R12 = Rlr;
-                                t12 = tlr;
-                                T12 = Tlr;
-
-                                pCamera1 = pKF1->mpCamera;
-                                pCamera2 = pKF2->mpCamera2;
-                            }
-                            else{
-                                R12 = Rll;
-                                t12 = tll;
-                                T12 = Tll;
-
-                                pCamera1 = pKF1->mpCamera;
-                                pCamera2 = pKF2->mpCamera;
-                            }
-
                         }
 
                         if(bCoarse || pCamera1->epipolarConstrain(pCamera2,kp1,kp2,R12,t12,pKF1->mvLevelSigma2[kp1.octave],pKF2->mvLevelSigma2[kp2.octave])) // MODIFICATION_2
@@ -1078,9 +938,7 @@ namespace ORB_SLAM3
 
                     if(bestIdx2>=0)
                     {
-                        const cv::KeyPoint &kp2 = (pKF2 -> NLeft == -1) ? pKF2->mvKeysUn[bestIdx2]
-                                                                        : (bestIdx2 < pKF2 -> NLeft) ? pKF2 -> mvKeys[bestIdx2]
-                                                                                                     : pKF2 -> mvKeysRight[bestIdx2 - pKF2 -> NLeft];
+                        const cv::KeyPoint &kp2 = pKF2->mvKeysUn[bestIdx2];
                         vMatches12[idx1]=bestIdx2;
                         nmatches++;
 
@@ -1152,9 +1010,10 @@ namespace ORB_SLAM3
         Eigen::Vector3f Ow;
 
         if(bRight){
-            Tcw = pKF->GetRightPose();
-            Ow = pKF->GetRightCameraCenter();
-            pCamera = pKF->mpCamera2;
+            cerr << "FATAL should NOT be right!!" <<endl;
+//            Tcw = pKF->GetRightPose();
+//            Ow = pKF->GetRightCameraCenter();
+//            pCamera = pKF->mpCamera2;
         }
         else{
             Tcw = pKF->GetPose();
@@ -1260,9 +1119,7 @@ namespace ORB_SLAM3
             for(vector<size_t>::const_iterator vit=vIndices.begin(), vend=vIndices.end(); vit!=vend; vit++)
             {
                 size_t idx = *vit;
-                const cv::KeyPoint &kp = (pKF -> NLeft == -1) ? pKF->mvKeysUn[idx]
-                                                              : (!bRight) ? pKF -> mvKeys[idx]
-                                                                          : pKF -> mvKeysRight[idx];
+                const cv::KeyPoint &kp = pKF->mvKeysUn[idx];
 
                 const int &kpLevel= kp.octave;
 
@@ -1717,8 +1574,7 @@ namespace ORB_SLAM3
                     if(uv(1)<CurrentFrame.mnMinY || uv(1)>CurrentFrame.mnMaxY)
                         continue;
 
-                    int nLastOctave = (LastFrame.Nleft == -1 || i < LastFrame.Nleft) ? LastFrame.mvKeys[i].octave
-                                                                                     : LastFrame.mvKeysRight[i - LastFrame.Nleft].octave;
+                    int nLastOctave = LastFrame.mvKeys[i].octave;
 
                     // Search in a window. Size depends on scale
                     float radius = th*CurrentFrame.mvScaleFactors[nLastOctave];
@@ -1774,13 +1630,9 @@ namespace ORB_SLAM3
 
                         if(mbCheckOrientation)
                         {
-                            cv::KeyPoint kpLF = (LastFrame.Nleft == -1) ? LastFrame.mvKeysUn[i]
-                                                                        : (i < LastFrame.Nleft) ? LastFrame.mvKeys[i]
-                                                                                                : LastFrame.mvKeysRight[i - LastFrame.Nleft];
+                            cv::KeyPoint kpLF = LastFrame.mvKeysUn[i];
 
-                            cv::KeyPoint kpCF = (CurrentFrame.Nleft == -1) ? CurrentFrame.mvKeysUn[bestIdx2]
-                                                                           : (bestIdx2 < CurrentFrame.Nleft) ? CurrentFrame.mvKeys[bestIdx2]
-                                                                                                             : CurrentFrame.mvKeysRight[bestIdx2 - CurrentFrame.Nleft];
+                            cv::KeyPoint kpCF = CurrentFrame.mvKeysUn[bestIdx2];
                             float rot = kpLF.angle-kpCF.angle;
                             if(rot<0.0)
                                 rot+=360.0f;
@@ -1790,72 +1642,6 @@ namespace ORB_SLAM3
                             assert(bin>=0 && bin<HISTO_LENGTH);
                             rotHist[bin].push_back(bestIdx2);
                         }
-                    }
-                    if(CurrentFrame.Nleft != -1){
-                        Eigen::Vector3f x3Dr = CurrentFrame.GetRelativePoseTrl() * x3Dc;
-                        Eigen::Vector2f uv = CurrentFrame.mpCamera->project(x3Dr);
-
-                        int nLastOctave = (LastFrame.Nleft == -1 || i < LastFrame.Nleft) ? LastFrame.mvKeys[i].octave
-                                             : LastFrame.mvKeysRight[i - LastFrame.Nleft].octave;
-
-                        // Search in a window. Size depends on scale
-                        float radius = th*CurrentFrame.mvScaleFactors[nLastOctave];
-
-                        vector<size_t> vIndices2;
-
-                        if(bForward)
-                            vIndices2 = CurrentFrame.GetFeaturesInArea(uv(0),uv(1), radius, nLastOctave, -1,true);
-                        else if(bBackward)
-                            vIndices2 = CurrentFrame.GetFeaturesInArea(uv(0),uv(1), radius, 0, nLastOctave, true);
-                        else
-                            vIndices2 = CurrentFrame.GetFeaturesInArea(uv(0),uv(1), radius, nLastOctave-1, nLastOctave+1, true);
-
-                        const cv::Mat dMP = pMP->GetDescriptor();
-
-                        int bestDist = 256;
-                        int bestIdx2 = -1;
-
-                        for(vector<size_t>::const_iterator vit=vIndices2.begin(), vend=vIndices2.end(); vit!=vend; vit++)
-                        {
-                            const size_t i2 = *vit;
-                            if(CurrentFrame.mvpMapPoints[i2 + CurrentFrame.Nleft])
-                                if(CurrentFrame.mvpMapPoints[i2 + CurrentFrame.Nleft]->Observations()>0)
-                                    continue;
-
-                            const cv::Mat &d = CurrentFrame.mDescriptors.row(i2 + CurrentFrame.Nleft);
-
-                            const int dist = DescriptorDistance(dMP,d);
-
-                            if(dist<bestDist)
-                            {
-                                bestDist=dist;
-                                bestIdx2=i2;
-                            }
-                        }
-
-                        if(bestDist<=TH_HIGH)
-                        {
-                            CurrentFrame.mvpMapPoints[bestIdx2 + CurrentFrame.Nleft]=pMP;
-                            nmatches++;
-                            if(mbCheckOrientation)
-                            {
-                                cv::KeyPoint kpLF = (LastFrame.Nleft == -1) ? LastFrame.mvKeysUn[i]
-                                                                            : (i < LastFrame.Nleft) ? LastFrame.mvKeys[i]
-                                                                                                    : LastFrame.mvKeysRight[i - LastFrame.Nleft];
-
-                                cv::KeyPoint kpCF = CurrentFrame.mvKeysRight[bestIdx2];
-
-                                float rot = kpLF.angle-kpCF.angle;
-                                if(rot<0.0)
-                                    rot+=360.0f;
-                                int bin = round(rot*factor);
-                                if(bin==HISTO_LENGTH)
-                                    bin=0;
-                                assert(bin>=0 && bin<HISTO_LENGTH);
-                                rotHist[bin].push_back(bestIdx2  + CurrentFrame.Nleft);
-                            }
-                        }
-
                     }
                 }
             }

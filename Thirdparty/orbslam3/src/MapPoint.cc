@@ -99,9 +99,7 @@ MapPoint::MapPoint(const Eigen::Vector3f &Pos, std::shared_ptr<Map> pMap, std::s
 
     Eigen::Vector3f PC = mWorldPos - Ow;
     const float dist = PC.norm();
-    const int level = (pFrame -> Nleft == -1) ? pFrame->mvKeysUn[idxF].octave
-                                              : (idxF < pFrame -> Nleft) ? pFrame->mvKeys[idxF].octave
-                                                                         : pFrame -> mvKeysRight[idxF].octave;
+    const int level = pFrame->mvKeysUn[idxF].octave;
     const float levelScaleFactor =  pFrame->mvScaleFactors[level];
     const int nLevels = pFrame->mnScaleLevels;
 
@@ -159,7 +157,7 @@ void MapPoint::AddObservation(std::shared_ptr<KeyFrame> pKF, int idx)
 
     mObservations[pKF]=indexes;
 
-    if(!pKF->mpCamera2 && pKF->mvuRight[idx]>=0)
+    if(pKF->mvuRight[idx]>=0)
         nObs+=2;
     else
         nObs++;
@@ -176,7 +174,7 @@ void MapPoint::EraseObservation(std::shared_ptr<KeyFrame> pKF)
             int leftIndex = get<0>(indexes), rightIndex = get<1>(indexes);
 
             if(leftIndex != -1){
-                if(!pKF->mpCamera2 && pKF->mvuRight[leftIndex]>=0)
+                if(pKF->mvuRight[leftIndex]>=0)
                     nObs-=2;
                 else
                     nObs--;
@@ -478,7 +476,8 @@ void MapPoint::UpdateNormalAndDepth()
         level = pRefKF -> mvKeys[leftIndex].octave;
     }
     else{
-        level = pRefKF -> mvKeysRight[rightIndex - pRefKF -> NLeft].octave;
+        cout << "FATAL: should NOT have right camera stuff!!" <<endl;
+        exit(11);
     }
 
     //const int level = pRefKF->mvKeysUn[observations[pRefKF]].octave;

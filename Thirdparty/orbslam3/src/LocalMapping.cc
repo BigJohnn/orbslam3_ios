@@ -252,7 +252,10 @@ void LocalMapping::Run()
             vdKFCullingSync_ms.push_back(timeKFCulling_ms);
 #endif
 
-            mpLoopCloser->InsertKeyFrame(mpCurrentKeyFrame);
+
+            if(mpLoopCloser)
+                mpLoopCloser->InsertKeyFrame(mpCurrentKeyFrame);
+
 
 #ifdef REGISTER_TIMES
             std::chrono::steady_clock::time_point time_EndLocalMap = std::chrono::steady_clock::now();
@@ -490,74 +493,14 @@ void LocalMapping::CreateNewMapPoints()
             const int &idx1 = vMatchedIndices[ikp].first;
             const int &idx2 = vMatchedIndices[ikp].second;
 
-            const cv::KeyPoint &kp1 = (mpCurrentKeyFrame -> NLeft == -1) ? mpCurrentKeyFrame->mvKeysUn[idx1]
-                                                                         : (idx1 < mpCurrentKeyFrame -> NLeft) ? mpCurrentKeyFrame -> mvKeys[idx1]
-                                                                                                               : mpCurrentKeyFrame -> mvKeysRight[idx1 - mpCurrentKeyFrame -> NLeft];
+            const cv::KeyPoint &kp1 = mpCurrentKeyFrame->mvKeysUn[idx1];
             const float kp1_ur=mpCurrentKeyFrame->mvuRight[idx1];
-            bool bStereo1 = (!mpCurrentKeyFrame->mpCamera2 && kp1_ur>=0);
-            const bool bRight1 = (mpCurrentKeyFrame -> NLeft == -1 || idx1 < mpCurrentKeyFrame -> NLeft) ? false
-                                                                                                         : true;
+            bool bStereo1 = (kp1_ur>=0);
 
-            const cv::KeyPoint &kp2 = (pKF2 -> NLeft == -1) ? pKF2->mvKeysUn[idx2]
-                                                            : (idx2 < pKF2 -> NLeft) ? pKF2 -> mvKeys[idx2]
-                                                                                     : pKF2 -> mvKeysRight[idx2 - pKF2 -> NLeft];
+            const cv::KeyPoint &kp2 = pKF2->mvKeysUn[idx2];
 
             const float kp2_ur = pKF2->mvuRight[idx2];
-            bool bStereo2 = (!pKF2->mpCamera2 && kp2_ur>=0);
-            const bool bRight2 = (pKF2 -> NLeft == -1 || idx2 < pKF2 -> NLeft) ? false
-                                                                               : true;
-
-            if(mpCurrentKeyFrame->mpCamera2 && pKF2->mpCamera2){
-                if(bRight1 && bRight2){
-                    sophTcw1 = mpCurrentKeyFrame->GetRightPose();
-                    Ow1 = mpCurrentKeyFrame->GetRightCameraCenter();
-
-                    sophTcw2 = pKF2->GetRightPose();
-                    Ow2 = pKF2->GetRightCameraCenter();
-
-                    pCamera1 = mpCurrentKeyFrame->mpCamera2;
-                    pCamera2 = pKF2->mpCamera2;
-                }
-                else if(bRight1 && !bRight2){
-                    sophTcw1 = mpCurrentKeyFrame->GetRightPose();
-                    Ow1 = mpCurrentKeyFrame->GetRightCameraCenter();
-
-                    sophTcw2 = pKF2->GetPose();
-                    Ow2 = pKF2->GetCameraCenter();
-
-                    pCamera1 = mpCurrentKeyFrame->mpCamera2;
-                    pCamera2 = pKF2->mpCamera;
-                }
-                else if(!bRight1 && bRight2){
-                    sophTcw1 = mpCurrentKeyFrame->GetPose();
-                    Ow1 = mpCurrentKeyFrame->GetCameraCenter();
-
-                    sophTcw2 = pKF2->GetRightPose();
-                    Ow2 = pKF2->GetRightCameraCenter();
-
-                    pCamera1 = mpCurrentKeyFrame->mpCamera;
-                    pCamera2 = pKF2->mpCamera2;
-                }
-                else{
-                    sophTcw1 = mpCurrentKeyFrame->GetPose();
-                    Ow1 = mpCurrentKeyFrame->GetCameraCenter();
-
-                    sophTcw2 = pKF2->GetPose();
-                    Ow2 = pKF2->GetCameraCenter();
-
-                    pCamera1 = mpCurrentKeyFrame->mpCamera;
-                    pCamera2 = pKF2->mpCamera;
-                }
-                eigTcw1 = sophTcw1.matrix3x4();
-                Rcw1 = eigTcw1.block<3,3>(0,0);
-                Rwc1 = Rcw1.transpose();
-                tcw1 = sophTcw1.translation();
-
-                eigTcw2 = sophTcw2.matrix3x4();
-                Rcw2 = eigTcw2.block<3,3>(0,0);
-                Rwc2 = Rcw2.transpose();
-                tcw2 = sophTcw2.translation();
-            }
+            bool bStereo2 = (kp2_ur>=0);
 
             // Check parallax between rays
             Eigen::Vector3f xn1 = pCamera1->unprojectEig(kp1.pt);
@@ -970,9 +913,7 @@ void LocalMapping::KeyFrameCulling()
                     nMPs++;
                     if(pMP->Observations()>thObs)
                     {
-                        const int &scaleLevel = (pKF -> NLeft == -1) ? pKF->mvKeysUn[i].octave
-                                                                     : (i < pKF -> NLeft) ? pKF -> mvKeys[i].octave
-                                                                                          : pKF -> mvKeysRight[i].octave;
+                        const int &scaleLevel = pKF->mvKeysUn[i].octave;
                         const map<std::shared_ptr<KeyFrame>, tuple<int,int>> observations = pMP->GetObservations();
                         int nObs=0;
                         for(map<std::shared_ptr<KeyFrame>, tuple<int,int>>::const_iterator mit=observations.begin(), mend=observations.end(); mit!=mend; mit++)
@@ -990,9 +931,11 @@ void LocalMapping::KeyFrameCulling()
                                     scaleLeveli = pKFi->mvKeys[leftIndex].octave;
                                 }
                                 if (rightIndex != -1) {
-                                    int rightLevel = pKFi->mvKeysRight[rightIndex - pKFi->NLeft].octave;
-                                    scaleLeveli = (scaleLeveli == -1 || scaleLeveli > rightLevel) ? rightLevel
-                                                                                                  : scaleLeveli;
+                                    cout << "FATAL 12!!" <<endl;
+                                    exit(12);
+//                                    int rightLevel = pKFi->mvKeysRight[rightIndex - pKFi->NLeft].octave;
+//                                    scaleLeveli = (scaleLeveli == -1 || scaleLeveli > rightLevel) ? rightLevel
+//                                                                                                  : scaleLeveli;
                                 }
                             }
 
@@ -1259,7 +1202,7 @@ void LocalMapping::InitializeIMU(float priorG, float priorA, bool bFIBA)
         const float cosg = gI.dot(dirG);
         const float ang = acos(cosg);
         Eigen::Vector3f vzg = v*ang/nv;
-        Rwg = Sophus::SO3f::exp(vzg).matrix(); //TODO: check vzg NaN here
+        Rwg = Sophus::SO3f::exp(vzg).matrix(); //TODO: https://github.com/UZ-SLAMLab/ORB_SLAM3/issues/608
         mRwg = Rwg.cast<double>();
         mTinit = mpCurrentKeyFrame->mTimeStamp-mFirstTs;
     }
@@ -1437,6 +1380,7 @@ void LocalMapping::InitializeIMU(float priorG, float priorA, bool bFIBA)
     return;
 }
 
+//https://blog.csdn.net/Goretzka/article/details/114113880
 void LocalMapping::ScaleRefinement()
 {
     // Minimum number of keyframes to compute a solution

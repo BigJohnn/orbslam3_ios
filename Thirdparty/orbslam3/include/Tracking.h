@@ -61,11 +61,6 @@ public:
 
     ~Tracking();
 
-    // Parse the config file
-    bool ParseCamParamFile(cv::FileStorage &fSettings);
-    bool ParseORBParamFile(cv::FileStorage &fSettings);
-    bool ParseIMUParamFile(cv::FileStorage &fSettings);
-
     // Preprocess the input and call Track(). Extract features and performs stereo matching.
     Sophus::SE3f GrabImageMonocular(const cv::Mat &im, const double &timestamp, string filename);
 
@@ -236,7 +231,7 @@ protected:
     std::mutex mMutexImuQueue;
 
     // Imu calibration parameters
-    IMU::Calib *mpImuCalib = nullptr;
+    std::shared_ptr<IMU::Calib> mpImuCalib;
 
     // Last Bias Estimation (at keyframe creation)
     IMU::Bias mLastBias;
@@ -252,7 +247,7 @@ protected:
     LoopClosing* mpLoopClosing = nullptr;
 
     //ORB
-    ORBextractor* mpORBextractorLeft, *mpORBextractorRight = nullptr;
+    ORBextractor* mpORBextractorLeft = nullptr;
     ORBextractor* mpIniORBextractor = nullptr;
 
     //BoW

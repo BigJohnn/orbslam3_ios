@@ -36,7 +36,7 @@ KeyFrame::KeyFrame():
         mfLogScaleFactor(0), mvScaleFactors(0), mvLevelSigma2(0), mvInvLevelSigma2(0), mnMinX(0), mnMinY(0), mnMaxX(0),
         mnMaxY(0), mPrevKF(nullptr), mNextKF(nullptr), mbFirstConnection(true), mpParent(nullptr), mbNotErase(false),
         mbToBeErased(false), mbBad(false), mHalfBaseline(0), mbCurrentPlaceRecognition(false), mnMergeCorrectedForKF(0),
-        NLeft(0),NRight(0), mnNumberOfOpt(0), mbHasVelocity(false)
+        NLeft(0), mnNumberOfOpt(0), mbHasVelocity(false)
 {
 
 }
@@ -56,9 +56,9 @@ KeyFrame::KeyFrame(std::shared_ptr<Frame> const& F, std::shared_ptr<Map>pMap, Ke
     mImuCalib(F->mImuCalib), mvpMapPoints(F->mvpMapPoints), mpKeyFrameDB(pKFDB),
     mpORBvocabulary(F->mpORBvocabulary), mbFirstConnection(true), mpParent(nullptr), mDistCoef(F->mDistCoef), mbNotErase(false), mnDataset(F->mnDataset),
     mbToBeErased(false), mbBad(false), mHalfBaseline(F->mb/2), mpMap(pMap), mbCurrentPlaceRecognition(false), mNameFile(F->mNameFile), mnMergeCorrectedForKF(0),
-    mpCamera(F->mpCamera), mpCamera2(F->mpCamera2),
-    mvLeftToRightMatch(F->mvLeftToRightMatch),mvRightToLeftMatch(F->mvRightToLeftMatch), mTlr(F->GetRelativePoseTlr()),
-    mvKeysRight(F->mvKeysRight), NLeft(F->Nleft), NRight(F->Nright), mTrl(F->GetRelativePoseTrl()), mnNumberOfOpt(0), mbHasVelocity(false)
+    mpCamera(F->mpCamera), 
+     mTlr(F->GetRelativePoseTlr()),
+     NLeft(F->Nleft), mTrl(F->GetRelativePoseTrl()), mnNumberOfOpt(0), mbHasVelocity(false)
 {
     mnId=nNextId++;
 
@@ -114,9 +114,9 @@ void KeyFrame::SetPose(const Sophus::SE3f &Tcw)
     mTwc = mTcw.inverse();
     mRwc = mTwc.rotationMatrix();
 
-    if (mImuCalib.mbIsSet) // TODO Use a flag instead of the OpenCV matrix
+    if (mImuCalib->mbIsSet) // TODO Use a flag instead of the OpenCV matrix
     {
-        mOwb = mRwc * mImuCalib.mTcb.translation() + mTwc.translation();
+        mOwb = mRwc * mImuCalib->mTcb.translation() + mTwc.translation();
     }
 }
 
@@ -153,13 +153,13 @@ Eigen::Vector3f KeyFrame::GetImuPosition()
 Eigen::Matrix3f KeyFrame::GetImuRotation()
 {
     unique_lock<mutex> lock(mMutexPose);
-    return (mTwc * mImuCalib.mTcb).rotationMatrix();
+    return (mTwc * mImuCalib->mTcb).rotationMatrix();
 }
 
 Sophus::SE3f KeyFrame::GetImuPose()
 {
     unique_lock<mutex> lock(mMutexPose);
-    return mTwc * mImuCalib.mTcb;
+    return mTwc * mImuCalib->mTcb;
 }
 
 Eigen::Matrix3f KeyFrame::GetRotation(){
@@ -732,9 +732,7 @@ vector<size_t> KeyFrame::GetFeaturesInArea(const float &x, const float &y, const
             const vector<size_t> vCell = mGrid[ix][iy];
             for(size_t j=0, jend=vCell.size(); j<jend; j++)
             {
-                const cv::KeyPoint &kpUn = (NLeft == -1) ? mvKeysUn[vCell[j]]
-                                                         : (!bRight) ? mvKeys[vCell[j]]
-                                                                     : mvKeysRight[vCell[j]];
+                const cv::KeyPoint &kpUn = mvKeysUn[vCell[j]];
                 const float distx = kpUn.pt.x-x;
                 const float disty = kpUn.pt.y-y;
 
@@ -903,8 +901,6 @@ void KeyFrame::PreSave(set<std::shared_ptr<KeyFrame>>& spKF,set<std::shared_ptr<
         mnBackupIdCamera = mpCamera->GetId();
 
     mnBackupIdCamera2 = -1;
-    if(mpCamera2 && spCam.find(mpCamera2) != spCam.end())
-        mnBackupIdCamera2 = mpCamera2->GetId();
 
     //Inertial data
     mBackupPrevKFId = -1;
@@ -981,10 +977,6 @@ void KeyFrame::PostLoad(map<long unsigned int, std::shared_ptr<KeyFrame>>& mpKFi
     else
     {
         cout << "ERROR: There is not a main camera in KF " << mnId << endl;
-    }
-    if(mnBackupIdCamera2 >= 0)
-    {
-        mpCamera2 = mpCamId[mnBackupIdCamera2];
     }
 
     //Inertial data

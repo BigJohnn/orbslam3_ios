@@ -104,10 +104,10 @@ IntegratedRotation::IntegratedRotation(const Eigen::Vector3f &angVel, const Bias
     }
 }
 
-Preintegrated::Preintegrated(const Bias &b_, const Calib &calib)
+Preintegrated::Preintegrated(const Bias &b_, std::shared_ptr<Calib> const& calib)
 {
-    Nga = calib.Cov;
-    NgaWalk = calib.CovWalk;
+    Nga = calib->Cov;
+    NgaWalk = calib->CovWalk;
     Initialize(b_);
 }
 

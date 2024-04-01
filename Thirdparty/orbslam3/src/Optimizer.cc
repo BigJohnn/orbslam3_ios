@@ -225,40 +225,6 @@ void Optimizer::BundleAdjustment(const vector<std::shared_ptr<KeyFrame>> &vpKFs,
                 vpEdgeKFStereo.push_back(pKF);
                 vpMapPointEdgeStereo.push_back(pMP);
             }
-
-            if(pKF->mpCamera2){
-                int rightIndex = get<1>(mit->second);
-
-                if(rightIndex != -1 && rightIndex < pKF->mvKeysRight.size()){
-                    rightIndex -= pKF->NLeft;
-
-                    Eigen::Matrix<double,2,1> obs;
-                    cv::KeyPoint kp = pKF->mvKeysRight[rightIndex];
-                    obs << kp.pt.x, kp.pt.y;
-
-                    ORB_SLAM3::EdgeSE3ProjectXYZToBody *e = new ORB_SLAM3::EdgeSE3ProjectXYZToBody();
-
-                    e->setVertex(0, dynamic_cast<g2o::OptimizableGraph::Vertex*>(optimizer.vertex(id)));
-                    e->setVertex(1, dynamic_cast<g2o::OptimizableGraph::Vertex*>(optimizer.vertex(pKF->mnId)));
-                    e->setMeasurement(obs);
-                    const float &invSigma2 = pKF->mvInvLevelSigma2[kp.octave];
-                    e->setInformation(Eigen::Matrix2d::Identity()*invSigma2);
-
-                    g2o::RobustKernelHuber* rk = new g2o::RobustKernelHuber;
-                    e->setRobustKernel(rk);
-                    rk->setDelta(thHuber2D);
-
-                    Sophus::SE3f Trl = pKF-> GetRelativePoseTrl();
-                    e->mTrl = g2o::SE3Quat(Trl.unit_quaternion().cast<double>(), Trl.translation().cast<double>());
-
-                    e->pCamera = pKF->mpCamera2;
-
-                    optimizer.addEdge(e);
-                    vpEdgesBody.push_back(e);
-                    vpEdgeKFBody.push_back(pKF);
-                    vpMapPointEdgeBody.push_back(pMP);
-                }
-            }
         }
 
 
@@ -676,37 +642,6 @@ void Optimizer::FullInertialBA(std::shared_ptr<Map>pMap, int its, const bool bFi
                     rk->setDelta(thHuberStereo);
 
                     optimizer.addEdge(e);
-                }
-
-                if(pKFi->mpCamera2){ // Monocular right observation
-                    int rightIndex = get<1>(mit->second);
-
-                    if(rightIndex != -1 && rightIndex < pKFi->mvKeysRight.size()){
-                        rightIndex -= pKFi->NLeft;
-
-                        Eigen::Matrix<double,2,1> obs;
-                        kpUn = pKFi->mvKeysRight[rightIndex];
-                        obs << kpUn.pt.x, kpUn.pt.y;
-
-                        EdgeMono *e = new EdgeMono(1);
-
-                        g2o::OptimizableGraph::Vertex* VP = dynamic_cast<g2o::OptimizableGraph::Vertex*>(optimizer.vertex(pKFi->mnId));
-                        if(bAllFixed)
-                            if(!VP->fixed())
-                                bAllFixed=false;
-
-                        e->setVertex(0, dynamic_cast<g2o::OptimizableGraph::Vertex*>(optimizer.vertex(id)));
-                        e->setVertex(1, VP);
-                        e->setMeasurement(obs);
-                        const float invSigma2 = pKFi->mvInvLevelSigma2[kpUn.octave];
-                        e->setInformation(Eigen::Matrix2d::Identity()*invSigma2);
-
-                        g2o::RobustKernelHuber* rk = new g2o::RobustKernelHuber;
-                        e->setRobustKernel(rk);
-                        rk->setDelta(thHuberMono);
-
-                        optimizer.addEdge(e);
-                    }
                 }
             }
         }
@@ -3333,40 +3268,6 @@ void Optimizer::LocalBundleAdjustment(std::shared_ptr<KeyFrame> pMainKF,vector<s
                 vpEdgesMono.push_back(e);
                 vpEdgeKFMono.push_back(pKF);
                 vpMapPointEdgeMono.push_back(pMPi);
-
-                mpObsKFs[pKF]++;
-            }
-            else // RGBD or Stereo
-            {
-                mpObsMPs[pMPi]+=2;
-                Eigen::Matrix<double,3,1> obs;
-                const float kp_ur = pKF->mvuRight[get<0>(mit->second)];
-                obs << kpUn.pt.x, kpUn.pt.y, kp_ur;
-
-                g2o::EdgeStereoSE3ProjectXYZ* e = new g2o::EdgeStereoSE3ProjectXYZ();
-
-                e->setVertex(0, dynamic_cast<g2o::OptimizableGraph::Vertex*>(optimizer.vertex(id)));
-                e->setVertex(1, dynamic_cast<g2o::OptimizableGraph::Vertex*>(optimizer.vertex(pKF->mnId)));
-                e->setMeasurement(obs);
-                const float &invSigma2 = pKF->mvInvLevelSigma2[kpUn.octave];
-                Eigen::Matrix3d Info = Eigen::Matrix3d::Identity()*invSigma2;
-                e->setInformation(Info);
-
-                g2o::RobustKernelHuber* rk = new g2o::RobustKernelHuber;
-                e->setRobustKernel(rk);
-                rk->setDelta(thHuber3D);
-
-                e->fx = pKF->fx;
-                e->fy = pKF->fy;
-                e->cx = pKF->cx;
-                e->cy = pKF->cy;
-                e->bf = pKF->mbf;
-
-                optimizer.addEdge(e);
-
-                vpEdgesStereo.push_back(e);
-                vpEdgeKFStereo.push_back(pKF);
-                vpMapPointEdgeStereo.push_back(pMPi);
 
                 mpObsKFs[pKF]++;
             }

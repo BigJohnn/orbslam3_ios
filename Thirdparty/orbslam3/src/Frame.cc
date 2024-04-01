@@ -68,7 +68,7 @@ Frame& Frame::operator=(const Frame& frame) {
     mThDepth = frame.mThDepth;
     N = frame.N;
     mvKeys = frame.mvKeys;
-    mvKeysRight = frame.mvKeysRight;
+    
     mvKeysUn = frame.mvKeysUn;
     mvuRight = frame.mvuRight;
     mvDepth = frame.mvDepth;
@@ -108,13 +108,11 @@ Frame& Frame::operator=(const Frame& frame) {
     mbImuPreintegrated = frame.mbImuPreintegrated;
     mpMutexImu = frame.mpMutexImu;
     mpCamera = frame.mpCamera;
-    mpCamera2 = frame.mpCamera2;
+    
     Nleft = frame.Nleft;  // Number of left keypoints
-      Nright = frame.Nright;  // Number of right keypoints (if stereo camera)
+      
       monoLeft = frame.monoLeft;  // Monocular flag for left camera
-      monoRight = frame.monoRight;  // Monocular flag for right camera (if stereo camera)
-      mvLeftToRightMatch = frame.mvLeftToRightMatch;  // Matches between left and right keypoints (if stereo camera)
-      mvRightToLeftMatch = frame.mvRightToLeftMatch;  // Matches between right and left keypoints (if stereo camera)
+      
       mvStereo3Dpoints = frame.mvStereo3Dpoints;
     
     for(int i=0;i<FRAME_GRID_COLS;i++)
@@ -144,7 +142,7 @@ Frame::Frame(const Frame &frame)
     :mpcpi(frame.mpcpi),mpORBvocabulary(frame.mpORBvocabulary), mpORBextractorLeft(frame.mpORBextractorLeft),
      mTimeStamp(frame.mTimeStamp), mK(frame.mK.clone()), mK_(Converter::toMatrix3f(frame.mK)), mDistCoef(frame.mDistCoef.clone()),
      mbf(frame.mbf), mb(frame.mb), mThDepth(frame.mThDepth), N(frame.N), mvKeys(frame.mvKeys),
-     mvKeysRight(frame.mvKeysRight), mvKeysUn(frame.mvKeysUn), mvuRight(frame.mvuRight),
+     mvKeysUn(frame.mvKeysUn), mvuRight(frame.mvuRight),
      mvDepth(frame.mvDepth), mBowVec(frame.mBowVec), mFeatVec(frame.mFeatVec),
      mDescriptors(frame.mDescriptors.clone()),
      mvpMapPoints(frame.mvpMapPoints), mvbOutlier(frame.mvbOutlier), mImuCalib(frame.mImuCalib), mnCloseMPs(frame.mnCloseMPs),
@@ -154,9 +152,8 @@ Frame::Frame(const Frame &frame)
      mvScaleFactors(frame.mvScaleFactors), mvInvScaleFactors(frame.mvInvScaleFactors), mNameFile(frame.mNameFile), mnDataset(frame.mnDataset),
      mvLevelSigma2(frame.mvLevelSigma2), mvInvLevelSigma2(frame.mvInvLevelSigma2), mpPrevFrame(frame.mpPrevFrame), mpLastKeyFrame(frame.mpLastKeyFrame),
      mbIsSet(frame.mbIsSet), mbImuPreintegrated(frame.mbImuPreintegrated), mpMutexImu(frame.mpMutexImu),
-     mpCamera(frame.mpCamera), mpCamera2(frame.mpCamera2), Nleft(frame.Nleft), Nright(frame.Nright),
-     monoLeft(frame.monoLeft), monoRight(frame.monoRight), mvLeftToRightMatch(frame.mvLeftToRightMatch),
-     mvRightToLeftMatch(frame.mvRightToLeftMatch), mvStereo3Dpoints(frame.mvStereo3Dpoints),
+     mpCamera(frame.mpCamera),
+     monoLeft(frame.monoLeft),mvStereo3Dpoints(frame.mvStereo3Dpoints),
      mTlr(frame.mTlr), mRlr(frame.mRlr), mtlr(frame.mtlr), mTrl(frame.mTrl),
      mTcw(frame.mTcw), mbHasPose(false), mbHasVelocity(false)
 {
@@ -186,7 +183,7 @@ Frame::Frame(const Frame &frame)
 }
 
 Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extractor,ORBVocabulary* voc, GeometricCamera* pCamera, cv::Mat &distCoef, const float &bf, const float &thDepth, std::shared_ptr<Frame>
-             pPrevF, const IMU::Calib &ImuCalib)
+             pPrevF, std::shared_ptr<IMU::Calib> ImuCalib)
 {
     mpORBvocabulary = voc;
     mpORBextractorLeft = extractor;
@@ -273,12 +270,9 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
 
     //Set no stereo fisheye information
     Nleft = -1;
-    Nright = -1;
-    mvLeftToRightMatch = vector<int>(0);
-    mvRightToLeftMatch = vector<int>(0);
+    
     mvStereo3Dpoints = vector<Eigen::Vector3f>(0);
     monoLeft = -1;
-    monoRight = -1;
 
     AssignFeaturesToGrid();
 
@@ -317,9 +311,7 @@ void Frame::AssignFeaturesToGrid()
 
     for(int i=0;i<N;i++)
     {
-        const cv::KeyPoint &kp = (Nleft == -1) ? mvKeysUn[i]
-                                                 : (i < Nleft) ? mvKeys[i]
-                                                                 : mvKeysRight[i - Nleft];
+        const cv::KeyPoint &kp = mvKeysUn[i];
 
         int nGridPosX, nGridPosY;
         if(PosInGrid(kp,nGridPosX,nGridPosY)){
@@ -376,7 +368,7 @@ void Frame::SetImuPoseVelocity(const Eigen::Matrix3f &Rwb, const Eigen::Vector3f
     Sophus::SE3f Twb(Rwb, twb);
     Sophus::SE3f Tbw = Twb.inverse();
 
-    mTcw = mImuCalib.mTcb * Tbw;
+    mTcw = mImuCalib->mTcb * Tbw;
 
     UpdatePoseMatrices();
     mbIsSet = true;
@@ -393,15 +385,15 @@ void Frame::UpdatePoseMatrices()
 }
 
 Eigen::Matrix<float,3,1> Frame::GetImuPosition() const {
-    return mRwc * mImuCalib.mTcb.translation() + mOw;
+    return mRwc * mImuCalib->mTcb.translation() + mOw;
 }
 
 Eigen::Matrix<float,3,3> Frame::GetImuRotation() {
-    return mRwc * mImuCalib.mTcb.rotationMatrix();
+    return mRwc * mImuCalib->mTcb.rotationMatrix();
 }
 
 Sophus::SE3<float> Frame::GetImuPose() {
-    return mTcw.inverse() * mImuCalib.mTcb;
+    return mTcw.inverse() * mImuCalib->mTcb;
 }
 
 Sophus::SE3f Frame::GetRelativePoseTrl()
@@ -613,9 +605,7 @@ vector<size_t> Frame::GetFeaturesInArea(const float &x, const float  &y, const f
 
             for(size_t j=0, jend=vCell.size(); j<jend; j++)
             {
-                const cv::KeyPoint &kpUn = (Nleft == -1) ? mvKeysUn[vCell[j]]
-                                                         : (!bRight) ? mvKeys[vCell[j]]
-                                                                     : mvKeysRight[vCell[j]];
+                const cv::KeyPoint &kpUn = mvKeysUn[vCell[j]];
                 if(bCheckLevels)
                 {
                     if(kpUn.octave<minLevel)
@@ -783,8 +773,7 @@ bool Frame::isInFrustumChecks(std::shared_ptr<MapPoint>pMP, float viewingCosLimi
 
     // Project in image and check it is not outside
     Eigen::Vector2f uv;
-    if(bRight) uv = mpCamera2->project(Pc);
-    else uv = mpCamera->project(Pc);
+    uv = mpCamera->project(Pc);
 
     if(uv(0)<mnMinX || uv(0)>mnMaxX)
         return false;

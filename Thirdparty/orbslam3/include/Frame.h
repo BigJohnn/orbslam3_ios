@@ -60,7 +60,7 @@ public:
     Frame& operator=(Frame const& frame);
 
     // Constructor for Monocular cameras.
-    Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extractor,ORBVocabulary* voc, GeometricCamera* pCamera, cv::Mat &distCoef, const float &bf, const float &thDepth, std::shared_ptr<Frame> pPrevF = nullptr, const IMU::Calib &ImuCalib = IMU::Calib());
+    Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extractor,ORBVocabulary* voc, GeometricCamera* pCamera, cv::Mat &distCoef, const float &bf, const float &thDepth, std::shared_ptr<Frame> pPrevF = nullptr, std::shared_ptr<IMU::Calib> ImuCalib = nullptr);
 
     // Destructor
     // ~Frame();
@@ -213,7 +213,7 @@ public:
     // Vector of keypoints (original for visualization) and undistorted (actually used by the system).
     // In the stereo case, mvKeysUn is redundant as images must be rectified.
     // In the RGB-D case, RGB images can be distorted.
-    std::vector<cv::KeyPoint> mvKeys, mvKeysRight;
+    std::vector<cv::KeyPoint> mvKeys;
     std::vector<cv::KeyPoint> mvKeysUn;
 
     // Corresponding stereo coordinate and depth for each keypoint.
@@ -245,7 +245,7 @@ public:
     IMU::Bias mImuBias;
 
     // Imu calibration
-    IMU::Calib mImuCalib;
+    std::shared_ptr<IMU::Calib> mImuCalib;
 
     // Imu preintegration from last keyframe
     std::shared_ptr<IMU::Preintegrated> mpImuPreintegrated;
@@ -311,15 +311,12 @@ private:
     std::shared_ptr<std::mutex> mpMutexImu;
 
 public:
-    GeometricCamera* mpCamera = nullptr, *mpCamera2 = nullptr;
+    GeometricCamera* mpCamera = nullptr;
 
     //Number of KeyPoints extracted in the left and right images
-    int Nleft = -1, Nright;
+    int Nleft = -1;
     //Number of Non Lapping Keypoints
-    int monoLeft, monoRight;
-
-    //For stereo matching
-    std::vector<int> mvLeftToRightMatch, mvRightToLeftMatch;
+    int monoLeft;
 
     //For stereo fisheye matching
     static cv::BFMatcher BFmatcher;
@@ -327,11 +324,6 @@ public:
     //Triangulated stereo observations using as reference the left camera. These are
     //computed during ComputeStereoFishEyeMatches
     std::vector<Eigen::Vector3f> mvStereo3Dpoints;
-
-    //Grid for the right image
-//    std::vector<std::size_t> mGridRight[FRAME_GRID_COLS][FRAME_GRID_ROWS];
-
-//    Frame(const cv::Mat &imLeft, const cv::Mat &imRight, const double &timeStamp, ORBextractor* extractorLeft, ORBextractor* extractorRight, ORBVocabulary* voc, cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth, GeometricCamera* pCamera, GeometricCamera* pCamera2, Sophus::SE3f& Tlr,std::shared_ptr<Frame> pPrevF = nullptr, const IMU::Calib &ImuCalib = IMU::Calib());
 
     bool isInFrustumChecks(std::shared_ptr<MapPoint> pMP, float viewingCosLimit, bool bRight = false);
 

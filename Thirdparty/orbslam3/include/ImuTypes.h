@@ -171,7 +171,7 @@ class Preintegrated
 
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    Preintegrated(const Bias &b_, const Calib &calib);
+    Preintegrated(const Bias &b_, std::shared_ptr<Calib> const& calib);
     Preintegrated(Preintegrated* pImuPre);
     Preintegrated() {}
     ~Preintegrated() {}

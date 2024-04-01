@@ -175,10 +175,8 @@ class KeyFrame : public std::enable_shared_from_this<KeyFrame>
         ar & mvLeftToRightMatch;
         ar & mvRightToLeftMatch;
         ar & const_cast<int&>(NLeft);
-        ar & const_cast<int&>(NRight);
+        
         serializeSophusSE3<Archive>(ar, mTlr, version);
-        serializeVectorKeyPoints<Archive>(ar, mvKeysRight, version);
-//        ar & mGridRight;
 
         // Inertial variables
         ar & mImuBias;
@@ -410,7 +408,7 @@ public:
     std::shared_ptr<KeyFrame> mNextKF;
 
     std::shared_ptr<IMU::Preintegrated> mpImuPreintegrated;
-    IMU::Calib mImuCalib;
+    std::shared_ptr<IMU::Calib> mImuCalib;
 
     unsigned int mnOriginMapId;
 
@@ -503,7 +501,7 @@ protected:
     std::mutex mMutexMap;
 
 public:
-    GeometricCamera* mpCamera = nullptr, *mpCamera2 = nullptr;
+    GeometricCamera* mpCamera = nullptr;
 
     //Indexes of stereo observations correspondences
     std::vector<int> mvLeftToRightMatch, mvRightToLeftMatch;
@@ -512,9 +510,9 @@ public:
     Sophus::SE3f GetRelativePoseTlr();
 
     //KeyPoints in the right image (for stereo fisheye, coordinates are needed)
-    const std::vector<cv::KeyPoint> mvKeysRight;
+//    const std::vector<cv::KeyPoint> mvKeysRight;
 
-    const int NLeft, NRight;
+    const int NLeft;
 
 //    std::vector< std::vector <std::vector<size_t> > > mGridRight;
 
