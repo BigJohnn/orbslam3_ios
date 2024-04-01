@@ -147,11 +147,13 @@ void LocalMapping::Run()
 
                         bool bLarge = ((mpTracker->GetMatchesInliers()>75)&&mbMonocular)||((mpTracker->GetMatchesInliers()>100)&&!mbMonocular);
                         Optimizer::LocalInertialBA(mpCurrentKeyFrame, &mbAbortBA, mpCurrentKeyFrame->GetMap(),num_FixedKF_BA,num_OptKF_BA,num_MPs_BA,num_edges_BA, bLarge, !mpCurrentKeyFrame->GetMap()->GetIniertialBA2());
+                        Verbose::PrintMess("LocalInertialBA Done!! ", Verbose::VERBOSITY_NORMAL);
                         b_doneLBA = true;
                     }
                     else
                     {
                         Optimizer::LocalBundleAdjustment(mpCurrentKeyFrame,&mbAbortBA, mpCurrentKeyFrame->GetMap(),num_FixedKF_BA,num_OptKF_BA,num_MPs_BA,num_edges_BA);
+                        Verbose::PrintMess("LocalBundleAdjustment Done!! ", Verbose::VERBOSITY_NORMAL);
                         b_doneLBA = true;
                     }
 
@@ -225,6 +227,9 @@ void LocalMapping::Run()
 
                                 cout << "end VIBA 2" << endl;
                             }
+                        }
+                        else {
+                            cout<<" NO VIBA........."<<endl;
                         }
 
                         // scale refinement
@@ -1189,8 +1194,11 @@ void LocalMapping::InitializeIMU(float priorG, float priorA, bool bFIBA)
     }
 
 
-    if(mpAtlas->KeyFramesInMap()<nMinKF)
+    if(mpAtlas->KeyFramesInMap()<nMinKF) {
+        printf("[InitializeIMU] mpAtlas->KeyFramesInMap() == %lu < nMinKF == %lu, return!!\n", mpAtlas->KeyFramesInMap(), nMinKF);
         return;
+    }
+        
 
     // Retrieve all keyframe in temporal order
     list<std::shared_ptr<KeyFrame>> lpKF;
@@ -1251,7 +1259,7 @@ void LocalMapping::InitializeIMU(float priorG, float priorA, bool bFIBA)
         const float cosg = gI.dot(dirG);
         const float ang = acos(cosg);
         Eigen::Vector3f vzg = v*ang/nv;
-        Rwg = Sophus::SO3f::exp(vzg).matrix();
+        Rwg = Sophus::SO3f::exp(vzg).matrix(); //TODO: check vzg NaN here
         mRwg = Rwg.cast<double>();
         mTinit = mpCurrentKeyFrame->mTimeStamp-mFirstTs;
     }
@@ -1495,6 +1503,7 @@ void LocalMapping::ScaleRefinement()
     // To perform pose-inertial opt w.r.t. last keyframe
     mpCurrentKeyFrame->GetMap()->IncreaseChangeIndex();
 
+    Verbose::PrintMess("ScaleRefinement Done!! ", Verbose::VERBOSITY_NORMAL);
     return;
 }
 

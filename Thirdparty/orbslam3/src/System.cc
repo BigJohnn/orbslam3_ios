@@ -223,7 +223,7 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
     //usleep(10*1000*1000);
 
     // Fix verbosity
-    Verbose::SetTh(Verbose::VERBOSITY_DEBUG);
+    Verbose::SetTh(Verbose::VERBOSITY_NORMAL);
 
 }
 
@@ -244,11 +244,11 @@ Sophus::SE3f System::TrackMonocular(const cv::Mat &im, const double &timestamp, 
 
 //    cv::Mat imToFeed = im.clone();
     cv::Mat imToFeed = im;
-    if(settings_ && settings_->needToResize()){
-        cv::Mat resizedIm;
-        cv::resize(im,resizedIm,settings_->newImSize());
-        imToFeed = resizedIm;
-    }
+//    if(settings_ && settings_->needToResize()){
+//        cv::Mat resizedIm;
+//        cv::resize(im,resizedIm,settings_->newImSize());
+//        imToFeed = resizedIm;
+//    }
 
     // Check mode change
     {

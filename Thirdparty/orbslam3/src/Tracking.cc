@@ -593,9 +593,6 @@ void Tracking::newParameterLoader(Settings *settings) {
 
     mpORBextractorLeft = new ORBextractor(nFeatures,fScaleFactor,nLevels,fIniThFAST,fMinThFAST);
 
-    if(mSensor==System::STEREO || mSensor==System::IMU_STEREO)
-        mpORBextractorRight = new ORBextractor(nFeatures,fScaleFactor,nLevels,fIniThFAST,fMinThFAST);
-
     if(mSensor==System::MONOCULAR || mSensor==System::IMU_MONOCULAR)
         mpIniORBextractor = new ORBextractor(5*nFeatures,fScaleFactor,nLevels,fIniThFAST,fMinThFAST);
 
@@ -1281,9 +1278,6 @@ bool Tracking::ParseORBParamFile(cv::FileStorage &fSettings)
 
     mpORBextractorLeft = new ORBextractor(nFeatures,fScaleFactor,nLevels,fIniThFAST,fMinThFAST);
 
-    if(mSensor==System::STEREO || mSensor==System::IMU_STEREO)
-        mpORBextractorRight = new ORBextractor(nFeatures,fScaleFactor,nLevels,fIniThFAST,fMinThFAST);
-
     if(mSensor==System::MONOCULAR || mSensor==System::IMU_MONOCULAR)
         mpIniORBextractor = new ORBextractor(5*nFeatures,fScaleFactor,nLevels,fIniThFAST,fMinThFAST);
 
@@ -1453,22 +1447,6 @@ Sophus::SE3f Tracking::GrabImageMonocular(const cv::Mat &im, const double &times
     
     mImGray = im;
     
-    if(mImGray.channels()==3)
-    {
-        if(mbRGB)
-            cvtColor(mImGray,mImGray,cv::COLOR_RGB2GRAY);
-        else
-            cvtColor(mImGray,mImGray,cv::COLOR_BGR2GRAY);
-    }
-    else if(mImGray.channels()==4)
-    {
-        if(mbRGB)
-            cvtColor(mImGray,mImGray,cv::COLOR_RGBA2GRAY);
-        else
-            cvtColor(mImGray,mImGray,cv::COLOR_BGRA2GRAY);
-    }
-    
-    
     if (mSensor == System::MONOCULAR)
     {
         if(mState==NOT_INITIALIZED || mState==NO_IMAGES_YET ||(lastID - initID) < mMaxFrames)
@@ -1486,8 +1464,6 @@ Sophus::SE3f Tracking::GrabImageMonocular(const cv::Mat &im, const double &times
         else {
             mpCurrentFrame = std::make_shared<Frame>(mImGray,timestamp,mpORBextractorLeft,mpORBVocabulary,mpCamera,mDistCoef,mbf,mThDepth,mpLastFrame,*mpImuCalib);
         }
-
-//        
     }
 
     
@@ -2019,8 +1995,8 @@ void Tracking::Track()
             }
             if(!bOK)
                 Verbose::PrintMess("Fail to track local map! ", Verbose::VERBOSITY_DEBUG);
-            else
-                Verbose::PrintMess("Track local map Done! ", Verbose::VERBOSITY_VERBOSE);
+//            else
+//                Verbose::PrintMess("Track local map Done! ", Verbose::VERBOSITY_VERBOSE);
         }
         else
         {
@@ -2834,15 +2810,6 @@ bool Tracking::TrackLocalMap()
         else
             return true;
     }
-    else if (mSensor == System::IMU_STEREO || mSensor == System::IMU_RGBD)
-    {
-        if(mnMatchesInliers<15)
-        {
-            return false;
-        }
-        else
-            return true;
-    }
     else
     {
         if(mnMatchesInliers<30)
@@ -2857,8 +2824,6 @@ bool Tracking::NeedNewKeyFrame()
     if((mSensor == System::IMU_MONOCULAR || mSensor == System::IMU_STEREO || mSensor == System::IMU_RGBD) && !mpAtlas->GetCurrentMap()->isImuInitialized())
     {
         if (mSensor == System::IMU_MONOCULAR && (mpCurrentFrame->mTimeStamp-mpLastKeyFrame->mTimeStamp)>=0.25)
-            return true;
-        else if ((mSensor == System::IMU_STEREO || mSensor == System::IMU_RGBD) && (mpCurrentFrame->mTimeStamp-mpLastKeyFrame->mTimeStamp)>=0.25)
             return true;
         else
             return false;
@@ -2896,23 +2861,6 @@ bool Tracking::NeedNewKeyFrame()
     // Check how many "close" points are being tracked and how many could be potentially created.
     int nNonTrackedClose = 0;
     int nTrackedClose= 0;
-
-    if(mSensor!=System::MONOCULAR && mSensor!=System::IMU_MONOCULAR)
-    {
-        int N = (mpCurrentFrame->Nleft == -1) ? mpCurrentFrame->N : mpCurrentFrame->Nleft;
-        for(int i =0; i<N; i++)
-        {
-            if(mpCurrentFrame->mvDepth[i]>0 && mpCurrentFrame->mvDepth[i]<mThDepth)
-            {
-                if(mpCurrentFrame->mvpMapPoints[i] && !mpCurrentFrame->mvbOutlier[i])
-                    nTrackedClose++;
-                else
-                    nNonTrackedClose++;
-
-            }
-        }
-        //Verbose::PrintMess("[NEEDNEWKF]-> closed points: " + to_string(nTrackedClose) + "; non tracked closed points: " + to_string(nNonTrackedClose), Verbose::VERBOSITY_NORMAL);// Verbose::VERBOSITY_DEBUG);
-    }
 
     bool bNeedToInsertClose;
     bNeedToInsertClose = (nTrackedClose<100) && (nNonTrackedClose>70);
@@ -2958,11 +2906,6 @@ bool Tracking::NeedNewKeyFrame()
     if(mpLastKeyFrame)
     {
         if (mSensor==System::IMU_MONOCULAR)
-        {
-            if ((mpCurrentFrame->mTimeStamp-mpLastKeyFrame->mTimeStamp)>=0.5)
-                c3 = true;
-        }
-        else if (mSensor==System::IMU_STEREO || mSensor == System::IMU_RGBD)
         {
             if ((mpCurrentFrame->mTimeStamp-mpLastKeyFrame->mTimeStamp)>=0.5)
                 c3 = true;
@@ -3034,91 +2977,6 @@ void Tracking::CreateNewKeyFrame()
     {
         mpImuPreintegratedFromLastKF = std::make_shared<IMU::Preintegrated>(pKF->GetImuBias(),pKF->mImuCalib);
     }
-
-    if(mSensor!=System::MONOCULAR && mSensor != System::IMU_MONOCULAR) // TODO check if incluide imu_stereo
-    {
-        mpCurrentFrame->UpdatePoseMatrices();
-        // cout << "create new MPs" << endl;
-        // We sort points by the measured depth by the stereo/RGBD sensor.
-        // We create all those MapPoints whose depth < mThDepth.
-        // If there are less than 100 close points we create the 100 closest.
-        int maxPoint = 100;
-        if(mSensor == System::IMU_STEREO || mSensor == System::IMU_RGBD)
-            maxPoint = 100;
-
-        vector<pair<float,int> > vDepthIdx;
-        int N = (mpCurrentFrame->Nleft != -1) ? mpCurrentFrame->Nleft : mpCurrentFrame->N;
-        vDepthIdx.reserve(mpCurrentFrame->N);
-        for(int i=0; i<N; i++)
-        {
-            float z = mpCurrentFrame->mvDepth[i];
-            if(z>0)
-            {
-                vDepthIdx.push_back(make_pair(z,i));
-            }
-        }
-
-        if(!vDepthIdx.empty())
-        {
-            sort(vDepthIdx.begin(),vDepthIdx.end());
-
-            int nPoints = 0;
-            for(size_t j=0; j<vDepthIdx.size();j++)
-            {
-                int i = vDepthIdx[j].second;
-
-                bool bCreateNew = false;
-
-                std::shared_ptr<MapPoint> pMP = mpCurrentFrame->mvpMapPoints[i];
-                if(!pMP)
-                    bCreateNew = true;
-                else if(pMP->Observations()<1)
-                {
-                    bCreateNew = true;
-                    mpCurrentFrame->mvpMapPoints[i] = nullptr;
-                }
-
-                if(bCreateNew)
-                {
-                    Eigen::Vector3f x3D;
-
-                    if(mpCurrentFrame->Nleft == -1){
-                        mpCurrentFrame->UnprojectStereo(i, x3D);
-                    }
-
-                    std::shared_ptr<MapPoint> pNewMP = std::make_shared<MapPoint>(x3D,pKF,mpAtlas->GetCurrentMap());
-                    pNewMP->AddObservation(pKF,i);
-
-                    //Check if it is a stereo observation in order to not
-                    //duplicate mappoints
-                    if(mpCurrentFrame->Nleft != -1 && mpCurrentFrame->mvLeftToRightMatch[i] >= 0){
-                        mpCurrentFrame->mvpMapPoints[mpCurrentFrame->Nleft + mpCurrentFrame->mvLeftToRightMatch[i]]=pNewMP;
-                        pNewMP->AddObservation(pKF,mpCurrentFrame->Nleft + mpCurrentFrame->mvLeftToRightMatch[i]);
-                        pKF->AddMapPoint(pNewMP,mpCurrentFrame->Nleft + mpCurrentFrame->mvLeftToRightMatch[i]);
-                    }
-
-                    pKF->AddMapPoint(pNewMP,i);
-                    pNewMP->ComputeDistinctiveDescriptors();
-                    pNewMP->UpdateNormalAndDepth();
-                    mpAtlas->AddMapPoint(pNewMP);
-
-                    mpCurrentFrame->mvpMapPoints[i]=pNewMP;
-                    nPoints++;
-                }
-                else
-                {
-                    nPoints++;
-                }
-
-                if(vDepthIdx[j].first>mThDepth && nPoints>maxPoint)
-                {
-                    break;
-                }
-            }
-            //Verbose::PrintMess("new mps for stereo KF: " + to_string(nPoints), Verbose::VERBOSITY_NORMAL);
-        }
-    }
-
 
     mpLocalMapper->InsertKeyFrame(pKF);
 

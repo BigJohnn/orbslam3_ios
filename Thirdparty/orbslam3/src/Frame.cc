@@ -42,7 +42,7 @@ float Frame::mfGridElementWidthInv, Frame::mfGridElementHeightInv;
 //For stereo fisheye matching
 cv::BFMatcher Frame::BFmatcher = cv::BFMatcher(cv::NORM_HAMMING);
 
-Frame::Frame(): mpcpi(nullptr), mpImuPreintegrated(nullptr), mpPrevFrame(nullptr), mpImuPreintegratedFrame(nullptr), mpReferenceKF(nullptr), mbIsSet(false), mbImuPreintegrated(false), mbHasPose(false), mbHasVelocity(false)
+Frame::Frame(): mpImuPreintegrated(nullptr), mpPrevFrame(nullptr), mpImuPreintegratedFrame(nullptr), mpReferenceKF(nullptr), mbIsSet(false), mbImuPreintegrated(false), mbHasPose(false), mbHasVelocity(false)
 {
 #ifdef REGISTER_TIMES
     mTimeStereoMatch = 0;
@@ -76,7 +76,7 @@ Frame& Frame::operator=(const Frame& frame) {
     mFeatVec = frame.mFeatVec;
     // Clone descriptors as they might be large data structures
     mDescriptors = frame.mDescriptors.clone();
-    mDescriptorsRight = frame.mDescriptorsRight.clone();
+    
     mvpMapPoints = frame.mvpMapPoints;
     mvbOutlier = frame.mvbOutlier;
     mImuCalib = frame.mImuCalib;
@@ -146,7 +146,7 @@ Frame::Frame(const Frame &frame)
      mbf(frame.mbf), mb(frame.mb), mThDepth(frame.mThDepth), N(frame.N), mvKeys(frame.mvKeys),
      mvKeysRight(frame.mvKeysRight), mvKeysUn(frame.mvKeysUn), mvuRight(frame.mvuRight),
      mvDepth(frame.mvDepth), mBowVec(frame.mBowVec), mFeatVec(frame.mFeatVec),
-     mDescriptors(frame.mDescriptors.clone()), mDescriptorsRight(frame.mDescriptorsRight.clone()),
+     mDescriptors(frame.mDescriptors.clone()),
      mvpMapPoints(frame.mvpMapPoints), mvbOutlier(frame.mvbOutlier), mImuCalib(frame.mImuCalib), mnCloseMPs(frame.mnCloseMPs),
      mpImuPreintegrated(frame.mpImuPreintegrated), mpImuPreintegratedFrame(frame.mpImuPreintegratedFrame), mImuBias(frame.mImuBias),
      mnId(frame.mnId), mpReferenceKF(frame.mpReferenceKF), mnScaleLevels(frame.mnScaleLevels),
@@ -188,7 +188,6 @@ Frame::Frame(const Frame &frame)
 Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extractor,ORBVocabulary* voc, GeometricCamera* pCamera, cv::Mat &distCoef, const float &bf, const float &thDepth, std::shared_ptr<Frame>
              pPrevF, const IMU::Calib &ImuCalib)
 {
-    mpcpi = nullptr;
     mpORBvocabulary = voc;
     mpORBextractorLeft = extractor;
     
@@ -199,14 +198,13 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
     mbf = bf;
     mThDepth = thDepth;
     mImuCalib = ImuCalib;
-    mpImuPreintegrated = nullptr;
+
     mpPrevFrame = pPrevF;
-    mpImuPreintegratedFrame = nullptr;
-    mpReferenceKF = nullptr;
+
     mbIsSet = false;
     mbImuPreintegrated = false;
     mpCamera = pCamera;
-    mpCamera2 = nullptr;
+    
     mbHasPose = false;
     mbHasVelocity = false;
     

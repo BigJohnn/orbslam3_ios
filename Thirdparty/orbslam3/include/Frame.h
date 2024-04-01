@@ -41,8 +41,8 @@
 
 namespace ORB_SLAM3
 {
-#define FRAME_GRID_ROWS 48
-#define FRAME_GRID_COLS 64
+#define FRAME_GRID_ROWS 96
+#define FRAME_GRID_COLS 54
 
 class MapPoint;
 class KeyFrame;
@@ -109,7 +109,7 @@ public:
     // Backprojects a keypoint (if stereo/depth info available) into 3D world coordinates.
     bool UnprojectStereo(const int &i, Eigen::Vector3f &x3D);
 
-    ConstraintPoseImu* mpcpi;
+    std::shared_ptr<ConstraintPoseImu> mpcpi;
 
     bool imuIsPreintegrated();
     void setIntegrated();
@@ -227,7 +227,7 @@ public:
     DBoW2::FeatureVector mFeatVec;
 
     // ORB descriptor, each row associated to a keypoint.
-    cv::Mat mDescriptors, mDescriptorsRight;
+    cv::Mat mDescriptors;
 
     // MapPoints associated to keypoints, nullptr pointer if no association.
     // Flag to identify outlier associations.
@@ -314,7 +314,7 @@ public:
     GeometricCamera* mpCamera = nullptr, *mpCamera2 = nullptr;
 
     //Number of KeyPoints extracted in the left and right images
-    int Nleft, Nright;
+    int Nleft = -1, Nright;
     //Number of Non Lapping Keypoints
     int monoLeft, monoRight;
 

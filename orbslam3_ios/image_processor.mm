@@ -274,9 +274,9 @@ vector<IMU::Point> gyro_buf;  // for Interpolation
 //         acc_msg->a << -latestAcc.acceleration.x * GRAVITY,
 //         -latestAcc.acceleration.y * GRAVITY,
 //         -latestAcc.acceleration.z * GRAVITY;
-        acc_msg->a << latestAcc.acceleration.x,
-        latestAcc.acceleration.y,
-        latestAcc.acceleration.z;
+        acc_msg->a << -latestAcc.acceleration.x,
+        -latestAcc.acceleration.y,
+        -latestAcc.acceleration.z;
          cur_acc = acc_msg;
 #else
         std::ofstream accOutFile(tmp_folder + "acc.txt", std::ios::app);
